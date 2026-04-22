@@ -1,0 +1,309 @@
+﻿<Page
+    x:Class="DRLMobile.Uwp.View.CustomTaxStatementPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:customControls="using:DRLMobile.Uwp.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:DRLMobile.Uwp.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <Style x:Key="NoHoverButton" TargetType="Button">
+                <Setter Property="CornerRadius" Value="5" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Height" Value="40" />
+                <Setter Property="Width" Value="{StaticResource LoginButtonDefaultWidth}" />
+                <Setter Property="Background" Value="{ThemeResource LoginButtonBackground}" />
+                <Setter Property="BackgroundSizing" Value="OuterBorderEdge" />
+                <Setter Property="Foreground" Value="{ThemeResource LoginScreenTextFontColor}" />
+                <Setter Property="BorderBrush" Value="{ThemeResource LoginButtonBorderBrush}" />
+                <Setter Property="BorderThickness" Value="{ThemeResource DefaultBorderThikness}" />
+                <Setter Property="Padding" Value="{StaticResource ButtonPadding}" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+                <Setter Property="FontWeight" Value="Normal" />
+                <Setter Property="FontSize" Value="{ThemeResource MediumFontSize}" />
+                <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
+                <Setter Property="FocusVisualMargin" Value="-3" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <ContentPresenter
+                                x:Name="ContentPresenter"
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                AutomationProperties.AccessibilityView="Raw"
+                                Background="{TemplateBinding Background}"
+                                BackgroundSizing="{TemplateBinding BackgroundSizing}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                ContentTransitions="{TemplateBinding ContentTransitions}"
+                                CornerRadius="{TemplateBinding CornerRadius}">
+                                <ContentPresenter.RenderTransform>
+                                    <ScaleTransform />
+                                </ContentPresenter.RenderTransform>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal">
+                                            <Storyboard>
+                                                <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="PointerOver" />
+                                        <VisualState x:Name="Pressed">
+                                            <Storyboard Duration="0:0:0.1">
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="ContentPresenter"
+                                                    Storyboard.TargetProperty="(ContentPresenter.RenderTransform).(ScaleTransform.ScaleX)"
+                                                    From="1"
+                                                    To="0.95"
+                                                    Duration="0:0:0.1" />
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="ContentPresenter"
+                                                    Storyboard.TargetProperty="(ContentPresenter.RenderTransform).(ScaleTransform.ScaleY)"
+                                                    From="1"
+                                                    To="0.95"
+                                                    Duration="0:0:0.1" />
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Disabled">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundDisabled}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushDisabled}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundDisabled}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </ContentPresenter>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="ListViewItem">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            </Style>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid x:Name="OuterPanel" Background="{StaticResource LoginBackgroundColor}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <customControls:HeaderControl
+            Title="CUSTOM TAX STATEMENT"
+            Grid.Row="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            IsPageTitleVisible="Visible" />
+
+        <StackPanel Grid.Row="1" Background="{StaticResource LoginBackgroundColor}">
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="4*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock
+                    HorizontalAlignment="Right"
+                    Foreground="Black"
+                    Style="{StaticResource FieldTextBlockStyle}">
+                    <TextBlock.Inlines>
+                        <Run Text="Custom Tax Statement Title" />
+                        <Run x:Uid="Colon" d:Text=":" />
+                    </TextBlock.Inlines>
+                </TextBlock>
+
+                <TextBox
+                    Grid.Column="1"
+                    Margin="12,12,200,0"
+                    HorizontalAlignment="Stretch"
+                    Foreground="Black"
+                    Style="{StaticResource EditTextBoxStyle}"
+                    Text="{x:Bind CustomTaxStatementViewModel.UserTaxStatementPageModel.Title, Mode=TwoWay}" />
+
+            </Grid>
+
+            <Grid Margin="0,10,0,0" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="4*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Foreground="Black"
+                    Style="{StaticResource FieldTextBlockStyle}">
+                    <TextBlock.Inlines>
+                        <Run Text="Custom Tax Statement" />
+                        <Run x:Uid="Colon" d:Text=":" />
+                    </TextBlock.Inlines>
+                </TextBlock>
+
+                <TextBox
+                    Grid.Column="1"
+                    Height="100"
+                    Margin="12,12,200,0"
+                    HorizontalAlignment="Stretch"
+                    Foreground="Black"
+                    Style="{StaticResource EditTextBoxStyle}"
+                    Text="{x:Bind CustomTaxStatementViewModel.UserTaxStatementPageModel.Description, Mode=TwoWay}" />
+
+            </Grid>
+
+            <StackPanel
+                Margin="0,20,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                Spacing="20"
+                Visibility="{x:Bind CustomTaxStatementViewModel.ClearSaveVisibility, Mode=OneWay}">
+                <Button
+                    x:Name="ClearButton"
+                    Width="100"
+                    Click="ClearButton_Click"
+                    Content="Clear"
+                    Style="{StaticResource LoginButtonStyle}" />
+                <Button
+                    x:Name="SaveButton"
+                    Width="100"
+                    Click="SaveButton_Click"
+                    Content="Save"
+                    Style="{StaticResource LoginButtonStyle}" />
+            </StackPanel>
+            <StackPanel
+                Margin="0,20,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                Spacing="20"
+                Visibility="{x:Bind CustomTaxStatementViewModel.CancelUpdateVisibility, Mode=OneWay}">
+
+                <Button
+                    x:Name="CancelButton"
+                    Width="100"
+                    Click="CancelButton_Click"
+                    Content="Cancel"
+                    Style="{StaticResource LoginButtonStyle}" />
+                <Button
+                    x:Name="UpdateButton"
+                    Width="100"
+                    Click="UpdateButton_Click"
+                    Content="Update"
+                    Style="{StaticResource LoginButtonStyle}" />
+            </StackPanel>
+
+            <Grid
+                Grid.Row="1"
+                Height="40"
+                Margin="0,20,0,0"
+                Background="{StaticResource LoginButtonBackground}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="1.5*" />
+                    <ColumnDefinition Width="120" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0"
+                    Margin="12,0,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource MediumFontSize}"
+                    FontWeight="Medium"
+                    Text="Title" />
+
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="{StaticResource XSmallLeftMargin}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource MediumFontSize}"
+                    FontWeight="Medium"
+                    Text="Description" />
+            </Grid>
+
+
+            <ListView
+                Padding="0"
+                Background="{StaticResource FooterTextColor}"
+                ItemsSource="{x:Bind CustomTaxStatementViewModel.TaxListGridDataSource, Mode=OneWay}"
+                SelectionMode="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate >
+                        <Grid
+                            Grid.Row="1"
+                            Height="40"
+                            Margin="0"
+                            Padding="0"
+                            Background="{StaticResource FooterTextColor}"
+                            RowSpacing="0"
+                            ColumnSpacing="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="1.5*" />
+                                <ColumnDefinition Width="120" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Margin="0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                FontSize="15"
+                                Text="{Binding Title, Mode=OneWay}" />
+
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="4,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                FontSize="15"
+                                Foreground="{StaticResource LoginScreenTextFontColor}"
+                                Text="{Binding Description, Mode=OneWay}" />
+
+                            <StackPanel
+                                Grid.Column="2"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="20">
+                                <FontIcon
+                                    x:Name="EditIcon"
+                                    Foreground="{StaticResource LoginButtonBorderBrush}"
+                                    Glyph="{StaticResource EditIcon}"
+                                    Style="{StaticResource FontIconStyle}"
+                                    Tapped="EditIcon_Tapped" />
+                                <FontIcon
+                                    x:Name="DeleteIcon"
+                                    Foreground="{StaticResource BadgeColor}"
+                                    Glyph="{StaticResource DeleteIcon}"
+                                    Style="{StaticResource FontIconStyle}"
+                                    Tapped="DeleteIcon_Tapped" />
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+        </StackPanel>
+
+    </Grid>
+</Page>

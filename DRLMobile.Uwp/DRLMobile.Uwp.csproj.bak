@@ -1,0 +1,827 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{7AA86BA5-B9C7-4C42-A60A-6ABAFA3E2F63}</ProjectGuid>
+    <OutputType>AppContainerExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DRLMobile.Uwp</RootNamespace>
+    <AssemblyName>DRLMobile.Uwp</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <PackageCertificateThumbprint>3532C32E53616077DEC1637FCA49721D71730945</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>
+    </PackageCertificateKeyFile>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <AppInstallerUri>https://release.drl-ent.com:8090/IPadApp/1.1.240</AppInstallerUri>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <AppxPackageDir>C:\codestore\Honey\DRL-UWP\DRLMobile.Uwp\AppPackages\UAT\</AppxPackageDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <OutputPath>bin\ARM\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
+    <OutputPath>bin\ARM64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <Use64Bitcompiler>true</Use64Bitcompiler>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <Use64Bitcompiler>true</Use64Bitcompiler>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Constants\Constants.cs" />
+    <Compile Include="Converters\BoolToCartImageConverter.cs" />
+    <Compile Include="Converters\BoolToFavoriteDetailImageConverter.cs" />
+    <Compile Include="Converters\BoolToFavoriteImageConverter.cs" />
+    <Compile Include="Converters\BoolToImageSourceConverter.cs" />
+    <Compile Include="Converters\BoolToInvertBoolConverter.cs" />
+    <Compile Include="Converters\BoolToStyleConverter.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\EscapeStringConverter.cs" />
+    <Compile Include="Converters\InvertBoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\StringToPhoneNumberConverter.cs" />
+    <Compile Include="CustomControls\AlternateRowColorListView.cs" />
+    <Compile Include="CustomControls\CustomContentDialog.xaml.cs">
+      <DependentUpon>CustomContentDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\CustomerDocumentControl.xaml.cs">
+      <DependentUpon>CustomerDocumentControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\CustomImage.cs" />
+    <Compile Include="CustomControls\CustomKeypad.xaml.cs">
+      <DependentUpon>CustomKeypad.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\DashboardButton.xaml.cs">
+      <DependentUpon>DashboardButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\FooterControl.xaml.cs">
+      <DependentUpon>FooterControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\HeaderControl.xaml.cs">
+      <DependentUpon>HeaderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\MapPinCustomPopUp.xaml.cs">
+      <DependentUpon>MapPinCustomPopUp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\NameAndSignaturePanelControl.xaml.cs">
+      <DependentUpon>NameAndSignaturePanelControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\PreviewDocumentControl.xaml.cs">
+      <DependentUpon>PreviewDocumentControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\SegmentControl.xaml.cs">
+      <DependentUpon>SegmentControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\TravelVripPromotionContractPage.xaml.cs">
+      <DependentUpon>TravelVripPromotionContractPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EmailAndPrintOrder\BuildOrderEmail.cs" />
+    <Compile Include="EmailAndPrintOrder\BuildPrintOrder.cs" />
+    <Compile Include="EmailAndPrintOrder\CustomerInfo.cs" />
+    <Compile Include="EmailAndPrintOrder\Helper.cs" />
+    <Compile Include="EmailAndPrintOrder\OrderDetails.cs" />
+    <Compile Include="EmailAndPrintOrder\PdfCreator.cs" />
+    <Compile Include="Enums\PhotoSize.cs" />
+    <Compile Include="Enums\Scaling.cs" />
+    <Compile Include="Helpers\AlertHelper.cs" />
+    <Compile Include="Helpers\CaptureSignatureHelper.cs" />
+    <Compile Include="Helpers\CustomerPageGridHelper\CustomerFetchService.cs" />
+    <Compile Include="Helpers\CustomerPageGridHelper\CustomerFilter.cs" />
+    <Compile Include="Helpers\CustomerPageGridHelper\CustomerPageDataSourceHelper.cs" />
+    <Compile Include="Helpers\CustomerPageGridHelper\CustomerSortOrder.cs" />
+    <Compile Include="Helpers\LoadEmailTemplate.cs" />
+    <Compile Include="Helpers\MapHelpers\Cluster.cs" />
+    <Compile Include="Helpers\MapHelpers\PlaceInfo.cs" />
+    <Compile Include="Helpers\MapHelpers\PlaceLocation.cs" />
+    <Compile Include="Helpers\MapsStaticDataSourceHelper.cs" />
+    <Compile Include="Helpers\PhotosPageDescription.cs" />
+    <Compile Include="Helpers\PhotosPrintHelper.cs" />
+    <Compile Include="Helpers\PointOfInterest.cs" />
+    <Compile Include="Helpers\ReceiptPrintHelper.cs" />
+    <Compile Include="Helpers\ResourceExtensions.cs" />
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BackgroundDownloadService.cs" />
+    <Compile Include="Services\EmailService.cs" />
+    <Compile Include="Services\LocalFileService.cs" />
+    <Compile Include="Services\MemoryCacheService.cs" />
+    <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Services\RegisterBackgroundTask.cs" />
+    <Compile Include="ViewModel\ActivitiesPageViewModel.cs" />
+    <Compile Include="ViewModel\AddActivityPageViewModel.cs" />
+    <Compile Include="ViewModel\AddCustomerPageViewModel.cs" />
+    <Compile Include="ViewModel\AddEditRoutePageViewModel.cs" />
+    <Compile Include="ViewModel\CartPageViewModel.cs" />
+    <Compile Include="ViewModel\CustomerDetailsPageViewModel.cs" />
+    <Compile Include="ViewModel\CustomersListPageViewModel.cs" />
+    <Compile Include="ViewModel\CustomTaxStatementPageViewModel.cs" />
+    <Compile Include="ViewModel\DashboardPageViewModel.cs" />
+    <Compile Include="ViewModel\EditActivityPageViewModel.cs" />
+    <Compile Include="ViewModel\FavoritePageViewModel.cs" />
+    <Compile Include="ViewModel\LoginPageViewModel.cs" />
+    <Compile Include="ViewModel\MapPageViewModel.cs" />
+    <Compile Include="ViewModel\OrderHistoryDetailsPageViewModel.cs" />
+    <Compile Include="ViewModel\OrderHistoryPageViewModel.cs" />
+    <Compile Include="ViewModel\PopOrderPageViewModel.cs" />
+    <Compile Include="ViewModel\PrinOrderViewModel.cs" />
+    <Compile Include="ViewModel\RackOrderCartPageViewModel.cs" />
+    <Compile Include="ViewModel\RackOrderListPageViewModel.cs" />
+    <Compile Include="ViewModel\RetailTransactionPageViewModel.cs" />
+    <Compile Include="ViewModel\RouteListPageViewModel.cs" />
+    <Compile Include="ViewModel\SettingPageViewModel.cs" />
+    <Compile Include="ViewModel\ShellPageViewModel.cs" />
+    <Compile Include="ViewModel\SrcProductPageViewModel.cs" />
+    <Compile Include="ViewModel\TravelVripPageViewModel.cs" />
+    <Compile Include="ViewModel\TravelVripPromotionContractPageViewModel.cs" />
+    <Compile Include="ViewModel\ViewRouteListPageViewModel.cs" />
+    <Compile Include="View\ActivitiesPage.xaml.cs">
+      <DependentUpon>ActivitiesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddActivityPage.xaml.cs">
+      <DependentUpon>AddActivityPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddCustomerPage.xaml.cs">
+      <DependentUpon>AddCustomerPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddEditRoutePage.xaml.cs">
+      <DependentUpon>AddEditRoutePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CartPage.xaml.cs">
+      <DependentUpon>CartPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ContinuationPage.xaml.cs">
+      <DependentUpon>ContinuationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CustomerDetailsPage.xaml.cs">
+      <DependentUpon>CustomerDetailsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CustomersListPage.xaml.cs">
+      <DependentUpon>CustomersListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CustomTaxStatementPage.xaml.cs">
+      <DependentUpon>CustomTaxStatementPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DashboardPage.xaml.cs">
+      <DependentUpon>DashboardPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\EditActivityPage.xaml.cs">
+      <DependentUpon>EditActivityPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\FavoritePage.xaml.cs">
+      <DependentUpon>FavoritePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ImagePrintPage.xaml.cs">
+      <DependentUpon>ImagePrintPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LoginPage.xaml.cs">
+      <DependentUpon>LoginPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MapPage.xaml.cs">
+      <DependentUpon>MapPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OrderHistoryDetailsPage.xaml.cs">
+      <DependentUpon>OrderHistoryDetailsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OrderHistoryPage.xaml.cs">
+      <DependentUpon>OrderHistoryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PopOrderPage.xaml.cs">
+      <DependentUpon>PopOrderPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PrintOrderXAMLPage.xaml.cs">
+      <DependentUpon>PrintOrderXAMLPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RackOrderCartPage.xaml.cs">
+      <DependentUpon>RackOrderCartPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RackOrderListPage.xaml.cs">
+      <DependentUpon>RackOrderListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ReceiptPrintPage.xaml.cs">
+      <DependentUpon>ReceiptPrintPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RetailTransactionPage.xaml.cs">
+      <DependentUpon>RetailTransactionPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RouteListPage.xaml.cs">
+      <DependentUpon>RouteListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ShellPage.xaml.cs">
+      <DependentUpon>ShellPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SRCProductPage.xaml.cs">
+      <DependentUpon>SRCProductPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TravelVripPage.xaml.cs">
+      <DependentUpon>TravelVripPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ViewRouteListPage.xaml.cs">
+      <DependentUpon>ViewRouteListPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Cart\cart_delete.png" />
+    <Content Include="Assets\Cart\cart_down_arrow.png" />
+    <Content Include="Assets\Cart\cart_minus.png" />
+    <Content Include="Assets\Cart\edit_cart.png" />
+    <Content Include="Assets\Cart\numpad_back.png" />
+    <Content Include="Assets\Cart\numpad_left.png" />
+    <Content Include="Assets\Controls\sort.png" />
+    <Content Include="Assets\Controls\sort_down.png" />
+    <Content Include="Assets\Controls\sort_up.png" />
+    <Content Include="Assets\CustomerProfile\edit_hover.png" />
+    <Content Include="Assets\CustomerProfile\edit_normal.png" />
+    <Content Include="Assets\CustomerProfile\save_hover.png" />
+    <Content Include="Assets\CustomerProfile\save_normal.png" />
+    <Content Include="Assets\Dashboard\activity_hover.png" />
+    <Content Include="Assets\Dashboard\activity_normal.png" />
+    <Content Include="Assets\Dashboard\cart_hover.png" />
+    <Content Include="Assets\Dashboard\cart_normal.png" />
+    <Content Include="Assets\Dashboard\customers_hover.png" />
+    <Content Include="Assets\Dashboard\customers_normal.png" />
+    <Content Include="Assets\Dashboard\favorite_hover.png" />
+    <Content Include="Assets\Dashboard\favorite_normal.png" />
+    <Content Include="Assets\Dashboard\logout_dashboard.png" />
+    <Content Include="Assets\Dashboard\map_hover.png" />
+    <Content Include="Assets\Dashboard\map_normal.png" />
+    <Content Include="Assets\Dashboard\pop_order_hover.png" />
+    <Content Include="Assets\Dashboard\pop_order_normal.png" />
+    <Content Include="Assets\Dashboard\rack_order_hover.png" />
+    <Content Include="Assets\Dashboard\rack_order_normal.png" />
+    <Content Include="Assets\Dashboard\route_list_hover.png" />
+    <Content Include="Assets\Dashboard\route_list_normal.png" />
+    <Content Include="Assets\Dashboard\settings_hover.png" />
+    <Content Include="Assets\Dashboard\settings_normal.png" />
+    <Content Include="Assets\Dashboard\src_product_hover.png" />
+    <Content Include="Assets\Dashboard\src_product_normal.png" />
+    <Content Include="Assets\Dashboard\sync_hover.png" />
+    <Content Include="Assets\Dashboard\sync_normal.png" />
+    <Content Include="Assets\Dashboard\travel-vrip_hover.png" />
+    <Content Include="Assets\Dashboard\travel-vrip_normal.png" />
+    <Content Include="Assets\Documents\documentIcon.png" />
+    <Content Include="Assets\Documents\documentPDF.png" />
+    <Content Include="Assets\Email\Republic.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Email\Top.png" />
+    <Content Include="Assets\Favorite\mail-normal.png" />
+    <Content Include="Assets\Header\cart_white_header.png" />
+    <Content Include="Assets\LargeTile.scale-100.png" />
+    <Content Include="Assets\LargeTile.scale-125.png" />
+    <Content Include="Assets\LargeTile.scale-150.png" />
+    <Content Include="Assets\LargeTile.scale-200.png" />
+    <Content Include="Assets\LargeTile.scale-400.png" />
+    <Content Include="Assets\Login\logo-login.png" />
+    <Content Include="Assets\Maps\MapPin-1.png" />
+    <Content Include="Assets\Maps\MapPin-2.png" />
+    <Content Include="Assets\Maps\MapPin-3.png" />
+    <Content Include="Assets\Maps\MapPin-4.png" />
+    <Content Include="Assets\Maps\MapPin-5.png" />
+    <Content Include="Assets\Maps\MapPin-6.png" />
+    <Content Include="Assets\Maps\MapPin-Black.png" />
+    <Content Include="Assets\Maps\MapPin-Blue.png" />
+    <Content Include="Assets\Maps\MapPin-Brown.png" />
+    <Content Include="Assets\Maps\MapPin-Cyan.png" />
+    <Content Include="Assets\Maps\MapPin-Florecent.png" />
+    <Content Include="Assets\Maps\MapPin-Gray.png" />
+    <Content Include="Assets\Maps\MapPin-Green.png" />
+    <Content Include="Assets\Maps\MapPin-LightBrown.png" />
+    <Content Include="Assets\Maps\MapPin-LightYellow.png" />
+    <Content Include="Assets\Maps\MapPin-Pink.png" />
+    <Content Include="Assets\Maps\MapPin-Red.png" />
+    <Content Include="Assets\Maps\MapPin-Voilet.png" />
+    <Content Include="Assets\Maps\MapPin-White.png" />
+    <Content Include="Assets\Maps\MapPin-Yellow.png" />
+    <Content Include="Assets\ProductDetail\button_active.png" />
+    <Content Include="Assets\ProductDetail\button_hover.png" />
+    <Content Include="Assets\ProductDetail\button_inactive.png" />
+    <Content Include="Assets\ProductDetail\cart_black.png" />
+    <Content Include="Assets\ProductDetail\cart_white.png" />
+    <Content Include="Assets\ProductDetail\default_product.png" />
+    <Content Include="Assets\ProductDetail\factsheet_normal.png" />
+    <Content Include="Assets\ProductDetail\factsheet_normal_hover.png" />
+    <Content Include="Assets\ProductDetail\favorite_normal.png" />
+    <Content Include="Assets\ProductDetail\favorite_selected.png" />
+    <Content Include="Assets\ProductDetail\left_arrow_hover.png" />
+    <Content Include="Assets\ProductDetail\left_arrow_normal.png" />
+    <Content Include="Assets\ProductDetail\list_icon.png" />
+    <Content Include="Assets\ProductDetail\retail_image_hover.png" />
+    <Content Include="Assets\ProductDetail\retail_image_normal.png" />
+    <Content Include="Assets\ProductDetail\right_arrow_hover.png" />
+    <Content Include="Assets\ProductDetail\right_arrow_normal.png" />
+    <Content Include="Assets\ProductDetail\text_box_normal.png" />
+    <Content Include="Assets\RackOrder\rack_item_placeholder.png" />
+    <Content Include="Assets\Settings\change_pin_hover.png" />
+    <Content Include="Assets\Settings\change_pin_normal.png" />
+    <Content Include="Assets\Settings\logout_normal.png" />
+    <Content Include="Assets\Settings\tax_statement_hover.png" />
+    <Content Include="Assets\Settings\tax_statement_normal.png" />
+    <Content Include="Assets\SmallTile.scale-100.png" />
+    <Content Include="Assets\SmallTile.scale-125.png" />
+    <Content Include="Assets\SmallTile.scale-150.png" />
+    <Content Include="Assets\SmallTile.scale-200.png" />
+    <Content Include="Assets\SmallTile.scale-400.png" />
+    <Content Include="Assets\SplashScreen.scale-100.png" />
+    <Content Include="Assets\SplashScreen.scale-125.png" />
+    <Content Include="Assets\SplashScreen.scale-150.png" />
+    <Content Include="Assets\SplashScreen.scale-400.png" />
+    <Content Include="Assets\Square150x150Logo.scale-100.png" />
+    <Content Include="Assets\Square150x150Logo.scale-125.png" />
+    <Content Include="Assets\Square150x150Logo.scale-150.png" />
+    <Content Include="Assets\Square150x150Logo.scale-400.png" />
+    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
+    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
+    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
+    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
+    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
+    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-16.png" />
+    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-256.png" />
+    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-32.png" />
+    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-48.png" />
+    <Content Include="Assets\Square44x44Logo.scale-100.png" />
+    <Content Include="Assets\Square44x44Logo.scale-125.png" />
+    <Content Include="Assets\Square44x44Logo.scale-150.png" />
+    <Content Include="Assets\Square44x44Logo.scale-400.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-16.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-256.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-32.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-48.png" />
+    <Content Include="Assets\SRCProduct\cart_normal.png" />
+    <Content Include="Assets\SRCProduct\cart_selected.png" />
+    <Content Include="Assets\SRCProduct\category_selected.png" />
+    <Content Include="Assets\SRCProduct\category_unselected.png" />
+    <Content Include="Assets\SRCProduct\distribution_normal.png" />
+    <Content Include="Assets\SRCProduct\distribution_selected.png" />
+    <Content Include="Assets\SRCProduct\favorite_normal.png" />
+    <Content Include="Assets\SRCProduct\favorite_selected.png" />
+    <Content Include="Assets\SRCProduct\no_product.png" />
+    <Content Include="Assets\SRCProduct\pdf.png" />
+    <Content Include="Assets\SRCProduct\style_selected.png" />
+    <Content Include="Assets\SRCProduct\style_unselected.png" />
+    <None Include="Package.StoreAssociation.xml" />
+    <Content Include="Assets\StoreLogo.scale-100.png" />
+    <Content Include="Assets\StoreLogo.scale-125.png" />
+    <Content Include="Assets\StoreLogo.scale-150.png" />
+    <Content Include="Assets\StoreLogo.scale-200.png" />
+    <Content Include="Assets\StoreLogo.scale-400.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-100.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-125.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-150.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="Properties\Default.rd.xml" />
+    <Content Include="Assets\LockScreenLogo.scale-200.png" />
+    <Content Include="Assets\SplashScreen.scale-200.png" />
+    <Content Include="Assets\Square150x150Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="CustomControls\CustomContentDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\CustomerDocumentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\CustomKeypad.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\DashboardButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\FooterControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\HeaderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\MapPinCustomPopUp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\NameAndSignaturePanelControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\PreviewDocumentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\SegmentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\TravelVripPromotionContractPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Images.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Page.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\TextBlock.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\_Colors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\_FontSizes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\_Thickness.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ActivitiesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddActivityPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddCustomerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddEditRoutePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CartPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ContinuationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CustomerDetailsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CustomersListPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\CustomTaxStatementPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DashboardPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\EditActivityPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\FavoritePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ImagePrintPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\LoginPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MapPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\OrderHistoryDetailsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\OrderHistoryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PopOrderPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PrintOrderXAMLPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RackOrderCartPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RackOrderListPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ReceiptPrintPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RetailTransactionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RouteListPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ShellPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SRCProductPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TravelVripPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ViewRouteListPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="itext7">
+      <Version>7.2.1</Version>
+    </PackageReference>
+    <PackageReference Include="itext7.pdfhtml">
+      <Version>4.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory">
+      <Version>6.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Net.Native.Compiler">
+      <Version>2.2.12-rel-31116-00</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>6.2.14</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit">
+      <Version>7.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Mvvm">
+      <Version>7.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp">
+      <Version>7.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
+      <Version>7.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
+      <Version>7.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
+      <Version>2.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="MsgKit">
+      <Version>2.5.1</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.Direct2D1">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Reflection.TypeExtensions">
+      <Version>4.7.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Text.Encoding.CodePages">
+      <Version>6.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Text.Json">
+      <Version>6.0.5</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DRLMobile.Core\DRLMobile.Core.csproj">
+      <Project>{722ccdfc-3b91-4586-a060-c7cdd04cc39d}</Project>
+      <Name>DRLMobile.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DRLMobile.ExceptionHandler\DRLMobile.ExceptionHandler.csproj">
+      <Project>{b8c4e1c2-4308-4d80-97bc-b59d48abf513}</Project>
+      <Name>DRLMobile.ExceptionHandler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DRLMobile.NotificationBackgroundTask\DRLMobile.NotificationBackgroundTask.csproj">
+      <Project>{d4f07879-9c8e-4b91-abb0-d33e58223bb2}</Project>
+      <Name>DRLMobile.NotificationBackgroundTask</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="DevExpress.Core.v21.2, Version=21.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\UWP\DevExpress.Core.v21.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Drawing.v21.2, Version=21.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\UWP\DevExpress.Drawing.v21.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Mvvm.v21.2, Version=21.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\UWP\DevExpress.Mvvm.v21.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Pdf.Core.v21.2">
+      <HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\UWP\DevExpress.Pdf.Core.v21.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.UI.Xaml.Charts.v21.2, Version=21.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\UWP\DevExpress.UI.Xaml.Charts.v21.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.UI.Xaml.Controls.v21.2, Version=21.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\UWP\DevExpress.UI.Xaml.Controls.v21.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.UI.Xaml.Editors.v21.2, Version=21.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\UWP\DevExpress.UI.Xaml.Editors.v21.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.UI.Xaml.Grid.v21.2">
+      <HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\UWP\DevExpress.UI.Xaml.Grid.v21.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.UI.Xaml.Layout.v21.2, Version=21.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\UWP\DevExpress.UI.Xaml.Layout.v21.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.UI.Xaml.v21.2, Version=21.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\UWP\DevExpress.UI.Xaml.v21.2.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Strings\en-us\Resources.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DRLMobile.Uwp_TemporaryKey.pfx" />
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+    <VisualStudioVersion>14.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,61 @@
+﻿<UserControl
+    x:Class="DRLMobile.CustomControls.PreviewDocumentControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Controls="using:DevExpress.UI.Xaml.Controls"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:DRLMobile.CustomControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <Grid Margin="25">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Background="{StaticResource FooterBackgroundColor}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                x:Name="TitleTextBlock"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                d:Text="Title text"
+                FontSize="{StaticResource MediumFontSize}"
+                Foreground="White"
+                TextWrapping="Wrap" />
+
+
+            <FontIcon
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                FontSize="25"
+                Foreground="White"
+                Glyph="{StaticResource CancelIcon}"
+                Style="{StaticResource FontIconStyle}"
+                Tapped="ClosePreviewer" />
+        </Grid>
+
+
+        <Grid Grid.Row="1" Background="White">
+            <Image
+                Name="ImageViewer"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Stretch="Uniform" />
+
+            <!--<Controls:PdfViewerControl Name="PdfViewer" />-->
+
+        </Grid>
+
+    </Grid>
+</UserControl>

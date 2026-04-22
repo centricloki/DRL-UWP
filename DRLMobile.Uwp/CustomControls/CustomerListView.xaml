@@ -1,0 +1,371 @@
+﻿<UserControl
+    x:Class="DRLMobile.Uwp.CustomControls.CustomerListView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="using:DRLMobile.Uwp.Converters"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:customControl="using:DRLMobile.Uwp.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helper="using:DRLMobile.Uwp.Helpers"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:DRLMobile.Uwp.CustomControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="using:System"
+    xmlns:uim="using:DRLMobile.Core.Models.UIModels"
+    x:Name="UserControlCustomerListView"
+    d:DesignHeight="400"
+    d:DesignWidth="1200"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converter:BoolToInvertBoolConverter x:Key="BoolToInvertBoolConverter" />
+        <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converter:BooleanToGridLengthConverter x:Key="BooleanToGridLengthConverter" />
+    </UserControl.Resources>
+    <Grid
+        Width="1200"
+        Height="Auto"
+        MaxHeight="600"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Background="White"
+        BorderBrush="Black"
+        BorderThickness="1"
+        CornerRadius="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" MinHeight="400" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <SolidColorBrush x:Key="gridBrush" Color="Silver" />
+        </Grid.Resources>
+        <Grid Grid.Row="0" Background="{StaticResource FooterBackgroundColor}">
+            <TextBlock
+                Margin="{StaticResource XSmallLeftTopRightBottomMargin}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="{StaticResource LargeFontSize}"
+                Foreground="White"
+                Text="{x:Bind PopupHeaderText, Mode=OneWay}" />
+        </Grid>
+        <!--  No Assosicate Customer  -->
+        <Grid
+            x:Name="gridEmptyData"
+            Grid.Row="1"
+            x:Load="{x:Bind IsDataAvailable, Mode=OneWay, Converter={StaticResource BoolToInvertBoolConverter}}">
+            <TextBlock HorizontalAlignment="Center" Text="{x:Bind PopupEmptyText, Mode=OneWay}" />
+        </Grid>
+        <!--  Associate Customer Grid  -->
+        <Grid
+            x:Name="gridCustomer"
+            Grid.Row="1"
+            x:Load="{x:Bind IsDataAvailable, Mode=OneWay}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <!--  CustomerName  -->
+                    <ColumnDefinition Width="4.6*" />
+                    <!--  CustomerNo  -->
+                    <ColumnDefinition Width="3.2*" />
+                    <!--  KAM User  -->
+                    <ColumnDefinition Width="{x:Bind ShowKAMColumn, Converter={StaticResource BooleanToGridLengthConverter}, ConverterParameter=3.2, Mode=OneWay}" />
+                    <!--  Store Type  -->
+                    <ColumnDefinition Width="5.1*" />
+                    <!--  Rank  -->
+                    <ColumnDefinition Width="1.9*" />
+                    <!--  Address  -->
+                    <ColumnDefinition Width="3.7*" />
+                    <!--  City  -->
+                    <ColumnDefinition Width="2.4*" />
+                    <!--  State  -->
+                    <ColumnDefinition Width="1.9*" />
+                    <!--  Activity Creator  -->
+                    <ColumnDefinition Width="3.4*" />
+                    <!--  calldate  -->
+                    <ColumnDefinition Width="2.5*" />
+                </Grid.ColumnDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="Grid">
+                        <Setter Property="BorderBrush" Value="{StaticResource gridBrush}" />
+                        <Setter Property="BorderThickness" Value="0,0,1,1" />
+                    </Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="15" />
+                        <Setter Property="FontWeight" Value="Bold" />
+                        <Setter Property="Foreground" Value="Black" />
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="Margin" Value="10" />
+                    </Style>
+                    <Style TargetType="Image">
+                        <Setter Property="Width" Value="20" />
+                        <Setter Property="Height" Value="15" />
+                        <Setter Property="Grid.Column" Value="1" />
+                        <Setter Property="VerticalAlignment" Value="Top" />
+                        <Setter Property="Margin" Value="0,15,0,0" />
+                    </Style>
+                </Grid.Resources>
+                <!--  1st Header Cell  -->
+                <Grid Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="CUSTOMER NAME" />
+                    <Image
+                        x:Name="sortCustomerNameImg"
+                        x:Load="{x:Bind IsSortImageLoad(IsAscending), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(IsAscending,'CustomerName'), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind SortOrderCommand, Mode=OneWay}" CommandParameter="CustomerName" />
+                        </core:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </Grid>
+                <!--  2nd Header Cell  -->
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="CUSTOMER#" />
+                    <Image
+                        x:Name="sortCustomerNumberImg"
+                        x:Load="{x:Bind IsSortImageLoad(IsAscending), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(IsAscending,'CustomerNumber'), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind SortOrderCommand, Mode=OneWay}" CommandParameter="CustomerNumber" />
+                        </core:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </Grid>
+                <!--  3rd Header Cell  -->
+                <Border
+                    x:Name="HQKAMColumn"
+                    Grid.Column="2"
+                    x:Load="{x:Bind ShowKAMColumn, Mode=OneWay}"
+                    BorderBrush="{StaticResource gridBrush}"
+                    BorderThickness="0,0,1,1">
+                    <TextBlock Text="KAM" />
+                </Border>
+                <!--  3rd Header Cell  -->
+                <Border
+                    Grid.Column="3"
+                    BorderBrush="{StaticResource gridBrush}"
+                    BorderThickness="0,0,1,1">
+                    <TextBlock Text="NOTES" />
+                </Border>
+                <!--  4th Header Cell  -->
+                <Grid Grid.Column="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="RANK" />
+                    <Image
+                        x:Name="sortRankImg"
+                        x:Load="{x:Bind IsSortImageLoad(IsAscending), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(IsAscending,'Rank'), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind SortOrderCommand, Mode=OneWay}" CommandParameter="Rank" />
+                        </core:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </Grid>
+                <!--  5th Header Cell  -->
+                <Grid Grid.Column="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="ADDRESS" />
+                    <Image
+                        x:Name="sortAddressImg"
+                        x:Load="{x:Bind IsSortImageLoad(IsAscending), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(IsAscending,'Address'), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind SortOrderCommand, Mode=OneWay}" CommandParameter="Address" />
+                        </core:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </Grid>
+                <!--  6th Header Cell  -->
+                <Grid Grid.Column="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="CITY" />
+                    <Image
+                        x:Name="sortCityImg"
+                        x:Load="{x:Bind IsSortImageLoad(IsAscending), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(IsAscending,'City'), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind SortOrderCommand, Mode=OneWay}" CommandParameter="City" />
+                        </core:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </Grid>
+                <!--  7th Header Cell  -->
+                <Grid Grid.Column="7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="STATE" />
+                    <Image
+                        x:Name="sortStateImg"
+                        x:Load="{x:Bind IsSortImageLoad(IsAscending), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(IsAscending,'State'), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind SortOrderCommand, Mode=OneWay}" CommandParameter="State" />
+                        </core:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </Grid>
+                <!--  8th Header Cell  -->
+                <Grid Grid.Column="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="ACTIVITY CREATOR" />
+                    <Image
+                        x:Name="sortCreatorImg"
+                        x:Load="{x:Bind IsSortImageLoad(IsAscending), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(IsAscending,'ActivityCreator'), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind SortOrderCommand, Mode=OneWay}" CommandParameter="ActivityCreator" />
+                        </core:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </Grid>
+                <!--  9th Header Cell  -->
+                <Grid Grid.Column="9">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="CALLDATE" TextWrapping="NoWrap" />
+                    <Image
+                        x:Name="sortCallDateImg"
+                        x:Load="{x:Bind IsSortImageLoad(IsAscending), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(IsAscending,'CallDate'), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind SortOrderCommand, Mode=OneWay}" CommandParameter="CallDate" />
+                        </core:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </Grid>
+            </Grid>
+            <!--  gridAllCustomers.Grid.Row=1  -->
+            <ListView
+                x:Name="lvItemCustomer"
+                Grid.Row="1"
+                ContainerContentChanging="OnContainerContentChanging"
+                IsTextScaleFactorEnabled="False"
+                ItemsSource="{x:Bind DataList, Mode=OneWay}"
+                SelectionMode="None">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="Margin" Value="0" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="uim:CustomerListControlUIModel">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <!--  CustomerName  -->
+                                <ColumnDefinition Width="4.6*" />
+                                <!--  CustomerNo  -->
+                                <ColumnDefinition Width="3.2*" />
+                                <!--  KAM User  -->
+                                <ColumnDefinition Width="{Binding ShowKAMColumn, Converter={StaticResource BooleanToGridLengthConverter}, ConverterParameter=3.2, Mode=OneWay}" />
+                                <!--  Store Type  -->
+                                <ColumnDefinition Width="5.1*" />
+                                <!--  Rank  -->
+                                <ColumnDefinition Width="1.9*" />
+                                <!--  Address  -->
+                                <ColumnDefinition Width="3.7*" />
+                                <!--  City  -->
+                                <ColumnDefinition Width="2.4*" />
+                                <!--  State  -->
+                                <ColumnDefinition Width="1.9*" />
+                                <!--  Activity Creator  -->
+                                <ColumnDefinition Width="3.4*" />
+                                <!--  calldate  -->
+                                <ColumnDefinition Width="2.4*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="15" />
+                                    <Setter Property="FontWeight" Value="Normal" />
+                                    <Setter Property="Foreground" Value="Gray" />
+                                    <Setter Property="TextWrapping" Value="WrapWholeWords" />
+                                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="Margin" Value="10,4,0,4" />
+                                </Style>
+                            </Grid.Resources>
+                            <TextBlock Grid.Column="0" Text="{x:Bind CustomerName, Mode=OneWay}" />
+                            <TextBlock Grid.Column="1" Text="{x:Bind CustomerNumber, Mode=OneWay}" />
+                            <TextBlock
+                                Grid.Column="2"
+                                Text="{x:Bind KAMUserName, Mode=OneWay}"
+                                Visibility="{x:Bind ShowKAMColumn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                            <StackPanel
+                                Grid.Column="3"
+                                Padding="10,0,0,5"
+                                Orientation="Vertical">
+                                <TextBlock Margin="0" Text="{x:Bind helper:XAMLHelper.TrimToLength(ActivityComment, 50), Mode=OneWay}" />
+                                <Button
+                                    x:Name="BtnShowMore"
+                                    Margin="0"
+                                    x:Load="{x:Bind helper:XAMLHelper.IsGivenLengthExceed(ActivityComment, 50), Mode=OneWay}"
+                                    Click="ShowMoreButton_Click"
+                                    Content="See More"
+                                    PointerEntered="Button_PointerEntered"
+                                    PointerExited="Button_PointerExited"
+                                    Style="{StaticResource HyperlinkButtonStyle}" />
+                            </StackPanel>
+                            <TextBlock Grid.Column="4" Text="{x:Bind Rank, Mode=OneWay}" />
+                            <TextBlock Grid.Column="5" Text="{x:Bind Address, Mode=OneWay}" />
+                            <TextBlock Grid.Column="6" Text="{x:Bind City, Mode=OneWay}" />
+                            <TextBlock Grid.Column="7" Text="{x:Bind State, Mode=OneWay}" />
+                            <TextBlock Grid.Column="8" Text="{x:Bind ActivityCreator, Mode=OneWay}" />
+                            <TextBlock Grid.Column="9" Text="{x:Bind sys:String.Format('{0:MM-dd-yyyy}', CallDate), Mode=OneWay}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+        <!--  Popup Close Button  -->
+        <StackPanel
+            Grid.Row="2"
+            Margin="7"
+            HorizontalAlignment="Center"
+            Orientation="Vertical">
+            <Button
+                Width="80"
+                Margin="{StaticResource SmallLeftTopMargin}"
+                HorizontalAlignment="Center"
+                Command="{x:Bind PopupCloseCommand}"
+                Content="Close"
+                Style="{StaticResource CustomerDetailPageButton}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

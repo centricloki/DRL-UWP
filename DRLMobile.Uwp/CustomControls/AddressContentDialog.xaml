@@ -1,0 +1,51 @@
+﻿<ContentDialog
+    x:Class="DRLMobile.Uwp.CustomControls.AddressContentDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DRLMobile.Uwp.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"  CornerRadius="10"
+    PrimaryButtonText="Keep Entered Address"
+    SecondaryButtonText="Use Suggested Address">
+    <Grid Margin="2" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"  />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.Resources>
+            <Style TargetType="TextBlock">
+                <Setter Property="FontWeight" Value="Normal"/>
+            </Style>
+        </Grid.Resources>
+        <!-- Entered Address -->
+        <StackPanel Width="180" Grid.Column="0" Margin="0,0,3,0">
+            <TextBlock Text="Entered Address:" FontSize="18"  />
+            <TextBlock TextWrapping="Wrap">
+                <Run Text="{x:Bind EnteredAddress.StreetLines, Mode=OneWay}"   />
+                <Run Text=","/>
+                <LineBreak/>
+                <Run Text="{x:Bind EnteredAddress.City, Mode=OneWay}"/>
+                <Run Text=","/>
+                <Run Text="{x:Bind EnteredAddress.StateOrProvinceCode, Mode=OneWay}"/>
+                <Run Text=","/>
+                <Run Text="{x:Bind EnteredAddress.PostalCode, Mode=OneWay}"/>
+            </TextBlock>
+        </StackPanel>
+
+        <!-- Suggested Address -->
+        <StackPanel  Width="180" Grid.Column="1" Margin="3,0,0,0" >
+            <TextBlock Text="Suggested Address:" FontSize="18"  />
+            <TextBlock TextWrapping="Wrap">
+                <Run Text="{x:Bind SuggestedAddress.StreetLines, Mode=OneWay}" Foreground="{x:Bind IsTextNotEqual(EnteredAddress.StreetLines,SuggestedAddress.StreetLines), Mode=OneWay}"/>
+                <Run Text=","/>
+                <LineBreak/>
+                <Run Text="{x:Bind SuggestedAddress.City, Mode=OneWay}" Foreground="{x:Bind IsTextNotEqual(EnteredAddress.City,SuggestedAddress.City), Mode=OneWay}"/>
+                <Run Text=","/>
+                <Run Text="{x:Bind SuggestedAddress.StateOrProvinceCode, Mode=OneWay}" Foreground="{x:Bind IsTextNotEqual(EnteredAddress.StateOrProvinceCode,SuggestedAddress.StateOrProvinceCode), Mode=OneWay}"/>
+                <Run Text=","/>
+                <Run Text="{x:Bind SuggestedAddress.PostalCode, Mode=OneWay}" Foreground="{x:Bind IsTextNotEqual(EnteredAddress.PostalCode,SuggestedAddress.PostalCode), Mode=OneWay}"/>
+            </TextBlock>
+        </StackPanel>
+    </Grid>
+</ContentDialog>

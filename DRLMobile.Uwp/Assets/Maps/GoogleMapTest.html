@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Maps - US Locations (Browser Test)</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <script src="../../Scripts/GoogleMap.js"></script>
+    <script>
+        window.onerror = function(msg, url, line, col, error) {
+            var message = 'Error: ' + msg + ' | Line: ' + line + ' | URL: ' + url;
+            console.error(message);
+            document.getElementById('error').innerHTML += message + '<br>';
+            return false;
+        };
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJeUyPCwkMaFph6tfAm-kmfdFaYFQVlrI&callback=initMap" async defer></script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #error {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255,0,0,0.8);
+            color: white;
+            padding: 10px;
+            z-index: 9999;
+            font-family: monospace;
+            font-size: 12px;
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="error"></div>
+    <script>
+        window.onload = function() {
+            console.log('Page loaded successfully');
+        };
+    </script>
+</body>
+</html>

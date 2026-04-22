@@ -1,0 +1,24 @@
+﻿<Page
+    x:Class="DRLMobile.Uwp.View.ImagePrintPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DRLMobile.Uwp.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid Margin="12,10,12,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>              
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Canvas x:Name="PrintCanvas" Opacity="0"/>
+  
+            <!-- Status Block for providing messages to the user.  Use the NotifyUser() method to populate the message -->
+            <TextBlock x:Name="StatusBlock" Grid.Row="2" Margin="12, 10, 12, 10" Visibility="Collapsed"/>
+        </Grid>
+
+    </Grid>
+</Page>

@@ -1,0 +1,19 @@
+﻿<Page
+    x:Class="DRLMobile.Views.ActivitiesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DRLMobile.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:customControls="using:DRLMobile.CustomControls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <StackPanel
+                x:Name="outerPanel">
+        <customControls:HeaderControl
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                IsPageTitleVisible="Visible"
+                Title="ACTIVITIES"/>
+    </StackPanel>
+</Page>

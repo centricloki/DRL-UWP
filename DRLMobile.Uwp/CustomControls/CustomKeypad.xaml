@@ -1,0 +1,191 @@
+﻿<UserControl
+    x:Class="DRLMobile.Uwp.CustomControls.CustomKeypad"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:DRLMobile.Uwp.CustomControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="customKeypad"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style x:Key="KeyPadTextStyle" TargetType="Button">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="Foreground" Value="{StaticResource LoginScreenTextFontColor}" />
+            <Setter Property="BorderBrush" Value="{StaticResource LoginButtonBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+    </UserControl.Resources>
+    <StackPanel
+        Margin="0"
+        Padding="0"
+        Background="Transparent"
+        Orientation="Horizontal">
+        <Grid
+            Width="250"
+            Height="250"
+            Background="White"
+            BorderBrush="{StaticResource LoginBackgroundColor}"
+            BorderThickness="1"
+            CornerRadius="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid
+                Grid.Row="0"
+                Grid.ColumnSpan="4"
+                Height="35"
+                HorizontalAlignment="Stretch"
+                Background="{StaticResource FooterBackgroundColor}">
+                <Button
+                    Padding="20,0,10,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Stretch"
+                    Background="Transparent"
+                    Click="Button_Click"
+                    Command="{Binding DoneButtonClick, ElementName=customKeypad}"
+                    Content="Done"
+                    FontSize="16"
+                    Foreground="White" />
+            </Grid>
+            <!--  1st Row 1,2,3  -->
+            <Button
+                Grid.Row="1"
+                Grid.Column="0"
+                Command="{Binding NumPadButtonClick, ElementName=customKeypad}"
+                CommandParameter="1"
+                Content="1"
+                Style="{StaticResource KeyPadTextStyle}" />
+            <Button
+                Grid.Row="1"
+                Grid.Column="1"
+                Command="{Binding NumPadButtonClick, ElementName=customKeypad}"
+                CommandParameter="2"
+                Content="2"
+                Style="{StaticResource KeyPadTextStyle}" />
+            <Button
+                Grid.Row="1"
+                Grid.Column="2"
+                Command="{Binding NumPadButtonClick, ElementName=customKeypad}"
+                CommandParameter="3"
+                Content="3"
+                Style="{StaticResource KeyPadTextStyle}" />
+            <!--  2nd Row 4,5,6  -->
+            <Button
+                Grid.Row="2"
+                Grid.Column="0"
+                Command="{Binding NumPadButtonClick, ElementName=customKeypad}"
+                CommandParameter="4"
+                Content="4"
+                Style="{StaticResource KeyPadTextStyle}" />
+            <Button
+                Grid.Row="2"
+                Grid.Column="1"
+                Command="{Binding NumPadButtonClick, ElementName=customKeypad}"
+                CommandParameter="5"
+                Content="5"
+                Style="{StaticResource KeyPadTextStyle}" />
+            <Button
+                Grid.Row="2"
+                Grid.Column="2"
+                Command="{Binding NumPadButtonClick, ElementName=customKeypad}"
+                CommandParameter="6"
+                Content="6"
+                Style="{StaticResource KeyPadTextStyle}" />
+            <!--  3rd Row 7,8,9  -->
+            <Button
+                Grid.Row="3"
+                Grid.Column="0"
+                Command="{Binding NumPadButtonClick, ElementName=customKeypad}"
+                CommandParameter="7"
+                Content="7"
+                Style="{StaticResource KeyPadTextStyle}" />
+            <Button
+                Grid.Row="3"
+                Grid.Column="1"
+                Command="{Binding NumPadButtonClick, ElementName=customKeypad}"
+                CommandParameter="8"
+                Content="8"
+                Style="{StaticResource KeyPadTextStyle}" />
+            <Button
+                Grid.Row="3"
+                Grid.Column="2"
+                Command="{Binding NumPadButtonClick, ElementName=customKeypad}"
+                CommandParameter="9"
+                Content="9"
+                Style="{StaticResource KeyPadTextStyle}" />
+            <!--  4th Row .,0,clear  -->
+            <Button
+                Name="DotButton"
+                Grid.Row="4"
+                Grid.Column="0"
+                Command="{Binding NumPadButtonClick, ElementName=customKeypad}"
+                CommandParameter="."
+                Content="."
+                Style="{StaticResource KeyPadTextStyle}"
+                Visibility="{Binding IsDotButtonVisible}" />
+            <Button
+                Name="MinusButton"
+                Grid.Row="4"
+                Grid.Column="0"
+                Command="{Binding NumPadButtonClick, ElementName=customKeypad}"
+                CommandParameter="-"
+                Content="-"
+                Style="{StaticResource KeyPadTextStyle}"
+                Visibility="{Binding IsMinusButtonVisible}" />
+
+            <Button
+                Grid.Row="4"
+                Grid.Column="1"
+                Command="{Binding NumPadButtonClick, ElementName=customKeypad}"
+                CommandParameter="0"
+                Content="0"
+                Style="{StaticResource KeyPadTextStyle}" />
+            <Button
+                Grid.Row="4"
+                Grid.Column="2"
+                Background="Transparent"
+                Command="{Binding NumPadButtonClick, ElementName=customKeypad}"
+                CommandParameter="C">
+                <Grid
+                    Name="ClearGrid"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="Transparent">
+                    <Image
+                        x:Name="ClearImage"
+                        Width="80"
+                        Height="80"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <Image.Source>
+                            <BitmapImage CreateOptions="IgnoreImageCache" UriSource="{StaticResource KeyPadClear}" />
+                        </Image.Source>
+                    </Image>
+                </Grid>
+            </Button>
+        </Grid>
+        <Path
+            Margin="0,0,0,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Data="M 0 0 L 0 10 L 5 5"
+            Fill="White"
+            Stroke="White"
+            StrokeThickness="2" />
+    </StackPanel>
+</UserControl>

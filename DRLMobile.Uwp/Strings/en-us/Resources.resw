@@ -1,0 +1,1996 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddCustomerButton.Content" xml:space="preserve">
+    <value>Add Customer</value>
+  </data>
+  <data name="ADD_CUSTOMER_SUCCESS_MSG" xml:space="preserve">
+    <value>Customer has been added successfully to your device</value>
+  </data>
+  <data name="ALERT" xml:space="preserve">
+    <value>Alert</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>DRL Mobile Application</value>
+    <comment>Application description</comment>
+  </data>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>Honey For UAT</value>
+    <comment>Application display name</comment>
+  </data>
+  <data name="Asterisk.Text" xml:space="preserve">
+    <value>*</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CancelText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CartItemDeleteWarning" xml:space="preserve">
+    <value>Are you sure you want to delete this product from the cart?</value>
+  </data>
+  <data name="CART_FACT_SHEET_LESS_THAN_5_ITEM_ALERT" xml:space="preserve">
+    <value>To e-mail factsheets, please select 5 or less products at one time.  You may send multiple e-mails if you have more than 5 products.</value>
+  </data>
+  <data name="CLOSE_APP_MSG" xml:space="preserve">
+    <value>Application will be closed after download. Do you want to proceed?</value>
+  </data>
+  <data name="Colon.Text" xml:space="preserve">
+    <value>:</value>
+  </data>
+  <data name="Confirmation" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
+  <data name="ConfirmOrder" xml:space="preserve">
+    <value>Confirm Order</value>
+  </data>
+  <data name="ConfirmOrderErrorMessage" xml:space="preserve">
+    <value>Please enter both name and signature to confirm the order.</value>
+  </data>
+  <data name="ConfirmOrderErrorTitle" xml:space="preserve">
+    <value>Confirm Order Error</value>
+  </data>
+  <data name="ContactDeleteConfirmationMsg" xml:space="preserve">
+    <value>Are You sure to delete this contact?</value>
+  </data>
+  <data name="CustomerDetailPageTitle.Title" xml:space="preserve">
+    <value>CUSTOMER PROFILE</value>
+  </data>
+  <data name="CustomerDetailPage_AccountClassification.Text" xml:space="preserve">
+    <value>Account Classification</value>
+  </data>
+  <data name="CustomerDetailPage_AccountType.Text" xml:space="preserve">
+    <value>Account Type</value>
+  </data>
+  <data name="CustomerDetailPage_Address.Text" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="CustomerDetailPage_City.Text" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="CustomerDetailPage_ContactEmail.Text" xml:space="preserve">
+    <value>Contact Email</value>
+  </data>
+  <data name="CustomerDetailPage_ContactName.Text" xml:space="preserve">
+    <value>Contact Name</value>
+  </data>
+  <data name="CustomerDetailPage_ContactRole.Text" xml:space="preserve">
+    <value>Contact Role</value>
+  </data>
+  <data name="CustomerDetailPage_CustomerName.Text" xml:space="preserve">
+    <value>Customer Name</value>
+  </data>
+  <data name="CustomerDetailPage_CustomerNumber.Text" xml:space="preserve">
+    <value>Customer Number</value>
+  </data>
+  <data name="CustomerDetailPage_Fax.Text" xml:space="preserve">
+    <value>Fax</value>
+  </data>
+  <data name="CustomerDetailPage_GeneralComments.Text" xml:space="preserve">
+    <value>General Comments</value>
+  </data>
+  <data name="CustomerDetailPage_InsideSales.Text" xml:space="preserve">
+    <value>Inside Sales</value>
+  </data>
+  <data name="CustomerDetailPage_KeyAccountManager.Text" xml:space="preserve">
+    <value>Key Account Manager</value>
+  </data>
+  <data name="CustomerDetailPage_MailingAddress.Text" xml:space="preserve">
+    <value>Mailing Address</value>
+  </data>
+  <data name="CustomerDetailPage_PayerName.Text" xml:space="preserve">
+    <value>Payer Name</value>
+  </data>
+  <data name="CustomerDetailPage_Phone.Text" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="CustomerDetailPage_PhysicalAddress.Text" xml:space="preserve">
+    <value>Physical Address</value>
+  </data>
+  <data name="CustomerDetailPage_Rank.Text" xml:space="preserve">
+    <value>Rank</value>
+  </data>
+  <data name="CustomerDetailPage_Region.Text" xml:space="preserve">
+    <value>Region</value>
+  </data>
+  <data name="CustomerDetailPage_RegionManager.Text" xml:space="preserve">
+    <value>Region Manager</value>
+  </data>
+  <data name="CustomerDetailPage_SameAsPhysicalAddress.Content" xml:space="preserve">
+    <value>Same As Physical Address</value>
+  </data>
+  <data name="CustomerDetailPage_ShippingAddress.Text" xml:space="preserve">
+    <value>Shipping Address</value>
+  </data>
+  <data name="CustomerDetailPage_State.Text" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="CustomerDetailPage_YTDLastCases.Text" xml:space="preserve">
+    <value>YTD Cases (last year)</value>
+  </data>
+  <data name="CustomerDetailPage_YTDLastYear.Text" xml:space="preserve">
+    <value>YTD Last Year</value>
+  </data>
+  <data name="CustomerDetailPage_YTDSales.Text" xml:space="preserve">
+    <value>YTD Sales</value>
+  </data>
+  <data name="CustomerDetailPage_Zip.Text" xml:space="preserve">
+    <value>Zip</value>
+  </data>
+  <data name="CustomerDetailPage_Zone.Text" xml:space="preserve">
+    <value>Zone</value>
+  </data>
+  <data name="CustomerDetailPage_ZoneManager.Text" xml:space="preserve">
+    <value>Zone Manager</value>
+  </data>
+  <data name="CustomerDetailPage_AVP.Text" xml:space="preserve">
+    <value>AVP</value>
+  </data>
+  <data name="CustomerDetailPage_BDManager.Text" xml:space="preserve">
+    <value>BD Manager</value>
+  </data>
+  <data name="CustomerEmptyCart" xml:space="preserve">
+    <value>Change customer and empty cart contents</value>
+  </data>
+  <data name="CustomerKeepCart" xml:space="preserve">
+    <value>Change customer and keep cart contents</value>
+  </data>
+  <data name="CustomerPageSearch.PlaceHolderText" xml:space="preserve">
+    <value> Search by Customer Name or #</value>
+  </data>
+  <data name="CustomerPageSearch.Title" xml:space="preserve">
+    <value>CUSTOMERS LIST</value>
+  </data>
+  <data name="Dashboard_Activities.TitleText" xml:space="preserve">
+    <value>Activities</value>
+    <comment>Dashboard string values</comment>
+  </data>
+  <data name="Dashboard_Cart.TitleText" xml:space="preserve">
+    <value>Cart</value>
+    <comment>Dashboard string values</comment>
+  </data>
+  <data name="Dashboard_Customer.TitleText" xml:space="preserve">
+    <value>Customer</value>
+    <comment>Dashboard string values</comment>
+  </data>
+  <data name="Dashboard_Favorite.TitleText" xml:space="preserve">
+    <value>Favorite</value>
+    <comment>Dashboard string values</comment>
+  </data>
+  <data name="Dashboard_Map.TitleText" xml:space="preserve">
+    <value>Map</value>
+    <comment>Dashboard string values</comment>
+  </data>
+  <data name="Dashboard_Pop_Order.TitleText" xml:space="preserve">
+    <value>Pop Order</value>
+    <comment>Dashboard string values</comment>
+  </data>
+  <data name="Dashboard_Rack_Order.TitleText" xml:space="preserve">
+    <value>Rack Order</value>
+    <comment>Dashboard string values</comment>
+  </data>
+  <data name="Dashboard_Route_List.TitleText" xml:space="preserve">
+    <value>Route Lists</value>
+    <comment>Dashboard string values</comment>
+  </data>
+  <data name="Dashboard_Settings.TitleText" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Dashboard string values</comment>
+  </data>
+  <data name="Dashboard_Src_Product.TitleText" xml:space="preserve">
+    <value>SRC/Product</value>
+    <comment>Dashboard string values</comment>
+  </data>
+  <data name="Dashboard_Sync.TitleText" xml:space="preserve">
+    <value>Sync</value>
+    <comment>Dashboard string values</comment>
+  </data>
+  <data name="Dashboard_Travel_Vrip.TitleText" xml:space="preserve">
+    <value>Travel/VRIP</value>
+    <comment>Dashboard string values</comment>
+  </data>
+  <data name="DeleteRouteMessage" xml:space="preserve">
+    <value>Are you sure you want to delete this route?</value>
+  </data>
+  <data name="DeleteRouteText" xml:space="preserve">
+    <value>Delete Route</value>
+  </data>
+  <data name="DeleteTaxStatement" xml:space="preserve">
+    <value>Are you sure you want to delete this tax statement?</value>
+  </data>
+  <data name="Direct" xml:space="preserve">
+    <value>Direct</value>
+  </data>
+  <data name="DocumentDeleteConfimationMsg" xml:space="preserve">
+    <value>Are you sure you want to delete</value>
+  </data>
+  <data name="EmailInvoice" xml:space="preserve">
+    <value>Email Invoice</value>
+  </data>
+  <data name="EmptyRackOrPopCart" xml:space="preserve">
+    <value>Empty Rack or POP cart and continue with SRC order?</value>
+  </data>
+  <data name="EmptySrcOrPopCart" xml:space="preserve">
+    <value>Empty SRC or POP cart and continue with Rack order?</value>
+  </data>
+  <data name="EmptySrcOrRack" xml:space="preserve">
+    <value>Empty SRC or Rack cart and continue with POP order?</value>
+  </data>
+  <data name="ERROR" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="FailedDataDownloadMessageText" xml:space="preserve">
+    <value>Something went wrong, could not download data at this moment. Please try after some time</value>
+    <comment>Failed DataDownload Message </comment>
+  </data>
+  <data name="CustomerDocumentFileDownloadFailed" xml:space="preserve">
+    <value>You cannot use the Documents feature until you download the Customer Documents. Go into Honey Settings and tap Download Customer Documents.  (This action will take a long time and requires WiFi)</value>
+    <comment>Failed Customer Document File Download Message </comment>
+  </data>
+  <data name="CustomerDocumentFileEmailFailed" xml:space="preserve">
+    <value>You cannot use the Email feature until you download the Customer Documents. Go into Honey Settings and tap Download Customer Documents.  (This action will take a long time and requires WiFi)</value>
+    <comment>Failed Customer Document File Email Message </comment>
+  </data>
+  <data name="CustomerDocumentFileDeleteFailed" xml:space="preserve">
+    <value>You cannot use the Delete feature until you download the Customer Documents. Go into Honey Settings and tap Download Customer Documents.  (This action will take a long time and requires WiFi)</value>
+    <comment>Failed Customer Document File Delete Message </comment>
+  </data>
+  <data name="FileDoesNotExist" xml:space="preserve">
+    <value>File doesn't exist.</value>
+  </data>
+  <data name="Footer_LoggedInText.Text" xml:space="preserve">
+    <value>Logged in as :</value>
+    <comment>Footer static text</comment>
+  </data>
+  <data name="Indirect" xml:space="preserve">
+    <value>In Direct</value>
+  </data>
+  <data name="InvalidUsernamePinMessageText" xml:space="preserve">
+    <value>Invalid Username or Pin</value>
+  </data>
+  <data name="ITEM_HISTORY" xml:space="preserve">
+    <value>Item History</value>
+  </data>
+  <data name="LoginButton.Content" xml:space="preserve">
+    <value>LOGIN</value>
+  </data>
+  <data name="LoginEmptyFieldsError" xml:space="preserve">
+    <value>Please enter both Username and Pin to login</value>
+  </data>
+  <data name="LoginErrorTitleText" xml:space="preserve">
+    <value>Login Error</value>
+  </data>
+  <data name="LoginFailMessage" xml:space="preserve">
+    <value>Something went wrong, could not login at this moment. Please try after some time.</value>
+    <comment>Login Failure Message</comment>
+  </data>
+  <data name="LoginTitleTextBlock.Text" xml:space="preserve">
+    <value>Login</value>
+    <comment>Login screen Label</comment>
+  </data>
+  <data name="LogoutMessage" xml:space="preserve">
+    <value>Are you sure you want to logout?</value>
+    <comment>User logout message</comment>
+  </data>
+  <data name="LogoutTitleText" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="NoCaps" xml:space="preserve">
+    <value>NO</value>
+  </data>
+  <data name="NoCustomerSelectedText" xml:space="preserve">
+    <value>You have not selected a customer yet.</value>
+  </data>
+  <data name="NoDistributorAddedMessage" xml:space="preserve">
+    <value>Please add Distributor from Customer Profile Screen</value>
+  </data>
+  <data name="NoResultsErrorMessage" xml:space="preserve">
+    <value>No Results Found</value>
+  </data>
+  <data name="NoText" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="InstallLaterText" xml:space="preserve">
+    <value>Install Later</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="OrderCancel" xml:space="preserve">
+    <value>Go Back - Do Not Confirm Order</value>
+  </data>
+  <data name="ORDER_HISTORY" xml:space="preserve">
+    <value>Order History</value>
+  </data>
+  <data name="PleaseAddPop" xml:space="preserve">
+    <value>Please add POP products in cart.</value>
+  </data>
+  <data name="PleaseAddRack" xml:space="preserve">
+    <value>Please add rack or components in cart.</value>
+  </data>
+  <data name="PleaseFillRequiredFields" xml:space="preserve">
+    <value>Please fill required fields.</value>
+  </data>
+  <data name="PrintInvoice" xml:space="preserve">
+    <value>Print and Email Invoice</value>
+  </data>
+  <data name="ProductCannotBeAddedText" xml:space="preserve">
+    <value>You cannot add this product in the cart.</value>
+  </data>
+  <data name="RememberMeCheckBox.Text" xml:space="preserve">
+    <value>Remember Me</value>
+  </data>
+  <data name="RemovePopItem" xml:space="preserve">
+    <value>Remove POP item from the cart?</value>
+  </data>
+  <data name="RemoveRackOrComponent" xml:space="preserve">
+    <value>Remove rack or component from the cart?</value>
+  </data>
+  <data name="ResetMessage" xml:space="preserve">
+    <value>Are you sure you want to reset user file?</value>
+  </data>
+  <data name="ResetUserText" xml:space="preserve">
+    <value>Reset User</value>
+  </data>
+  <data name="SelectAddedDistributorMessage" xml:space="preserve">
+    <value>Please select a distributor</value>
+  </data>
+  <data name="SelectAnyProduct" xml:space="preserve">
+    <value>Please select any product from list.</value>
+  </data>
+  <data name="SelectCustomer" xml:space="preserve">
+    <value>Select Customer</value>
+  </data>
+  <data name="SelectDocument" xml:space="preserve">
+    <value>Select Document</value>
+  </data>
+  <data name="SelectDocumentType" xml:space="preserve">
+    <value>Select document type</value>
+  </data>
+  <data name="SelectInvoiceMethod" xml:space="preserve">
+    <value>Please select your invoice method below. Once you have selected, your order will be confirmed.</value>
+  </data>
+  <data name="Separator" xml:space="preserve">
+    <value>__________________________________________________</value>
+  </data>
+  <data name="SetupMailAccountErrorMsg" xml:space="preserve">
+    <value>Please setup a Mail account in order to send email</value>
+  </data>
+  <data name="Shell_ContentGrid.Content" xml:space="preserve">
+    <value>Menu Items</value>
+    <comment>Navigation view item name for ContentGrid</comment>
+  </data>
+  <data name="Shell_Main.Content" xml:space="preserve">
+    <value>Dashboard</value>
+    <comment>Navigation view item name for Main</comment>
+  </data>
+  <data name="SignatureSaveError" xml:space="preserve">
+    <value>Something went wrong. Signature not saved, please try again to confirm the order.</value>
+  </data>
+  <data name="SomethingWentWrong_Error_Msg" xml:space="preserve">
+    <value>Something went wrong</value>
+  </data>
+  <data name="SquareAppMessage" xml:space="preserve">
+    <value>Please finish the transaction on the Square App on your phone</value>
+  </data>
+  <data name="SUCCESS" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="SyncFailMessageText" xml:space="preserve">
+    <value>Sync failed. Please try again after sometime.</value>
+    <comment>Sync Fail Message on dashboard</comment>
+  </data>
+  <data name="SyncSuccessMessageText" xml:space="preserve">
+    <value>Sync successfully completed.</value>
+    <comment>Sync Success Message on dashboard</comment>
+  </data>
+  <data name="TaxStatementCreated" xml:space="preserve">
+    <value>Tax statement created successfully.</value>
+  </data>
+  <data name="TaxStatementUpdated" xml:space="preserve">
+    <value>Tax statement updated successfully.</value>
+  </data>
+  <data name="TemplateCardSale" xml:space="preserve">
+    <value>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style='margin: 0px; padding:0px;width:100%'&gt;
+    &lt;table width="800"&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                    &lt;table width="800" style='width : 100%;'&gt;
+                        &lt;tr&gt;
+                            &lt;td&gt;
+                                &lt;font face='arial'&gt;
+                                    &lt;b&gt;
+                                        &lt;img src="cid:MyPic" alt="Republic Brands" /&gt; &lt;br /&gt;
+                                        2301 Ravine Way &lt;br /&gt;
+                                        Glenview,IL 60025 &lt;br /&gt;
+                                        (847)832-9700 &lt;br /&gt;
+                                        {0}   &lt;br /&gt; &lt;br /&gt;
+                                        Sales Person: {1} &lt;br /&gt;
+                                        {2} &lt;br /&gt;
+                                        {3} &lt;br /&gt;&lt;br /&gt;&lt;br /&gt;
+                                    &lt;/b&gt;&lt;/font&gt;
+                            &lt;/td&gt;
+                            &lt;td&gt;&lt;font face='arial'&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                            &lt;/font&gt;
+                            &lt;/td&gt;
+                            &lt;td style='vertical-align:top;'&gt;
+                                &lt;table&gt;
+                                    &lt;tr&gt;
+                                        &lt;td style='vertical-align:top; text-align:left; font-size:30px;'&gt;
+                                            &lt;b&gt;Credit Card Sale&lt;/b&gt;&lt;br /&gt;
+                                        &lt;/td&gt;
+                                    &lt;/tr&gt;
+                                    &lt;tr&gt;
+                                        &lt;td&gt;
+                                            &lt;font face='arial'&gt;
+                                                &lt;b&gt;Date:&lt;/b&gt; {4}&lt;br /&gt;
+                                                &lt;b&gt;Transaction#:&lt;/b&gt; {5}
+                                        &lt;/font&gt;&lt;/td&gt;
+                                    &lt;/tr&gt;
+                                &lt;/table&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt; &lt;/font&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                    &lt;table width="800" style='border:1px solid black; width:100%'&gt;
+                        &lt;tr&gt;
+                            &lt;td style='border:1px solid black; background-color:black; color: white; text-align: left' colspan=2&gt;Customer Details&lt;/td&gt;
+                        &lt;/tr&gt;
+                        &lt;tr&gt;
+                            &lt;td style='text-align: left;'&gt;
+                                &lt;b&gt;
+                                    {6} &lt;br /&gt;
+                                    {7}&lt;br /&gt;
+                                    {8}&lt;br /&gt;
+                                    {9}&lt;br /&gt;
+                                    {10}&lt;br /&gt;
+                                    {11}&lt;br /&gt;
+                                &lt;/b&gt;
+                            &lt;/td&gt;
+                            &lt;td style='text-align: left;'&gt;
+                                &lt;b&gt;
+                                    {15} &lt;br /&gt;
+                                    {22}&lt;br /&gt;
+                                    {23} &lt;br /&gt;
+                                    {24}&lt;br /&gt;
+                                    {16}&lt;br /&gt;
+                                &lt;/b&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt;
+                    &lt;/font&gt;&lt;br /&gt;&lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                    {12} 
+                &lt;/font&gt;&lt;br /&gt;&lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                    {13}
+                &lt;/font&gt;    
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                    {31} 
+                &lt;/font&gt;      
+              &lt;br /&gt;&lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                    {25} 
+                &lt;/font&gt;    
+              &lt;br /&gt;&lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                    &lt;b&gt;Comments: {14}
+                &lt;/b&gt;   &lt;/font&gt;     
+            &lt;/td&gt;
+        &lt;/tr&gt;
+		  &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                     &lt;img src="cid:Signature" alt="Signature" /&gt; 
+                &lt;/font&gt;     
+                &lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="TemplateCashSalesInitiative" xml:space="preserve">
+    <value>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body style='margin: 0px; padding:0px;width:100%'&gt;
+		&lt;table width="800"&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style='width : 100%;'&gt;
+						&lt;tr&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;
+								&lt;b&gt;
+									&lt;img src="cid:MyPic" alt="Republic Brands" /&gt; &lt;br/&gt;
+									2301 Ravine Way &lt;br/&gt;
+									Glenview,IL 60025 &lt;br/&gt;
+									(847)832-9700 &lt;br/&gt;
+									{0}   &lt;br/&gt; &lt;br/&gt;
+									Sales Person: {1} &lt;br/&gt;
+									{2} &lt;br/&gt;
+									{3} &lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+								&lt;/b&gt; 
+                &lt;/font&gt;
+							&lt;/td&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+              &lt;/font&gt;&lt;/td&gt;
+					        &lt;td style='vertical-align:top;'&gt;
+							&lt;table&gt;&lt;tr&gt;&lt;td style='vertical-align:top; text-align:left; font-size:30px;'&gt;
+                                &lt;b&gt;Cash Sales Initiative&lt;/b&gt;&lt;br/&gt;&lt;/td&gt;&lt;/tr&gt;
+								 &lt;tr&gt;&lt;td&gt;&lt;font face='arial'&gt;&lt;b&gt;Date:&lt;/b&gt; {4}&lt;br/&gt;
+							     &lt;b&gt;Transaction#:&lt;/b&gt; {5}
+							    &lt;/font&gt;
+                &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+							&lt;/td&gt;
+                        &lt;/tr&gt;
+					&lt;/table&gt;   &lt;/font&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style ='border:1px solid black; width:100%'&gt;
+						&lt;tr&gt;
+							&lt;td style='border:1px solid black; background-color:black; color: white; text-align: left'colspan=2&gt;Customer Details&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{6} &lt;br/&gt;
+								{7}&lt;br/&gt;
+								{8}&lt;br/&gt;
+								{9}&lt;br/&gt;
+								{10}&lt;br/&gt;
+								{11}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{15} &lt;br/&gt;
+								{22}&lt;br/&gt;
+								{23} &lt;br/&gt;
+								{24}&lt;br/&gt;	
+                {16}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+						&lt;/tr&gt;
+					&lt;/table&gt; 
+          &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;     
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{12} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;  
+				&lt;/td&gt;&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{13}        &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td&gt;&lt;font face='arial'&gt;
+                    {31} &lt;/font&gt;&lt;br /&gt;&lt;br/&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{25} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;b&gt;Comments: {14}&lt;/b&gt;  &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+		  &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                     &lt;img src="cid:Signature" alt="Signature" /&gt; &lt;/font&gt;&lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;/table&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="TemplateCreditRequest" xml:space="preserve">
+    <value>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body style='margin: 0px; padding:0px;width:100%'&gt;
+		&lt;table width="800"&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style='width : 100%;'&gt;
+						&lt;tr&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;
+								&lt;b&gt;
+									&lt;img src="cid:MyPic" alt="Republic Brands" /&gt; &lt;br/&gt;
+									2301 Ravine Way &lt;br/&gt;
+									Glenview,IL 60025 &lt;br/&gt;
+									(847)832-9700 &lt;br/&gt;
+									{0}   &lt;br/&gt; &lt;br/&gt;
+									RT Sales Person: {1} &lt;br/&gt;
+									{2} &lt;br/&gt;
+									{3} &lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+								&lt;/b&gt;  &lt;/font&gt;
+							&lt;/td&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                &lt;/font&gt;
+              &lt;/td&gt;
+					        &lt;td style='vertical-align:top;'&gt;
+							&lt;table&gt;&lt;tr&gt;&lt;td style='vertical-align:top; text-align:left; font-size:30px;'&gt;
+                                &lt;b&gt;Credit Request&lt;/b&gt;&lt;br/&gt;&lt;/td&gt;&lt;/tr&gt;
+								 &lt;tr&gt;&lt;td&gt;&lt;font face='arial'&gt;&lt;b&gt;Date:&lt;/b&gt; {4}&lt;br/&gt;
+							     &lt;b&gt;Transaction#:&lt;/b&gt; {5}&lt;br/&gt;
+                                 &lt;b&gt;ShipDate:&lt;/b&gt; {20}&lt;br/&gt;
+                                  {26} &lt;br/&gt; &lt;/font&gt;
+                                 
+							&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+							&lt;/td&gt;
+                        &lt;/tr&gt;
+					&lt;/table&gt; &lt;/font&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style ='border:1px solid black; width:100%'&gt;
+						&lt;tr&gt;
+							&lt;td style='border:1px solid black; background-color:black; color: white; text-align: left' colspan=2&gt;Customer Details&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{6} &lt;br/&gt;
+								{7}&lt;br/&gt;
+								{8}&lt;br/&gt;
+								{9}&lt;br/&gt;
+								{10}&lt;br/&gt;
+								{11}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{15} &lt;br/&gt;
+								{32}&lt;br/&gt;
+                {33}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+						&lt;/tr&gt;
+					&lt;/table&gt;  &lt;/font&gt;
+                    &lt;br/&gt;&lt;br/&gt;
+                    &lt;b&gt;RMA #: &lt;/b&gt;&lt;input type="text" size="25"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;b&gt;Authorized by: &lt;/b&gt;&lt;input type="text" size="35"&gt;&lt;table width="800" style='width : 100%;'&gt;
+               &lt;/td&gt;
+            &lt;/tr&gt;
+            
+			&lt;tr&gt;
+                &lt;td&gt;&lt;font face='arial'&gt;
+					{12}  &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+            &lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					Pricing,Terms and freight policy are based on Republic Brands's current distributor price list.  &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;b&gt;Comments: {14}&lt;/b&gt;   &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			  &lt;tr&gt;
+				&lt;td&gt;
+					&lt;font face='arial'&gt;
+					&lt;img src="cid:Signature" alt="Signature" /&gt; &lt;/font&gt;&lt;br /&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+        &lt;/table&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="TemplatePurchaseOrder" xml:space="preserve">
+    <value>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body style='margin: 0px; padding:0px;width:100%'&gt;
+		&lt;table width="800"&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style='width : 100%;'&gt;
+						&lt;tr&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;
+								&lt;b&gt;
+									&lt;img src="cid:MyPic" alt="Republic Brands" /&gt; &lt;br/&gt;
+									2301 Ravine Way &lt;br/&gt;
+									Glenview,IL 60025 &lt;br/&gt;
+									(847)832-9700 &lt;br/&gt;
+									{0}   &lt;br/&gt; &lt;br/&gt;
+									RT Sales Person: {1} &lt;br/&gt;
+									{2} &lt;br/&gt;
+									{3} &lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+								&lt;/b&gt; &lt;/font&gt; 
+							&lt;/td&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                  &lt;/font&gt;
+              &lt;/td&gt;
+					        &lt;td style='vertical-align:top;'&gt;
+							&lt;table&gt;&lt;tr&gt;&lt;td style='vertical-align:top; text-align:right; font-size:30px;'&gt;
+                                &lt;b&gt;Purchase Order&lt;/b&gt;&lt;br/&gt;&lt;/td&gt;&lt;/tr&gt;
+								 &lt;tr&gt;&lt;td&gt;&lt;font face='arial'&gt;&lt;b&gt;Date:&lt;/b&gt; {4}&lt;br/&gt;
+							     &lt;b&gt;Transaction#:&lt;/b&gt; {5}&lt;br/&gt;
+                                 &lt;b&gt;ShipDate:&lt;/b&gt; {20}&lt;br/&gt;
+                                  {26} &lt;br/&gt; &lt;/font&gt;
+                                 
+							&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+							&lt;/td&gt;
+                        &lt;/tr&gt;
+					&lt;/table&gt;   &lt;/font&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style ='border:1px solid black; width:100%'&gt;
+						&lt;tr&gt;
+							&lt;td style='border:1px solid black; background-color:black; color: white; text-align: left' colspan=2&gt;Customer Details&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{6} &lt;br/&gt;
+								{7}&lt;br/&gt;
+								{8}&lt;br/&gt;
+								{9}&lt;br/&gt;
+								{10}&lt;br/&gt;
+								{11}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{15} &lt;br/&gt;
+								{16}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+						&lt;/tr&gt;
+					&lt;/table&gt;
+       &lt;/font&gt;    
+      &lt;br/&gt;&lt;br/&gt;     
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{27} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td&gt;&lt;font face='arial'&gt;
+                    {28} &lt;/font&gt;&lt;br /&gt;&lt;br /&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					Pricing,Terms and freight policy are based on Republic Brands's current distributor price list. &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;b&gt;Comments: {14} &lt;/b&gt; &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;
+					&lt;font face='arial'&gt;
+					&lt;img src="cid:Signature" alt="Signature" /&gt; &lt;/font&gt;&lt;br /&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+        &lt;/table&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="TemplateRackPop" xml:space="preserve">
+    <value>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body style='margin: 0px; padding:0px;width:100%'&gt;
+		&lt;table width="800"&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style='width : 100%;'&gt;
+						&lt;tr&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;
+								&lt;b&gt;
+									&lt;img src="cid:MyPic" alt="Republic Brands" /&gt; &lt;br/&gt;
+									2301 Ravine Way &lt;br/&gt;
+									Glenview,IL 60025 &lt;br/&gt;
+									(847)832-9700 &lt;br/&gt;
+									{0}   &lt;br/&gt; &lt;br/&gt;
+									RT Sales Person: {1} &lt;br/&gt;
+									{2} &lt;br/&gt;
+									{3} &lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+								&lt;/b&gt; &lt;/font&gt; 
+							&lt;/td&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+              &lt;/font&gt;
+              &lt;/td&gt;
+					        &lt;td style='vertical-align:top;'&gt;
+							&lt;table&gt;&lt;tr&gt;&lt;td style='vertical-align:top; text-align:right; font-size:30px;'&gt;
+                                &lt;b&gt;RACK/POP Order&lt;/b&gt;&lt;br/&gt;&lt;/td&gt;&lt;/tr&gt;
+								 &lt;tr&gt;&lt;td&gt;&lt;font face='arial'&gt;&lt;b&gt;Date:&lt;/b&gt; {4}&lt;br/&gt;
+							     &lt;b&gt;Reference#:&lt;/b&gt; {5} &lt;/font&gt;
+							&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+							&lt;/td&gt;
+                        &lt;/tr&gt;
+					&lt;/table&gt;    &lt;/font&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style ='border:1px solid black; width:100%'&gt;
+						&lt;tr&gt;
+							&lt;td style='border:1px solid black; background-color:black; color: white; text-align: left' colspan=2&gt;Customer Details&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;td style='text-align: left;'&gt;
+                &lt;b&gt;
+								{6}&lt;br/&gt;
+								{7}&lt;br/&gt;
+								{8}&lt;br/&gt;
+								{9}&lt;br/&gt;
+								{10}&lt;br/&gt;
+								{11}&lt;br/&gt;
+                &lt;/b&gt;
+							&lt;/td&gt;
+							&lt;td style='text-align: left;'&gt;
+              &lt;b&gt;
+								{15} &lt;br/&gt;
+								{16}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+						&lt;/tr&gt;
+					&lt;/table&gt;
+          &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;     
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{12} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;  
+				&lt;/td&gt;&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{13} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;b&gt;Comments: {14}&lt;/b&gt;  &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			  &lt;tr&gt;
+      &lt;td&gt;
+          &lt;font face='arial'&gt;
+			&lt;img src="cid:Signature" alt="Signature" /&gt; &lt;/font&gt;&lt;br /&gt;
+       &lt;/td&gt;
+ &lt;/tr&gt;
+        &lt;/table&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="TemplateRecieptPrint" xml:space="preserve">
+    <value>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
+
+&lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;title&gt;&lt;/title&gt;
+    &lt;style&gt;
+        .tableWidth {width : 2in;height:auto
+        }
+
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;table id="MainTable" &gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;table id="CompanyName" class="tableWidth"&gt;
+                    &lt;tr&gt;
+                        &lt;td&gt;
+                            {0}
+                        &lt;/td&gt;
+                    &lt;/tr&gt;
+                &lt;/table&gt;
+
+            &lt;/td&gt;
+
+        &lt;/tr&gt;
+		  &lt;tr&gt;
+      &lt;td&gt;
+          &lt;font face='arial'&gt;
+			&lt;img src="cid:Signature" alt="Signature" /&gt; &lt;/font&gt;&lt;br /&gt;
+       &lt;/td&gt;
+ &lt;/tr&gt;
+
+    &lt;/table&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="TemplateRetailBillThrough" xml:space="preserve">
+    <value>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body style='margin: 0px; padding:0px;width:100%'&gt;
+		&lt;table width="800"&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style='width : 100%;'&gt;
+						&lt;tr&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;
+								&lt;b&gt;
+									&lt;img src="cid:MyPic" alt="Republic Brands" /&gt; &lt;br/&gt;
+									2301 Ravine Way &lt;br/&gt;
+									Glenview,IL 60025 &lt;br/&gt;
+									(847)832-9700 &lt;br/&gt;
+									{0}   &lt;br/&gt; &lt;br/&gt;
+									Sales Person: {1} &lt;br/&gt;
+									{2} &lt;br/&gt;
+									{3} &lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+								&lt;/b&gt; &lt;/font&gt; 
+							&lt;/td&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                           &lt;/font&gt;
+              &lt;/td&gt;
+					        &lt;td style='vertical-align:top;'&gt;
+							&lt;table&gt;&lt;tr&gt;&lt;td style='vertical-align:top; text-align:right; font-size:30px;'&gt;
+                                &lt;b&gt;Retail Bill Through&lt;/b&gt;&lt;br/&gt;&lt;/td&gt;&lt;/tr&gt;
+								 &lt;tr&gt;&lt;td&gt;&lt;font face='arial'&gt;&lt;b&gt;Date:&lt;/b&gt; {4}&lt;br/&gt;
+							     &lt;b&gt;Transaction#:&lt;/b&gt; {5}&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+								 &lt;b&gt;Distributor &lt;/b&gt; {17}&lt;br/&gt;
+								 &lt;b&gt;Distributor Name &lt;/b&gt; {18}&lt;br/&gt;
+								 &lt;b&gt;City, State, Zip &lt;/b&gt; {19} &lt;br/&gt;
+								 &lt;b&gt;Ship Date:&lt;/b&gt; {20}&lt;br/&gt;
+								 &lt;b&gt;RT Account Rep:&lt;/b&gt; {21} &lt;/font&gt;
+							&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+							&lt;/td&gt;
+                        &lt;/tr&gt;
+					&lt;/table&gt; &lt;/font&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style ='border:1px solid black; width:100%'&gt;
+						&lt;tr&gt;
+							&lt;td style='border:1px solid black; background-color:black; color: white; text-align: left' colspan=2&gt;Customer Details&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{6} &lt;br/&gt;
+								{7}&lt;br/&gt;
+								{8}&lt;br/&gt;
+								{9}&lt;br/&gt;
+								{10}&lt;br/&gt;
+								{11}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{15} &lt;br/&gt;
+								{22}&lt;br/&gt;
+								{23} &lt;br/&gt;
+								{24}&lt;br/&gt;	
+                {16}&lt;br/&gt;
+							&lt;/td&gt;
+						&lt;/tr&gt;
+					&lt;/table&gt;
+          &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;     
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{12} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;  
+				&lt;/td&gt;&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{13}    &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td&gt;&lt;font face='arial'&gt;
+                    {31} &lt;/font&gt;&lt;br /&gt;&lt;br/&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{25} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;b&gt;Comments: {14} &lt;/b&gt;     &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			  &lt;tr&gt;
+      &lt;td&gt;
+          &lt;font face='arial'&gt;
+			&lt;img src="cid:Signature" alt="Signature" /&gt; &lt;/font&gt;&lt;br /&gt;
+       &lt;/td&gt;
+ &lt;/tr&gt;
+        &lt;/table&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="TemplateRetailPrebook" xml:space="preserve">
+    <value>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
+&lt;html&gt;
+	&lt;head&gt; 
+		&lt;title&gt;&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body style='margin: 0px; padding:0px;width:100%'&gt;
+		&lt;table width="800"&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style='width : 100%;'&gt;
+						&lt;tr&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;
+								&lt;b&gt;
+									&lt;img src="cid:MyPic" alt="Republic Brands" /&gt; &lt;br/&gt;
+									2301 Ravine Way &lt;br/&gt;
+									Glenview,IL 60025 &lt;br/&gt;
+									(847)832-9700 &lt;br/&gt;
+									     {0}   &lt;br/&gt; &lt;br/&gt;
+									RT Sales Person: {1} &lt;br/&gt;
+									{2} &lt;br/&gt;
+									{3} &lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+								&lt;/b&gt;&lt;/font&gt;  
+							&lt;/td&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                      &lt;/font&gt;
+              &lt;/td&gt;
+					        &lt;td style='vertical-align:top;'&gt;
+							&lt;table&gt;&lt;tr&gt;&lt;td style='vertical-align:top; text-align:left; font-size:30px;'&gt;
+                                &lt;b&gt;Retail Prebook&lt;/b&gt;&lt;br/&gt;&lt;/td&gt;&lt;/tr&gt;
+								 &lt;tr&gt;&lt;td&gt;&lt;font face='arial'&gt;&lt;b&gt;Date:&lt;/b&gt; {4}&lt;br/&gt;
+							     &lt;b&gt;Transaction#:&lt;/b&gt; {5}&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+								&lt;b&gt; Retailer’s Distributor Customer Number &lt;/b&gt; {18}&lt;br/&gt;
+								&lt;b&gt; Distributor &lt;/b&gt; {17}&lt;br/&gt;
+								&lt;b&gt; City, State, Zip &lt;/b&gt; {19} &lt;br/&gt;
+								&lt;b&gt; Ship Date: &lt;/b&gt; {20}&lt;br/&gt;
+								&lt;b&gt; RT Account Rep:&lt;/b&gt; {21}  &lt;/font&gt;
+							&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+							&lt;/td&gt;
+                        &lt;/tr&gt;
+					&lt;/table&gt;   &lt;/font&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style ='border:1px solid black; width:100%'&gt;
+						&lt;tr&gt;
+							&lt;td style='border:1px solid black; background-color:black; color: white; text-align: left' colspan=2&gt;Customer Details&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;td style='text-align: left;' &gt;&lt;b&gt;
+								{6} &lt;br/&gt;
+								{7}&lt;br/&gt;
+								{8}&lt;br/&gt;
+								{9}&lt;br/&gt;
+								{10}&lt;br/&gt;
+								{11}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{15} &lt;br/&gt;
+								{16}&lt;br/&gt;&lt;/b&gt;
+								
+							&lt;/td&gt;
+						&lt;/tr&gt;
+					&lt;/table&gt;
+          &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;     
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{12} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;  
+				&lt;/td&gt;&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{13} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;b&gt;Comments: {14} &lt;/b&gt; &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                     &lt;img src="cid:Signature" alt="Signature" /&gt; &lt;/font&gt;&lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;/table&gt;
+      &lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="TemplateRetailSale" xml:space="preserve">
+    <value>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body style='margin: 0px; padding:0px;width:100%'&gt;
+		&lt;table width="800"&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style='width : 100%;'&gt;
+						&lt;tr&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;
+								&lt;b&gt;
+									&lt;img src="cid:MyPic" alt="Republic Brands" /&gt; &lt;br/&gt;
+									2301 Ravine Way &lt;br/&gt;
+									Glenview,IL 60025 &lt;br/&gt;
+									(847)832-9700 &lt;br/&gt;
+									{0}   &lt;br/&gt; &lt;br/&gt;
+									Sales Person: {1} &lt;br/&gt;
+									{2} &lt;br/&gt;
+									{3} &lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+								&lt;/b&gt; &lt;/font&gt; 
+							&lt;/td&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                &lt;/font&gt;  
+              &lt;/td&gt;
+					        &lt;td style='vertical-align:top;'&gt;
+							&lt;table&gt;&lt;tr&gt;&lt;td style='vertical-align:top; text-align:left; font-size:30px;'&gt;
+                                &lt;b&gt;Retail Sale&lt;/b&gt;&lt;br/&gt;&lt;/td&gt;&lt;/tr&gt;
+								 &lt;tr&gt;&lt;td&gt;&lt;font face='arial'&gt;&lt;b&gt;Date:&lt;/b&gt; {4}&lt;br/&gt;
+							     &lt;b&gt;Transaction#:&lt;/b&gt; {5}   &lt;/font&gt;
+							&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+							&lt;/td&gt;
+                        &lt;/tr&gt;
+					&lt;/table&gt;   &lt;/font&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style ='border:1px solid black; width:100%'&gt;
+						&lt;tr&gt;
+							&lt;td style='border:1px solid black; background-color:black; color: white; text-align: left'colspan=2&gt;Customer Details&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{6} &lt;br/&gt;
+								{7}&lt;br/&gt;
+								{8}&lt;br/&gt;
+								{9}&lt;br/&gt;
+								{10}&lt;br/&gt;
+								{11}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{15} &lt;br/&gt;
+								{22}&lt;br/&gt;
+								{23} &lt;br/&gt;
+								{24}&lt;br/&gt;	
+                {16}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+						&lt;/tr&gt;
+					&lt;/table&gt;
+          &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;     
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{12} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;  
+				&lt;/td&gt;&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{13} &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td&gt;&lt;font face='arial'&gt;
+                    {31} &lt;/font&gt;&lt;br /&gt;&lt;br/&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{25} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;b&gt;Comments: {14}&lt;/b&gt;  &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                     &lt;img src="cid:Signature" alt="Signature" /&gt; &lt;/font&gt;&lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;/table&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="TemplateRetailSale1" xml:space="preserve">
+    <value>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body style='margin: 0px; padding:0px;width:100%'&gt;
+		&lt;table width="800"&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style='width : 100%;'&gt;
+						&lt;tr&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;
+								&lt;b&gt;
+									&lt;img src="cid:MyPic" alt="Republic Brands" /&gt; &lt;br/&gt;
+									2301 Ravine Way &lt;br/&gt;
+									Glenview,IL 60025 &lt;br/&gt;
+									(847)832-9700 &lt;br/&gt;
+									{0}   &lt;br/&gt; &lt;br/&gt;
+									Sales Person: {1} &lt;br/&gt;
+									{2} &lt;br/&gt;
+									{3} &lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+								&lt;/b&gt; &lt;/font&gt; 
+							&lt;/td&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                        &lt;/font&gt;   
+                &lt;/td&gt;
+					        &lt;td style='vertical-align:top;'&gt;
+							&lt;table&gt;&lt;tr&gt;&lt;td style='vertical-align:top; text-align:left; font-size:30px;'&gt;
+                                &lt;b&gt;Retail Sale&lt;/b&gt;&lt;br/&gt;&lt;/td&gt;&lt;/tr&gt;
+								 &lt;tr&gt;&lt;td&gt;&lt;font face='arial'&gt;&lt;b&gt;Date:&lt;/b&gt; {4}&lt;br/&gt;
+							     &lt;b&gt;Transaction#:&lt;/b&gt; {5} &lt;/font&gt;
+							&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+							&lt;/td&gt;
+                        &lt;/tr&gt;
+					&lt;/table&gt; &lt;/font&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style ='border:1px solid black; width:100%'&gt;
+						&lt;tr&gt;
+							&lt;td style='border:1px solid black; background-color:black; color: white; text-align: left'colspan=2&gt;Customer Details&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{6} &lt;br/&gt;
+								{7}&lt;br/&gt;
+								{8}&lt;br/&gt;
+								{9}&lt;br/&gt;
+								{10}&lt;br/&gt;
+								{11}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{15} &lt;br/&gt;
+								{22}&lt;br/&gt;
+								{23} &lt;br/&gt;
+								{24}&lt;br/&gt;	
+                {16}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+						&lt;/tr&gt;
+					&lt;/table&gt;
+          &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;     
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{12} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;  
+				&lt;/td&gt;&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{13} &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td&gt;&lt;font face='arial'&gt;
+                    {31} &lt;/font&gt;&lt;br /&gt;&lt;br/&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{25} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;b&gt;Comments: {14} &lt;/b&gt;  &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                     &lt;img src="cid:Signature" alt="Signature" /&gt; &lt;/font&gt;&lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;/table&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="TemplateSampleOrder" xml:space="preserve">
+    <value>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body style='margin: 0px; padding:0px;width:100%'&gt;
+		&lt;table width="800"&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style='width : 100%;'&gt;
+						&lt;tr&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;
+								&lt;b&gt;
+									&lt;img src="cid:MyPic" alt="Republic Brands" /&gt; &lt;br/&gt;
+									2301 Ravine Way &lt;br/&gt;
+									Glenview,IL 60025 &lt;br/&gt;
+									(847)832-9700 &lt;br/&gt;
+									{0}   &lt;br/&gt; &lt;br/&gt;
+									Sales Person: {1} &lt;br/&gt;
+									{2} &lt;br/&gt;
+									{3} &lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+								&lt;/b&gt; &lt;/font&gt; 
+							&lt;/td&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                    &lt;/font&gt;        
+              &lt;/td&gt;
+					        &lt;td style='vertical-align:top;'&gt;
+							&lt;table&gt;&lt;tr&gt;&lt;td style='vertical-align:top; text-align:left; font-size:30px;'&gt;
+                                &lt;b&gt;Sample Order&lt;/b&gt;&lt;br/&gt;&lt;/td&gt;&lt;/tr&gt;
+								 &lt;tr&gt;&lt;td&gt;&lt;font face='arial'&gt;&lt;b&gt;Date:&lt;/b&gt; {4}&lt;br/&gt;
+							     &lt;b&gt;Transaction#:&lt;/b&gt; {5}  &lt;/font&gt;
+							&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+							&lt;/td&gt;
+                        &lt;/tr&gt;
+					&lt;/table&gt; &lt;/font&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style ='border:1px solid black; width:100%'&gt;
+						&lt;tr&gt;
+							&lt;td style='border:1px solid black; background-color:black; color: white; text-align: left'colspan=2&gt;Customer Details&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{6} &lt;br/&gt;
+								{7}&lt;br/&gt;
+								{8}&lt;br/&gt;
+								{9}&lt;br/&gt;
+								{10}&lt;br/&gt;
+								{11}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{15} &lt;br/&gt;
+								{22}&lt;br/&gt;
+								{23} &lt;br/&gt;
+								{24}&lt;br/&gt;	
+                {16}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+						&lt;/tr&gt;
+					&lt;/table&gt; &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;     
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{12} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;  
+				&lt;/td&gt;&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{13}   &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td&gt;&lt;font face='arial'&gt;
+                    {31} &lt;/font&gt;&lt;br /&gt;&lt;br/&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{25} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;b&gt;Comments: {14}&lt;/b&gt; &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                     &lt;img src="cid:Signature" alt="Signature" /&gt; &lt;/font&gt;&lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;/table&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="TemplateSuggestedOrder" xml:space="preserve">
+    <value>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body style='margin: 0px; padding:0px;width:100%'&gt;
+		&lt;table width="800"&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style='width : 100%;'&gt;
+						&lt;tr&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;
+								&lt;b&gt;
+									&lt;img src="cid:MyPic" alt="Republic Brands" /&gt; &lt;br/&gt;
+									2301 Ravine Way &lt;br/&gt;
+									Glenview,IL 60025 &lt;br/&gt;
+									(847)832-9700 &lt;br/&gt;
+									{0}   &lt;br/&gt; &lt;br/&gt;
+									RT Sales Person: {1} &lt;br/&gt;
+									{2} &lt;br/&gt;
+									{3} &lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+								&lt;/b&gt;&lt;/font&gt;  
+							&lt;/td&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+              &lt;/font&gt;&lt;/td&gt;
+					        &lt;td style='vertical-align:top;'&gt;
+							&lt;table&gt;&lt;tr&gt;&lt;td style='vertical-align:top; text-align:right; font-size:30px;'&gt;
+                                &lt;b&gt;Suggested Order&lt;/b&gt;&lt;br/&gt;&lt;/td&gt;&lt;/tr&gt;
+								 &lt;tr&gt;&lt;td&gt;&lt;font face='arial'&gt;&lt;b&gt;Date:&lt;/b&gt; {4} &lt;/font&gt;&lt;br/&gt;
+							     &lt;b&gt;Reference#:&lt;/b&gt; {5}
+							&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+							&lt;/td&gt;
+                        &lt;/tr&gt;
+					&lt;/table&gt; &lt;/font&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style ='border:1px solid black; width:100%'&gt;
+						&lt;tr&gt;
+							&lt;td style='border:1px solid black; background-color:black; color: white; text-align: left' colspan=2&gt;Customer Details&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{6} &lt;br/&gt;
+								{7}&lt;br/&gt;
+								{8}&lt;br/&gt;
+								{9}&lt;br/&gt;
+								{10}&lt;br/&gt;
+								{11}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+						&lt;/tr&gt;
+					&lt;/table&gt;
+          &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;     
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{12} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;  
+				&lt;/td&gt;&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{13} &lt;/font&gt;&lt;br/&gt;&lt;br/&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;b&gt;Comments: {14} &lt;/b&gt;         &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                     &lt;img src="cid:Signature" alt="Signature" /&gt; &lt;/font&gt;&lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;/table&gt;
+     &lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="TemplateTopCreditRequest" xml:space="preserve">
+    <value>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body style='margin: 0px; padding:0px;width:100%'&gt;
+		&lt;table width="800"&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style='width : 100%;'&gt;
+						&lt;tr&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;
+								&lt;b&gt;
+									&lt;img src="cid:MyPic" alt="Top" /&gt; &lt;br/&gt;
+									2301 Ravine Way &lt;br/&gt;
+									Glenview,IL 60025 &lt;br/&gt;
+									(847)832-9700 &lt;br/&gt;
+									{0}   &lt;br/&gt; &lt;br/&gt;
+									RT Sales Person: {1} &lt;br/&gt;
+									{2} &lt;br/&gt;
+									{3} &lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+								&lt;/b&gt; &lt;/font&gt; 
+							&lt;/td&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+              &lt;/font&gt;&lt;/td&gt;
+					        &lt;td style='vertical-align:top;'&gt;
+							&lt;table&gt;&lt;tr&gt;&lt;td style='vertical-align:top; text-align:left; font-size:30px;'&gt;
+                                &lt;b&gt;Credit Request&lt;/b&gt;&lt;br/&gt;&lt;/td&gt;&lt;/tr&gt;
+								 &lt;tr&gt;&lt;td&gt;&lt;font face='arial'&gt;&lt;b&gt;Date:&lt;/b&gt; {4}&lt;br/&gt;
+							     &lt;b&gt;Transaction#:&lt;/b&gt; {5}&lt;br/&gt;
+                                 &lt;b&gt;ShipDate:&lt;/b&gt; {20}&lt;br/&gt;
+                                  {26} &lt;br/&gt;&lt;/font&gt;                                 
+							&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+							&lt;/font&gt;&lt;/td&gt;
+                        &lt;/tr&gt;
+					&lt;/table&gt;
+          &lt;/font&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style ='border:1px solid black; width:100%'&gt;
+						&lt;tr&gt;
+							&lt;td style='border:1px solid black; background-color:black; color: white; text-align: left' colspan=2&gt;Customer Details&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{6} &lt;br/&gt;
+								{7}&lt;br/&gt;
+								{8}&lt;br/&gt;
+								{9}&lt;br/&gt;
+								{10}&lt;br/&gt;
+								{11}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{15} &lt;br/&gt;
+								{32}&lt;br/&gt;
+                {33}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+						&lt;/tr&gt;
+					&lt;/table&gt; &lt;/font&gt;
+                    &lt;br/&gt;&lt;br/&gt;
+                    &lt;b&gt;RMA #: &lt;/b&gt;&lt;input type="text" size="25"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;b&gt;Authorized by: &lt;/b&gt;&lt;input type="text" size="35"&gt;&lt;table width="800" style='width : 100%;'&gt;&lt;b&gt;RMA #: &lt;/b&gt;&lt;input type="text" size="25"&gt;    
+                &lt;/td&gt;
+           &lt;/tr&gt;
+    		&lt;tr&gt;
+                &lt;td&gt;&lt;font face='arial'&gt;
+                    {13}&lt;br /&gt;&lt;br /&gt;&lt;/font&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					Pricing,Terms and freight policy are based on Top Tobacco L.P.'s current distributor price list.&lt;br/&gt;&lt;br/&gt; &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;b&gt;Comments: {14}&lt;/b&gt;&lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                     &lt;img src="cid:Signature" alt="Signature" /&gt; &lt;/font&gt;&lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;/table&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="TemplateTopPurchaseOrder" xml:space="preserve">
+    <value>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body style='margin: 0px; padding:0px;width:100%'&gt;
+		&lt;table width="800"&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style='width : 100%;'&gt;
+						&lt;tr&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;
+								&lt;b&gt;
+									&lt;img src="cid:MyPic" alt="Top" /&gt; &lt;br/&gt;
+									2301 Ravine Way &lt;br/&gt;
+									Glenview,IL 60025 &lt;br/&gt;
+									(847)832-9700 &lt;br/&gt;
+									{0}   &lt;br/&gt; &lt;br/&gt;
+									RT Sales Person: {1} &lt;br/&gt;
+									{2} &lt;br/&gt;
+									{3} &lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+								&lt;/b&gt;&lt;/font&gt;  
+							&lt;/td&gt;
+							&lt;td&gt;&lt;font face='arial'&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/td&gt;
+					        &lt;td style='vertical-align:top;'&gt;
+							&lt;table&gt;&lt;tr&gt;&lt;td style='vertical-align:top; text-align:left; font-size:30px;'&gt;
+                                &lt;b&gt;Purchase Order&lt;/b&gt;&lt;br/&gt;&lt;/td&gt;&lt;/tr&gt;
+								 &lt;tr&gt;&lt;td&gt;&lt;font face='arial'&gt;&lt;b&gt;Date:&lt;/b&gt; {4}&lt;br/&gt;
+							     &lt;b&gt;Transaction#:&lt;/b&gt; {5}&lt;br/&gt;
+                                 &lt;b&gt;ShipDate:&lt;/b&gt; {20}&lt;br/&gt;
+                                  {26} &lt;br/&gt;&lt;/font&gt;                                 
+							&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/font&gt;
+							&lt;/td&gt;
+                        &lt;/tr&gt;
+					&lt;/table&gt;
+          &lt;/font&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;table width="800" style ='border:1px solid black; width:100%'&gt;
+						&lt;tr&gt;
+							&lt;td style='border:1px solid black; background-color:black; color: white; text-align: left' colspan=2&gt;Customer Details&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{6} &lt;br/&gt;
+								{7}&lt;br/&gt;
+								{8}&lt;br/&gt;
+								{9}&lt;br/&gt;
+								{10}&lt;br/&gt;
+								{11}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+							&lt;td style='text-align: left;'&gt;&lt;b&gt;
+								{15} &lt;br/&gt;
+								{16}&lt;br/&gt;&lt;/b&gt;
+							&lt;/td&gt;
+						&lt;/tr&gt;
+					&lt;/table&gt;&lt;/font&gt;&lt;br/&gt;&lt;br/&gt;     
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					{29}&lt;/font&gt;&lt;br/&gt;&lt;br/&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td&gt;&lt;font face='arial'&gt;
+                    {30}&lt;/font&gt;&lt;br /&gt;&lt;br /&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					Pricing,Terms and freight policy are based on Top Tobacco L.P.'s current distributor price list.
+            &lt;/font&gt;
+            &lt;br/&gt;&lt;br/&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;font face='arial'&gt;
+					&lt;b&gt;Comments: {14}&lt;/b&gt;
+          &lt;/font&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                     &lt;img src="cid:Signature" alt="Signature" /&gt; 
+                &lt;/font&gt;     
+                &lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;/table&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="Trademark.Text" xml:space="preserve">
+    <value>Republic Brands L.P. CONFIDENTIAL</value>
+  </data>
+  <data name="TRAVEL" xml:space="preserve">
+    <value>TRAVEL</value>
+  </data>
+  <data name="UnfavoriteWarning" xml:space="preserve">
+    <value>Are you sure you want to remove this product from Favorite?</value>
+  </data>
+  <data name="UPDATE" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="UPDATE_AVAILABLE_MSG" xml:space="preserve">
+    <value>Update Available</value>
+  </data>
+  <data name="VRIP" xml:space="preserve">
+    <value>VRIP</value>
+  </data>
+  <data name="WouldYouLikeTo" xml:space="preserve">
+    <value>Would you like to:</value>
+  </data>
+  <data name="YesCaps" xml:space="preserve">
+    <value>YES</value>
+  </data>
+  <data name="YesText" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="TemplateCarStockOrder" xml:space="preserve">
+    <value>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style='margin: 0px; padding:0px;width:100%'&gt;
+    &lt;table width="800"&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                    &lt;table width="800" style='width : 100%;'&gt;
+                        &lt;tr&gt;
+                            &lt;td&gt;
+                                &lt;font face='arial'&gt;
+                                    &lt;b&gt;
+                                        &lt;img src="cid:MyPic" alt="Republic Brands" /&gt; &lt;br /&gt;
+                                        2301 Ravine Way &lt;br /&gt;
+                                        Glenview,IL 60025 &lt;br /&gt;
+                                        (847)832-9700 &lt;br /&gt;
+                                        {0}   &lt;br /&gt; &lt;br /&gt;
+                                        Sales Person: {1} &lt;br /&gt;
+                                        {2} &lt;br /&gt;
+                                        {3} &lt;br /&gt;&lt;br /&gt;&lt;br /&gt;
+                                    &lt;/b&gt;&lt;/font&gt;
+                            &lt;/td&gt;
+                            &lt;td&gt;&lt;font face='arial'&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                            &lt;/font&gt;
+                            &lt;/td&gt;
+                            &lt;td style='vertical-align:top;'&gt;
+                                &lt;table&gt;
+                                    &lt;tr&gt;
+                                        &lt;td style='vertical-align:top; text-align:left; font-size:30px;'&gt;
+                                            &lt;b&gt;Car Stock Order&lt;/b&gt;&lt;br /&gt;
+                                        &lt;/td&gt;
+                                    &lt;/tr&gt;
+                                    &lt;tr&gt;
+                                        &lt;td&gt;
+                                            &lt;font face='arial'&gt;
+                                                &lt;b&gt;Date:&lt;/b&gt; {4}&lt;br /&gt;
+                                                &lt;b&gt;Transaction#:&lt;/b&gt; {5}
+                                        &lt;/font&gt;&lt;/td&gt;
+                                    &lt;/tr&gt;
+                                &lt;/table&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt; &lt;/font&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                    &lt;table width="800" style='border:1px solid black; width:100%'&gt;
+                        &lt;tr&gt;
+                            &lt;td style='border:1px solid black; background-color:black; color: white; text-align: left' colspan=2&gt;Customer Details&lt;/td&gt;
+                        &lt;/tr&gt;
+                        &lt;tr&gt;
+                            &lt;td style='text-align: left;'&gt;
+                                &lt;b&gt;
+                                    {6} &lt;br /&gt;
+                                    {7}&lt;br /&gt;
+                                    {8}&lt;br /&gt;
+                                    {9}&lt;br /&gt;
+                                    {10}&lt;br /&gt;
+                                    {11}&lt;br /&gt;
+                                &lt;/b&gt;
+                            &lt;/td&gt;
+                            &lt;td style='text-align: left;'&gt;
+                                &lt;b&gt;
+                                    {15} &lt;br /&gt;
+                                    {22}&lt;br /&gt;
+                                    {23} &lt;br /&gt;
+                                    {24}&lt;br /&gt;
+                                    {16}&lt;br /&gt;
+                                &lt;/b&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt;
+                    &lt;/font&gt;&lt;br /&gt;&lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                    {12} 
+                &lt;/font&gt;&lt;br /&gt;&lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                    {13}
+                &lt;/font&gt;    
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                    {31} 
+                &lt;/font&gt;      
+              &lt;br /&gt;&lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                    {25} 
+                &lt;/font&gt;    
+              &lt;br /&gt;&lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                    &lt;b&gt;Comments: {14}
+                &lt;/b&gt;   &lt;/font&gt;     
+            &lt;/td&gt;
+        &lt;/tr&gt;
+		  &lt;tr&gt;
+            &lt;td&gt;
+                &lt;font face='arial'&gt;
+                     &lt;img src="cid:Signature" alt="Signature" /&gt; 
+                &lt;/font&gt;     
+                &lt;br /&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+</root>

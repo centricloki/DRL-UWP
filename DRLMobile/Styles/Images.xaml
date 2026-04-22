@@ -1,0 +1,128 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--  Dashboard Page Images  -->
+
+    <x:String x:Key="SrcNormal">ms-appx:///Assets/Dashboard/src_product_normal.png</x:String>
+    <x:String x:Key="SrcHover">ms-appx:///Assets/Dashboard/src_product_hover.png</x:String>
+
+    <x:String x:Key="CartNormal">ms-appx:///Assets/Dashboard/cart_normal.png</x:String>
+    <x:String x:Key="CartHover">ms-appx:///Assets/Dashboard/cart_hover.png</x:String>
+
+    <x:String x:Key="CustomerNormal">ms-appx:///Assets/Dashboard/customers_normal.png</x:String>
+    <x:String x:Key="CustomerHover">ms-appx:///Assets/Dashboard/customers_hover.png</x:String>
+
+    <x:String x:Key="FavoriteNormal">ms-appx:///Assets/Dashboard/favorite_normal.png</x:String>
+    <x:String x:Key="FavoriteHover">ms-appx:///Assets/Dashboard/favorite_hover.png</x:String>
+
+    <x:String x:Key="RouteListNormal">ms-appx:///Assets/Dashboard/route_list_normal.png</x:String>
+    <x:String x:Key="RoutListHover">ms-appx:///Assets/Dashboard/route_list_hover.png</x:String>
+
+    <x:String x:Key="SettingNormal">ms-appx:///Assets/Dashboard/settings_normal.png</x:String>
+    <x:String x:Key="SettingHover">ms-appx:///Assets/Dashboard/settings_hover.png</x:String>
+
+    <x:String x:Key="ActivitiesNormal">ms-appx:///Assets/Dashboard/activity_normal.png</x:String>
+    <x:String x:Key="ActivitiesHover">ms-appx:///Assets/Dashboard/activity_hover.png</x:String>
+
+    <x:String x:Key="MapNormal">ms-appx:///Assets/Dashboard/map_normal.png</x:String>
+    <x:String x:Key="MapHover">ms-appx:///Assets/Dashboard/map_hover.png</x:String>
+
+    <x:String x:Key="SyncNormal">ms-appx:///Assets/Dashboard/sync_normal.png</x:String>
+    <x:String x:Key="SyncHover">ms-appx:///Assets/Dashboard/sync_hover.png</x:String>
+
+    <x:String x:Key="RackOrderNormal">ms-appx:///Assets/Dashboard/rack_order_normal.png</x:String>
+    <x:String x:Key="RackOrderHover">ms-appx:///Assets/Dashboard/rack_order_hover.png</x:String>
+
+    <x:String x:Key="PopOrderNormal">ms-appx:///Assets/Dashboard/pop_order_normal.png</x:String>
+    <x:String x:Key="PopOrderHover">ms-appx:///Assets/Dashboard/pop_order_hover.png</x:String>
+
+    <x:String x:Key="TravelNormal">ms-appx:///Assets/Dashboard/travel-vrip_normal.png</x:String>
+    <x:String x:Key="TravelHover">ms-appx:///Assets/Dashboard/travel-vrip_hover.png</x:String>
+
+
+    <x:String x:Key="LogoutDashboard">ms-appx:///Assets/Dashboard/logout_dashboard.png</x:String>
+    <x:String x:Key="CartWhiteHeader">ms-appx:///Assets/Header/cart_white_header.png</x:String>
+
+    <!--  Login Page Images  -->
+    <x:String x:Key="LoginHoneyLogo">ms-appx:///Assets/Login/logo-login.png</x:String>
+
+
+    <!--  SRC Product Page Images  -->
+    <x:String x:Key="CategorySelected">ms-appx:///Assets/SRCProduct/category_selected.png</x:String>
+    <x:String x:Key="CategoryUnselected">ms-appx:///Assets/SRCProduct/category_unselected.png</x:String>
+
+    <x:String x:Key="StyleSelected">ms-appx:///Assets/SRCProduct/style_selected.png</x:String>
+    <x:String x:Key="StyleUnselected">ms-appx:///Assets/SRCProduct/style_unselected.png</x:String>
+
+    <x:String x:Key="NoProduct">ms-appx:///Assets/SRCProduct/no_product.png</x:String>
+
+    <x:String x:Key="CartSelected">ms-appx:///Assets/SRCProduct/cart_selected.png</x:String>
+    <x:String x:Key="CartUnselected">ms-appx:///Assets/SRCProduct/cart_normal.png</x:String>
+
+    <x:String x:Key="FavoriteSelected">ms-appx:///Assets/SRCProduct/favorite_selected.png</x:String>
+    <x:String x:Key="FavoriteUnselected">ms-appx:///Assets/SRCProduct/favorite_normal.png</x:String>
+
+    <x:String x:Key="DistributionSelected">ms-appx:///Assets/SRCProduct/distribution_selected.png</x:String>
+    <x:String x:Key="DistributionUnselected">ms-appx:///Assets/SRCProduct/distribution_normal.png</x:String>
+
+    <x:String x:Key="PdfImage">ms-appx:///Assets/SRCProduct/pdf.png</x:String>
+
+    <x:String x:Key="EditIconNormal">ms-appx:///Assets/CustomerProfile/edit_normal.png</x:String>
+    <x:String x:Key="SaveIconNormal">ms-appx:///Assets/CustomerProfile/save_normal.png</x:String>
+
+    <x:String x:Key="EditIconHover">ms-appx:///Assets/CustomerProfile/edit_hover.png</x:String>
+    <x:String x:Key="SaveIconHover">ms-appx:///Assets/CustomerProfile/save_hover.png</x:String>
+
+    <!--  Cart Page Images  -->
+    <x:String x:Key="CartMinus">ms-appx:///Assets/Cart/cart_minus.png</x:String>
+    <x:String x:Key="CartDownArrow">ms-appx:///Assets/Cart/cart_down_arrow.png</x:String>
+    <x:String x:Key="EditCart">ms-appx:///Assets/Cart/edit_cart.png</x:String>
+    <x:String x:Key="DeleteCart">ms-appx:///Assets/Cart/cart_delete.png</x:String>
+    <x:String x:Key="KeyPadClear">ms-appx:///Assets/Cart/numpad_back.png</x:String>
+    <x:String x:Key="KeyPadLeft">ms-appx:///Assets/Cart/numpad_left.png</x:String>
+
+
+    <!--  Product Detail Page Images  -->
+    <x:String x:Key="CartBgInactive">ms-appx:///Assets/ProductDetail/button_hover.png</x:String>
+    <x:String x:Key="CartBgActive">ms-appx:///Assets/ProductDetail/button_active.png</x:String>
+    <x:String x:Key="CartBgNormal">ms-appx:///Assets/ProductDetail/button_inactive.png</x:String>
+    <x:String x:Key="LeftArrowBlack">ms-appx:///Assets/ProductDetail/left_arrow_hover.png</x:String>
+    <x:String x:Key="ListIcon">ms-appx:///Assets/ProductDetail/list_icon.png</x:String>
+
+    <x:String x:Key="RightArrowBlack">ms-appx:///Assets/ProductDetail/right_arrow_hover.png</x:String>
+    <x:String x:Key="DefaultProduct">ms-appx:///Assets/ProductDetail/default_product.png</x:String>
+    <x:String x:Key="CartBlack">ms-appx:///Assets/ProductDetail/cart_black.png</x:String>
+    <x:String x:Key="CartWhite">ms-appx:///Assets/ProductDetail/cart_white.png</x:String>
+    <x:String x:Key="FactsheetNormal">ms-appx:///Assets/ProductDetail/factsheet_normal.png</x:String>
+    <x:String x:Key="FactsheetSelected">ms-appx:///Assets/ProductDetail/factsheet_normal_hover.png</x:String>
+    <x:String x:Key="ProductDetailFavoriteNormal">ms-appx:///Assets/ProductDetail/favorite_normal.png</x:String>
+    <x:String x:Key="ProductDetailFavoriteSelected">ms-appx:///Assets/ProductDetail/favorite_selected.png</x:String>
+    <x:String x:Key="LeftArrowNormal">ms-appx:///Assets/ProductDetail/left_arrow_normal.png</x:String>
+    <x:String x:Key="RightArrowNormal">ms-appx:///Assets/ProductDetail/right_arrow_normal.png</x:String>
+    <x:String x:Key="RetailImageNormal">ms-appx:///Assets/ProductDetail/retail_image_normal.png</x:String>
+    <x:String x:Key="RetailImageSelected">ms-appx:///Assets/ProductDetail/retail_image_hover.png</x:String>
+    <x:String x:Key="AddToCartNormal">ms-appx:///Assets/ProductDetail/text_box_normal.png</x:String>
+
+
+    <!--  Documents  -->
+    <x:String x:Key="DocumentIconImage">ms-appx:///Assets/Documents/documentPDF.png</x:String>
+
+
+    <!--  Settings  -->
+    <x:String x:Key="ChangePinNormal">ms-appx:///Assets/Settings/change_pin_normal.png</x:String>
+    <x:String x:Key="ChangePinHover">ms-appx:///Assets/Settings/change_pin_hover.png</x:String>
+
+    <x:String x:Key="TaxStatementNormal">ms-appx:///Assets/Settings/tax_statement_normal.png</x:String>
+    <x:String x:Key="TaxStatementHover">ms-appx:///Assets/Settings/tax_statement_hover.png</x:String>
+
+    <x:String x:Key="LogoutNormal">ms-appx:///Assets/Settings/logout_normal.png</x:String>
+
+
+    <!--  Favorite  -->
+    <x:String x:Key="MailNormal">ms-appx:///Assets/Favorite/mail-normal.png</x:String>
+
+
+    <x:String x:Key="RepublicBrandImage">ms-appx:///Assets/Email/Top.png</x:String>
+    <!--  Rack Item  -->
+    <x:String x:Key="RackItemPlaceHolder">ms-appx:///Assets/RackOrder/rack_item_placeholder.png</x:String>
+
+</ResourceDictionary>

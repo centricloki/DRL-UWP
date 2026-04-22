@@ -1,0 +1,293 @@
+<Page
+    x:Class="DRLMobile.Uwp.View.AdvanceGoogleMapPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    xmlns:converter="using:DRLMobile.Uwp.Converters"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:customControls="using:DRLMobile.Uwp.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    NavigationCacheMode="Required"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{StaticResource CartTextColor}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,60,0" />
+        </Style>
+        <Style x:Key="ListViewItemStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+        <converter:InvertBoolToVisibilityConverter x:Key="InvertBoolToVisibilityConverter" />
+        <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converter:VisibilityToBoolConverter x:Key="VisibilityToBoolConverter" />
+        <converter:BoolToStyleConverter x:Key="BoolToStyleConverter" />
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition MaxHeight="110" />
+        </Grid.RowDefinitions>
+
+        <!--#region Page HeaderControl-->
+        <customControls:HeaderControl
+            Title="ADVANCED MAP"
+            Grid.Row="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            IsPageTitleVisible="Visible" />
+        <!--#endregion-->
+
+        <!--#region Header Filter Section-->
+        <Grid
+            Grid.Row="1"
+            Margin="20,5,10,5"
+            Padding="0"
+            Background="{StaticResource FooterTextColor}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!--#region Selected Filter Display Section-->
+            <StackPanel
+                x:Name="TopLegendStackPanel"
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource LabelStyle}" Text="{x:Bind ViewModel.SelectedZone.ZoneName, Mode=OneWay}" />
+                    <TextBlock Style="{StaticResource LabelStyle}" Text="{x:Bind ViewModel.SelectedRegion.Regioname, Mode=OneWay}" />
+                    <TextBlock Style="{StaticResource LabelStyle}" Text="{x:Bind ViewModel.SelectedTerritory.TerritoryName, Mode=OneWay}" />
+                    <TextBlock Style="{StaticResource LabelStyle}" Text="{x:Bind ViewModel.SelectedState.Value.Value, Mode=OneWay}" />
+                    <TextBlock Style="{StaticResource LabelStyle}" Text="{x:Bind ViewModel.SelectedCity.CityName, Mode=OneWay}" />
+                </StackPanel>
+                <StackPanel
+                    Margin="0,0,0,0"
+                    Orientation="Horizontal"
+                    Visibility="{x:Bind ViewModel.IsDateFilterDescriptionRowVisible, Mode=OneWay}">
+                    <TextBlock
+                        Margin="0,10,0,0"
+                        Style="{StaticResource LabelStyle}"
+                        Text="Start Date : " />
+                    <TextBlock
+                        Margin="0,10,60,0"
+                        Padding="5,0,0,0"
+                        Style="{StaticResource LabelStyle}"
+                        Text="{x:Bind ViewModel.DisplayStartDate, Mode=OneWay}" />
+                    <TextBlock
+                        Margin="0,10,0,0"
+                        Style="{StaticResource LabelStyle}"
+                        Text="End Date : " />
+                    <TextBlock
+                        Margin="0,10,60,0"
+                        Padding="5,0,0,0"
+                        Style="{StaticResource LabelStyle}"
+                        Text="{x:Bind ViewModel.DisplayEndDate, Mode=OneWay}" />
+                </StackPanel>
+            </StackPanel>
+            <!--#endregion-->
+
+            <!--#region Zone, Region Filter Section-->
+            <StackPanel
+                x:Name="ZoneFilterStackPanel"
+                Grid.Column="1"
+                Margin="0,5,0,5"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <Button
+                    x:Name="ZoneFilterButton"
+                    Margin="0,0,20,0"
+                    Padding="10,5,10,5"
+                    Background="{StaticResource FooterBackgroundColor}"
+                    CornerRadius="15"
+                    Tapped="ZoneFilterButton_Tapped">
+                    <FontIcon
+                        Foreground="White"
+                        Glyph="{StaticResource FilterIcon}"
+                        Style="{StaticResource FontIconStyle}" />
+                    <FlyoutBase.AttachedFlyout>
+                        <Flyout
+                            x:Name="ZoneFilterFlyout"
+                            FlyoutPresenterStyle="{StaticResource ErrorFlyoutPresenterStyle}"
+                            LightDismissOverlayMode="Off"
+                            Placement="Bottom">
+                            <Grid
+                                Width="300"
+                                Height="430"
+                                Background="White"
+                                BorderBrush="Black"
+                                BorderThickness="1"
+                                CornerRadius="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid
+                                    Grid.Row="0"
+                                    Height="35"
+                                    Padding="0,5,0,5"
+                                    HorizontalAlignment="Stretch"
+                                    Background="{StaticResource LoginButtonBackground}">
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontSize="16"
+                                        FontWeight="SemiBold"
+                                        Foreground="{StaticResource CartTextColor}"
+                                        Text="Filter" />
+                                </Grid>
+
+                                <StackPanel Grid.Row="1" Orientation="Vertical">
+                                    <RelativePanel Margin="10" HorizontalAlignment="Stretch">
+                                        <TextBlock Name="Zone" Style="{x:Bind ViewModel.IsZoneDropDownEnabled, Mode=OneWay, Converter={StaticResource BoolToStyleConverter}, ConverterParameter='ZoneFilterTextBlock'}" Text="Zone" />
+                                        <Grid Name="ZoneSelectionGrid" Grid.Column="1" Width="205" Margin="25,-5,0,0" HorizontalAlignment="Left" Background="White" BorderBrush="{StaticResource LoginButtonBorderBrush}" BorderThickness="1" CornerRadius="5" RelativePanel.RightOf="Zone" Tapped="ZoneSelectionGrid_Tapped">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <FlyoutBase.AttachedFlyout>
+                                                <Flyout x:Name="ZoneTypeFlyout" FlyoutPresenterStyle="{StaticResource ErrorFlyoutPresenterStyle}" LightDismissOverlayMode="Off" Placement="Left">
+                                                    <Grid Height="400" MinWidth="300" Background="White" BorderBrush="Black" BorderThickness="1" CornerRadius="10">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="auto" />
+                                                            <RowDefinition Height="auto" />
+                                                            <RowDefinition Height="*" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid Grid.Row="0" Height="35" HorizontalAlignment="Stretch" Background="{StaticResource FooterBackgroundColor}">
+                                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Foreground="{StaticResource FooterTextColor}" Text="Filter" />
+                                                            </Grid>
+                                                        <TextBox x:Name="FlyoutZoneTextBox" Grid.Row="1" Width="300" Margin="6" HorizontalAlignment="Center" Background="White" BorderBrush="Black" BorderThickness="1" CornerRadius="5" PlaceholderText="Search by zone" TextChanged="FlyoutZoneTextBox_TextChanged" />
+                                                        <ListView Grid.Row="2" Width="300" ItemContainerStyle="{StaticResource ListViewItemStyle}" ItemsSource="{x:Bind ViewModel.ZoneList, Mode=OneWay}" SelectionMode="None">
+                                                            <ListView.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Grid HorizontalAlignment="Stretch" Background="Transparent" Tapped="ZoneSelected">
+                                                                        <TextBlock Margin="5" Text="{Binding ZoneName}" TextWrapping="WrapWholeWords" />
+                                                                    </Grid>
+                                                                </DataTemplate>
+                                                            </ListView.ItemTemplate>
+                                                        </ListView>
+                                                    </Grid>
+                                                </Flyout>
+                                            </FlyoutBase.AttachedFlyout>
+                                            <TextBox Grid.Column="0" Width="400" BorderThickness="0" IsHitTestVisible="False" IsReadOnly="True" Style="{StaticResource NoHoverTextBoxStyle}" Text="{x:Bind ViewModel.FilterSelectedZone.ZoneName, Mode=OneWay}" />
+                                            <FontIcon Grid.Column="1" Margin="0,0,10,0" HorizontalAlignment="Right" FontSize="12" Foreground="Blue" Glyph="{StaticResource RightFilledArrowIcon}" Style="{StaticResource FontIconStyle}" Visibility="{x:Bind ViewModel.IsNationalHead, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                        </Grid>
+                                    </RelativePanel>
+                                    <RelativePanel Margin="10" HorizontalAlignment="Stretch">
+                                        <TextBlock Name="Regiontitle" Style="{x:Bind ViewModel.IsRegionDropDownEnabled, Mode=OneWay, Converter={StaticResource BoolToStyleConverter}, ConverterParameter='ZoneFilterTextBlock'}" Text="Region" />
+                                        <Grid Name="RegionSelectionGrid" Grid.Column="1" Width="205" Margin="14,-5,0,0" HorizontalAlignment="Left" Background="White" BorderBrush="{StaticResource LoginButtonBorderBrush}" BorderThickness="1" CornerRadius="5" RelativePanel.RightOf="Regiontitle" Tapped="RegionSelectionGrid_Tapped">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <FlyoutBase.AttachedFlyout>
+                                                <Flyout x:Name="RegionTypeFlyout" FlyoutPresenterStyle="{StaticResource ErrorFlyoutPresenterStyle}" LightDismissOverlayMode="Off" Placement="Left">
+                                                    <Grid Height="400" MinWidth="300" Background="White" BorderBrush="Black" BorderThickness="1" CornerRadius="10">
+                                                        <Grid.RowDefinitions><RowDefinition Height="auto" /><RowDefinition Height="auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                                                        <Grid Grid.Row="0" Height="35" HorizontalAlignment="Stretch" Background="{StaticResource FooterBackgroundColor}"><TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Foreground="{StaticResource FooterTextColor}" Text="Filter" /></Grid>
+                                                        <TextBox x:Name="FlyoutRegionTextBox" Grid.Row="1" Width="300" Margin="6" HorizontalAlignment="Center" Background="White" BorderBrush="Black" BorderThickness="1" CornerRadius="5" PlaceholderText="Search by region" />
+                                                        <ListView Grid.Row="2" Width="300" ItemContainerStyle="{StaticResource ListViewItemStyle}" ItemsSource="{x:Bind ViewModel.RegionList, Mode=TwoWay}" SelectionMode="None">
+                                                            <ListView.ItemTemplate><DataTemplate><Grid HorizontalAlignment="Stretch" Background="Transparent" Tapped="RegionSelected"><TextBlock Margin="5" Text="{Binding Regioname}" TextWrapping="WrapWholeWords" /></Grid></DataTemplate></ListView.ItemTemplate>
+                                                        </ListView>
+                                                    </Grid>
+                                                </Flyout>
+                                            </FlyoutBase.AttachedFlyout>
+                                            <TextBox Grid.Column="0" Width="400" BorderThickness="0" IsHitTestVisible="False" IsReadOnly="True" Style="{StaticResource NoHoverTextBoxStyle}" Text="{x:Bind ViewModel.FilterSelectedRegion.Regioname, Mode=OneWay}" />
+                                            <FontIcon Grid.Column="1" Margin="0,0,10,0" HorizontalAlignment="Right" FontSize="12" Glyph="{StaticResource RightFilledArrowIcon}" Style="{x:Bind ViewModel.IsRegionDropDownEnabled, Mode=OneWay, Converter={StaticResource BoolToStyleConverter}, ConverterParameter='ZoneFilterFontIcon'}" />
+                                        </Grid>
+                                    </RelativePanel>
+                                </StackPanel>
+                                <StackPanel Grid.Row="2" Margin="3,3,3,10" HorizontalAlignment="Center" Orientation="Horizontal" Spacing="10">
+                                    <Button Width="70" Padding="5" Command="{x:Bind ViewModel.ClearFilterCommand}" Content="Clear All" FontSize="14" Style="{StaticResource FlyoutButtonStyle}" />
+                                    <Button Width="70" Padding="5" Click="ApplyFilterButton_Click" Content="Filter" FontSize="14" Style="{StaticResource FlyoutButtonStyle}" />
+                                </StackPanel>
+                            </Grid>
+                        </Flyout>
+                    </FlyoutBase.AttachedFlyout>
+                </Button>
+
+                <Button x:Name="PlotAccountByButton" Padding="10,6,10,6" HorizontalAlignment="Right" Background="{StaticResource FooterBackgroundColor}" Content="Plot Account By" CornerRadius="15" Foreground="White" Tapped="PlotAccountByButton_Tapped">
+                    <FlyoutBase.AttachedFlyout>
+                        <Flyout x:Name="PlotAccountByFlyout" FlyoutPresenterStyle="{StaticResource ErrorFlyoutPresenterStyle}" LightDismissOverlayMode="Off" Placement="Bottom">
+                            <Grid Height="210" MinWidth="220" Background="White" BorderBrush="Black" BorderThickness="1" CornerRadius="10">
+                                <ListView ItemsSource="{x:Bind ViewModel.PlotByFilterSource, Mode=OneWay}" SelectionMode="None">
+                                    <ListView.ItemTemplate><DataTemplate><Grid Background="Transparent" Tapped="PlotAccountByFlyoutGrid_Tapped">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="25" /></Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" MinWidth="180" HorizontalAlignment="Stretch" VerticalAlignment="Center" FontSize="14" Foreground="{StaticResource LoginScreenTextFontColor}" Text="{Binding Title}" TextWrapping="Wrap" />
+                                        <FontIcon Grid.Column="1" Margin="3" HorizontalAlignment="Right" Foreground="Teal" Glyph="{StaticResource CheckMark}" Style="{StaticResource FontIconStyle}" Visibility="{Binding IsSelected, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                    </Grid></DataTemplate></ListView.ItemTemplate>
+                                </ListView>
+                            </Grid>
+                        </Flyout>
+                    </FlyoutBase.AttachedFlyout>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!--#region Map Section-->
+        <controls:WebView2
+            x:Name="webView"
+            Grid.Row="2"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InvertBoolToVisibilityConverter}}"/>
+
+        <Grid
+            x:Name="CustomPinVisibiltyGrid"
+            Grid.Row="2"
+            Grid.RowSpan="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Visibility="{x:Bind ViewModel.CustomMapPinVisibility, Mode=TwoWay}">
+            <Grid Background="Black" Opacity="0.7" />
+            <customControls:MapPinCustomPopUp x:Name="customMapPinPopup" CloseCommad="{x:Bind ViewModel.CloseCustomMapPushPinCommand, Mode=OneWay}" />
+        </Grid>
+        <!--#endregion-->
+
+        <!--#region Bottom Legend Filter Section-->
+        <Grid x:Name="BottomLegendGrid" Grid.Row="3" Background="{StaticResource FooterTextColor}">
+            <Grid.RowDefinitions><RowDefinition Height="auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <TextBlock Margin="20,0,20,0" VerticalAlignment="Center" Style="{StaticResource LabelStyle}" Text="{x:Bind ViewModel.LegendsLabelText, Mode=OneWay}" />
+                <CheckBox x:Name="OptionsAllCheckBox" Content="Select all" />
+            </StackPanel>
+            <ListView Grid.Row="1" VerticalAlignment="Center" ItemsSource="{x:Bind ViewModel.LegendsFilterSource, Mode=OneWay}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionMode="None">
+                <ListView.ItemsPanel><ItemsPanelTemplate><ItemsWrapGrid Orientation="Horizontal" /></ItemsPanelTemplate></ListView.ItemsPanel>
+                <ListView.ItemTemplate><DataTemplate><StackPanel Background="Transparent" Orientation="Horizontal" Tapped="BottomLegendRelativePanel_Tapped">
+                    <Grid Width="20" Height="20" Margin="5,0,0,0" Background="{Binding BackgroundColor}"><FontIcon Foreground="White" Glyph="{StaticResource CheckMark}" Style="{StaticResource FontIconStyle}" Visibility="{Binding IsSelected, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" /></Grid>
+                    <TextBlock MinWidth="240" Margin="5,0,0,0" FontSize="14" Foreground="{StaticResource LoginScreenTextFontColor}" Text="{Binding Title}" />
+                </StackPanel></DataTemplate></ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+        <!--#endregion-->
+
+        <!--#region Loader-->
+        <Grid
+            x:Name="ProgressRingGrid"
+            Grid.Row="1"
+            Grid.RowSpan="3"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="Black"
+            Opacity="0.7"
+            Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+            <ProgressRing Width="100" Height="100" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" IsActive="True" />
+        </Grid>
+        <!--#endregion-->
+    </Grid>
+</Page>

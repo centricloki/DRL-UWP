@@ -1,0 +1,249 @@
+﻿<Page
+    x:Class="DRLMobile.Views.RouteListPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:DE="using:DevExpress.UI.Xaml.Grid"
+    xmlns:customControls="using:DRLMobile.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:DRLMobile.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
+    <Grid x:Name="outerPanel" Background="{StaticResource LoginBackgroundColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="2" />
+
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <customControls:HeaderControl
+            x:Name="HeaderControl"
+            Title="ROUTES LIST"
+            Grid.Row="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            DisplayMemberPathValue="SearchDisplayPath"
+            IsAutoSuggestBoxVisible="Visible"
+            IsPageTitleVisible="Visible"
+            PlaceHolderText="Search by route name or destination"
+            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+            ScrollViewer.VerticalScrollBarVisibility="Hidden" />
+        <StackPanel
+            Grid.Row="1"
+            Padding="20"
+            Orientation="Horizontal">
+            <!--<Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>-->
+
+            <TextBlock
+                Margin="40,0,0,0"
+                FontSize="{StaticResource MediumFontSize}"
+                FontWeight="SemiBold"
+                Foreground="{StaticResource CartTextColor}"
+                Text="Start Date :" />
+
+            <CalendarDatePicker
+                x:Name="startDatePicker"
+                Width="150"
+                Margin="10,-8,0,0"
+                Background="Transparent"
+                PlaceholderText="Start Date" />
+            <TextBlock
+                Margin="40,-1,0,0"
+                FontSize="{StaticResource MediumFontSize}"
+                FontWeight="SemiBold"
+                Foreground="{StaticResource CartTextColor}"
+                Text="End Date :" />
+
+            <CalendarDatePicker
+                x:Name="endDatePicker"
+                Width="150"
+                Margin="10,-8,0,0"
+                Background="Transparent"
+                PlaceholderText="End Date" />
+            <Button
+                Width="100"
+                Height="37"
+                Margin="50,-6,0,0"
+                Content="Clear"
+                FontSize="15"
+                Style="{StaticResource LoginButtonStyle}" />
+
+        </StackPanel>
+        <Rectangle
+            Grid.Row="2"
+            Height="2"
+            HorizontalAlignment="Stretch"
+            Fill="{StaticResource LoginButtonBorderBrush}" />
+        <!--<DE:GridControl
+            x:Name="DataGridcontrol"
+            Grid.Row="3"
+            AlternationCount="2"
+            AutoGenerateColumns="False"
+            FontSize="{StaticResource DataGridTextSize}"
+            ItemClickCommand="{x:Bind ViewModel.ItemSelectedCommand}"
+            ItemsSource="{Binding Path=Items}"
+            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+            ScrollViewer.VerticalScrollBarVisibility="Hidden"
+            ShowAutoFilterRow="True"
+            ShowCriteriaInAutoFilterRow="True"
+            ShowGroupPanel="False"
+            ShowGroupedColumns="False"
+            ShowSearchPanelMode="Never">
+            <DE:GridControl.Columns>
+
+                <DE:GridTextColumn
+                    MinWidth="300"
+                    AllowSorting="True"
+                    AutoFilterCriteria="Contains"
+                    FieldName="CustomerName"
+                    TextWrapping="Wrap">
+                    <DE:GridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource GridHeaderStyle}" Text="{Binding}" />
+                        </DataTemplate>
+                    </DE:GridTextColumn.HeaderTemplate>
+                </DE:GridTextColumn>
+
+                <DE:GridTextColumn
+                    AllowSorting="True"
+                    AutoFilterCriteria="Contains"
+                    FieldName="CustomerNumber"
+                    TextWrapping="Wrap">
+                    <DE:GridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Customer#" />
+                        </DataTemplate>
+                    </DE:GridTextColumn.HeaderTemplate>
+                </DE:GridTextColumn>
+
+                <DE:GridTextColumn
+                    AllowSorting="True"
+                    AutoFilterCriteria="Contains"
+                    FieldName="StoreType"
+                    TextWrapping="Wrap">
+                    <DE:GridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource GridHeaderStyle}" Text="{Binding}" />
+                        </DataTemplate>
+                    </DE:GridTextColumn.HeaderTemplate>
+                </DE:GridTextColumn>
+
+                <DE:GridTextColumn
+                    Width="80"
+                    AllowSorting="True"
+                    AutoFilterCriteria="Contains"
+                    FieldName="Rank"
+                    TextWrapping="Wrap">
+                    <DE:GridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource GridHeaderStyle}" Text="{Binding}" />
+                        </DataTemplate>
+                    </DE:GridTextColumn.HeaderTemplate>
+                </DE:GridTextColumn>
+
+                <DE:GridTextColumn
+                    AllowSorting="True"
+                    AutoFilterCriteria="Contains"
+                    FieldName="Address"
+                    TextWrapping="Wrap">
+                    <DE:GridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource GridHeaderStyle}" Text="{Binding}" />
+                        </DataTemplate>
+                    </DE:GridTextColumn.HeaderTemplate>
+                </DE:GridTextColumn>
+
+                <DE:GridTextColumn
+                    AllowSorting="True"
+                    AutoFilterCriteria="Contains"
+                    FieldName="City"
+                    TextWrapping="Wrap">
+                    <DE:GridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource GridHeaderStyle}" Text="{Binding}" />
+                        </DataTemplate>
+                    </DE:GridTextColumn.HeaderTemplate>
+                </DE:GridTextColumn>
+
+                <DE:GridTextColumn
+                    AllowSorting="True"
+                    AutoFilterCriteria="Contains"
+                    FieldName="State"
+                    TextWrapping="Wrap">
+                    <DE:GridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Width="80"
+                                Style="{StaticResource GridHeaderStyle}"
+                                Text="{Binding}" />
+                        </DataTemplate>
+                    </DE:GridTextColumn.HeaderTemplate>
+                </DE:GridTextColumn>
+
+                <DE:GridTextColumn
+                    AllowSorting="True"
+                    AutoFilterCriteria="Contains"
+                    FieldName="LastCallDate"
+                    TextWrapping="Wrap">
+                    <DE:GridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource GridHeaderStyle}" Text="{Binding}" />
+                        </DataTemplate>
+                    </DE:GridTextColumn.HeaderTemplate>
+
+
+                </DE:GridTextColumn>
+                <DE:GridTemplateColumn
+                    x:Name="ellipsis"
+                    Width="60"
+                    AllowAutoFilter="False"
+                    AllowColumnFiltering="False"
+                    AllowSorting="True"
+                    FieldName="IsEllipsisVisible"
+                    Visible="True">
+                    <DE:GridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource GridHeaderStyle}" />
+                        </DataTemplate>
+                    </DE:GridTemplateColumn.HeaderTemplate>
+                    <DE:GridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid
+                                Name="ellipsisGrid"
+                                Tapped="ellipsisGrid_Tapped"
+                                Visibility="{Binding IsEllipsisVisible, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}}">
+
+                                <FontIcon
+                                    x:Name="EllipsisImage"
+                                    Width="20"
+                                    Height="30"
+                                    FontWeight="ExtraBold"
+                                    Glyph="{StaticResource EllipsisIcon}"
+                                    Style="{StaticResource FontIconStyle}" />
+                            </Grid>
+                        </DataTemplate>
+                    </DE:GridTemplateColumn.CellTemplate>
+                </DE:GridTemplateColumn>
+
+
+            </DE:GridControl.Columns>
+        </DE:GridControl>-->
+
+        <Grid Grid.Row="4">
+            <Button
+                Height="33"
+                Margin="{StaticResource XSmallLeftTopRightBottomMargin}"
+                HorizontalAlignment="Center"
+                Content="Add Route"
+                FontSize="15"
+                Style="{StaticResource LoginButtonStyle}" />
+
+        </Grid>
+    </Grid>
+</Page>

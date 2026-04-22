@@ -1,0 +1,78 @@
+﻿<UserControl
+    x:Class="DRLMobile.Uwp.CustomControls.FooterControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:DRLMobile.Uwp.CustomControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <RelativePanel Style="{StaticResource FooterStyle}">
+
+
+        <TextBlock
+            Name="VersionTextBlock"
+            Margin="{StaticResource MediumLeftMargin}"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            FontSize="{StaticResource FooterFontSize}"
+            FontWeight="SemiBold"
+            Foreground="{StaticResource FooterTextColor}"
+            RelativePanel.AlignVerticalCenterWithPanel="True"
+            Text="{Binding Version}" />
+
+
+        <TextBlock
+            Name="LoggedInUserName"
+            Margin="{StaticResource MediumLeftMargin}"
+            FontSize="{StaticResource FooterFontSize}"
+            FontWeight="SemiBold"
+            Foreground="{StaticResource FooterTextColor}"
+            RelativePanel.AlignVerticalCenterWithPanel="True"
+            RelativePanel.RightOf="VersionTextBlock"
+            Visibility="{Binding IsLoggedInVisible}">
+            <TextBlock.Inlines>
+                <Run Text="Logged in as: " />
+                <Run Text="{x:Bind LoggedInUsername, Mode=OneWay}" />
+            </TextBlock.Inlines>
+        </TextBlock>
+
+        <TextBlock
+            Name="TadeMark"
+            x:Uid="Trademark"
+            Margin="{StaticResource MediumLeftMargin}"
+            FontSize="{StaticResource FooterFontSize}"
+            FontWeight="SemiLight"
+            Foreground="{StaticResource FooterTextColor}"
+            RelativePanel.AlignHorizontalCenterWithPanel="True"
+            RelativePanel.AlignVerticalCenterWithPanel="True" />
+
+
+        <StackPanel
+            Name="SyncStackPanel"
+            Margin="{StaticResource SmallRightMargin}"
+            Orientation="Horizontal"
+            RelativePanel.AlignRightWithPanel="True"
+            RelativePanel.AlignVerticalCenterWithPanel="True"
+            Spacing="10"
+            Visibility="{Binding IsSyncVisible}">
+            <FontIcon
+                Name="SyncIcon"
+                HorizontalAlignment="Right"
+                FontSize="{StaticResource MediumFontSize}"
+                Foreground="{StaticResource FooterTextColor}"
+                Glyph="{StaticResource SyncIcon}" />
+
+
+            <TextBlock
+                Name="SyncDateTimeTextBlock"
+                HorizontalAlignment="Right"
+                Foreground="{StaticResource FooterTextColor}" />
+        </StackPanel>
+
+
+
+    </RelativePanel>
+</UserControl>

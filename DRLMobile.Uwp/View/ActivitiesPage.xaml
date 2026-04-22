@@ -1,0 +1,600 @@
+﻿<Page
+    x:Class="DRLMobile.Uwp.View.ActivitiesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:DE="using:DevExpress.UI.Xaml.Grid"
+    xmlns:converter="using:DRLMobile.Uwp.Converters"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:customControls="using:DRLMobile.Uwp.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helper="using:DRLMobile.Uwp.Helpers"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:DRLMobile.Core.Models.UIModels"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="using:System"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:wctprimitives="using:Microsoft.Toolkit.Uwp.UI.Controls.Primitives"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    NavigationCacheMode="Required"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <Style x:Key="ColumnHeaderStyle" TargetType="wctprimitives:DataGridColumnHeader">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+        </Style>
+        <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converter:BoolToInvertBoolConverter x:Key="BoolToInvertBoolConverter" />
+    </Page.Resources>
+    <Grid x:Name="outerPanel">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <!--  outerPanel.Grid.Row="0"  -->
+        <customControls:HeaderControl
+            x:Name="HeaderControl"
+            Title="{x:Bind ViewModel.PageTitleText, Mode=OneWay}"
+            Grid.Row="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            DisplayMemberPathValue="SearchDisplayPath"
+            IsAutoSuggestBoxVisible="Visible"
+            IsPageTitleVisible="Visible"
+            IsRbDataVisible="{x:Bind ViewModel.IsRbDataVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+            IsSecondaryTitleVisible="{x:Bind ViewModel.IsSecondaryTitleVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+            ItemList="{x:Bind ViewModel.HeaderSearchItemSource}"
+            PlaceHolderText="Search"
+            SecondaryTitleText="{x:Bind ViewModel.SecondaryTitleText, Mode=OneWay}"
+            SuggestionChoosenCommand="{x:Bind ViewModel.SuggestionChoosenCommand}"
+            TextValueChangedCommand="{x:Bind ViewModel.HeaderTextChangeCommand}"
+            rbActivityDataChangedCommand="{x:Bind ViewModel.rbActivityDataChangedCommand}" />
+        <!--  outerPanel.Grid.Row="1"  -->
+        <toolkit:DataGrid
+            x:Name="ToolkitDataGrid"
+            Grid.Row="1"
+            x:Load="{x:Bind ViewModel.LoadCustomerGrid, Mode=OneWay}"
+            AlternatingRowBackground="{StaticResource ActivityAlternateRowColor}"
+            AutoGenerateColumns="False"
+            CanUserReorderColumns="False"
+            CanUserSortColumns="False"
+            ColumnHeaderStyle="{StaticResource ColumnHeaderStyle}"
+            IsReadOnly="True"
+            ItemsSource="{x:Bind ViewModel.CollectionView, Mode=TwoWay}"
+            LoadingRowGroup="ToolkitDataGrid_LoadingRowGroup"
+            RowGroupHeaderPropertyNameAlternative=""
+            SelectionChanged="ToolkitDataGrid_SelectionChanged"
+            SelectionMode="Single">
+            <toolkit:DataGrid.Columns>
+                <toolkit:DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding ActivityType}"
+                    Header="Activity Type">
+                    <toolkit:DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap" />
+                        </Style>
+                    </toolkit:DataGridTextColumn.ElementStyle>
+
+                </toolkit:DataGridTextColumn>
+                <toolkit:DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding UserName}"
+                    Header="Created By">
+                    <toolkit:DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="WrapWholeWords" />
+                        </Style>
+                    </toolkit:DataGridTextColumn.ElementStyle>
+                </toolkit:DataGridTextColumn>
+                <toolkit:DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding DisplayTerritoryName}"
+                    Header="Territory #">
+                    <toolkit:DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="WrapWholeWords" />
+                        </Style>
+                    </toolkit:DataGridTextColumn.ElementStyle>
+                </toolkit:DataGridTextColumn>
+
+                <toolkit:DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding UserFullName}"
+                    Header="Territory Name">
+                    <toolkit:DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="WrapWholeWords" />
+                        </Style>
+                    </toolkit:DataGridTextColumn.ElementStyle>
+                </toolkit:DataGridTextColumn>
+
+                <toolkit:DataGridTextColumn
+                    Width="auto"
+                    Binding="{Binding Sales}"
+                    Header="Sales">
+                    <toolkit:DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="WrapWholeWords" />
+                        </Style>
+                    </toolkit:DataGridTextColumn.ElementStyle>
+                </toolkit:DataGridTextColumn>
+
+
+                <toolkit:DataGridTextColumn
+                    Width="2*"
+                    Binding="{Binding OrderID}"
+                    Header="Order #">
+                    <toolkit:DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="WrapWholeWords" />
+                        </Style>
+                    </toolkit:DataGridTextColumn.ElementStyle>
+                </toolkit:DataGridTextColumn>
+            </toolkit:DataGrid.Columns>
+        </toolkit:DataGrid>
+        <!--  outerPanel.Grid.Row="1"  -->
+        <Grid
+            x:Name="gridAllActivities"
+            Grid.Row="1"
+            x:Load="{x:Bind ViewModel.LoadCustomerGrid, Mode=OneWay, Converter={StaticResource BoolToInvertBoolConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.Resources>
+                <SolidColorBrush x:Key="gridBrush" Color="Silver" />
+            </Grid.Resources>
+            <!--  gridAllActivities.Grid.Row=0  -->
+            <Grid
+                x:Name="grdAllActivitiesHeader"
+                Grid.Row="0"
+                Padding="0">
+                <Grid.ColumnDefinitions>
+                    <!--  customerno  -->
+                    <ColumnDefinition Width="4.2*" />
+                    <!--  customername  -->
+                    <ColumnDefinition Width="4.4*" />
+                    <!--  city  -->
+                    <ColumnDefinition Width="3.2*" />
+                    <!--  state  -->
+                    <ColumnDefinition Width="2.6*" />
+                    <!--  sales  -->
+                    <ColumnDefinition Width="2.7*" />
+                    <!--  activity  -->
+                    <ColumnDefinition Width="4.4*" />
+                    <!--  creator  -->
+                    <ColumnDefinition Width="3.6*" />
+                    <!--  dist  -->
+                    <ColumnDefinition Width="2.8*" />
+                    <!--  terrname  -->
+                    <ColumnDefinition Width="4*" />
+                    <!--  calldate  -->
+                    <ColumnDefinition Width="3.6*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="Grid">
+                        <Setter Property="BorderBrush" Value="{StaticResource gridBrush}" />
+                        <Setter Property="BorderThickness" Value="0,0,1,0" />
+                    </Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="15" />
+                        <Setter Property="FontWeight" Value="Bold" />
+                        <Setter Property="Foreground" Value="Black" />
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="Grid.Column" Value="0" />
+                        <Setter Property="Margin" Value="10" />
+                    </Style>
+                    <Style TargetType="Image">
+                        <Setter Property="Width" Value="20" />
+                        <Setter Property="Height" Value="18" />
+                        <Setter Property="Grid.Column" Value="1" />
+                        <Setter Property="VerticalAlignment" Value="Top" />
+                        <Setter Property="Margin" Value="0,15,0,0" />
+                    </Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="CornerRadius" Value="0" />
+                        <Setter Property="Padding" Value="10" />
+                        <Setter Property="PlaceholderText" Value="Search..." />
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+                        <Setter Property="Grid.Row" Value="1" />
+                    </Style>
+                </Grid.Resources>
+                <!--  1st Row  -->
+                <Grid Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.80*" />
+                        <ColumnDefinition Width="0.20*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="CUSTOMER #" />
+                    <Image
+                        x:Name="sortCustomerNoImg"
+                        x:Load="{x:Bind IsNotEmpty(ViewModel.SortCustomerNoText), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(ViewModel.SortCustomerNoText), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.SortColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('customernumber|{0}', ViewModel.SortCustomerNoText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.80*" />
+                        <ColumnDefinition Width="0.20*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="CUSTOMER NAME" />
+                    <Image
+                        x:Name="sortCustomerNameImg"
+                        x:Load="{x:Bind IsNotEmpty(ViewModel.SortCustomerNameText), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(ViewModel.SortCustomerNameText), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.SortColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('customername|{0}', ViewModel.SortCustomerNameText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </Grid>
+                <Grid Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.80*" />
+                        <ColumnDefinition Width="0.20*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="CITY" />
+                    <Image
+                        x:Name="sortCityImg"
+                        x:Load="{x:Bind IsNotEmpty(ViewModel.SortCityText), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(ViewModel.SortCityText), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.SortColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('city|{0}', ViewModel.SortCityText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </Grid>
+                <Grid Grid.Column="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.80*" />
+                        <ColumnDefinition Width="0.20*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="STATE" />
+                    <Image
+                        x:Name="sortStateImg"
+                        Grid.Column="1"
+                        x:Load="{x:Bind IsNotEmpty(ViewModel.SortStateText), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(ViewModel.SortStateText), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.SortColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('state|{0}', ViewModel.SortStateText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </Grid>
+                <Grid Grid.Column="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.80*" />
+                        <ColumnDefinition Width="0.20*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="SALES" />
+                    <Image
+                        x:Name="sortSalesImg"
+                        x:Load="{x:Bind IsNotEmpty(ViewModel.SortSalesText), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(ViewModel.SortSalesText), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.SortColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('sales|{0}', ViewModel.SortSalesText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </Grid>
+                <Grid Grid.Column="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.80*" />
+                        <ColumnDefinition Width="0.20*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="ACTIVITY TYPE" />
+                    <Image
+                        x:Name="sortActivityImg"
+                        x:Load="{x:Bind IsNotEmpty(ViewModel.SortActivityTypeText), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(ViewModel.SortActivityTypeText), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.SortColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('type|{0}', ViewModel.SortActivityTypeText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </Grid>
+                <Grid Grid.Column="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.80*" />
+                        <ColumnDefinition Width="0.20*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="CREATOR" />
+                    <Image
+                        x:Name="sortCreatorImg"
+                        x:Load="{x:Bind IsNotEmpty(ViewModel.SortCreatorText), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(ViewModel.SortCreatorText), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.SortColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('creator|{0}', ViewModel.SortCreatorText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </Grid>
+                <Grid Grid.Column="7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.80*" />
+                        <ColumnDefinition Width="0.20*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="DIST #" />
+                    <Image
+                        x:Name="sortDistributorImg"
+                        x:Load="{x:Bind IsNotEmpty(ViewModel.SortDistributorText), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(ViewModel.SortDistributorText), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.SortColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('distributor|{0}', ViewModel.SortDistributorText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </Grid>
+                <Grid Grid.Column="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.80*" />
+                        <ColumnDefinition Width="0.20*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="TERR NAME" />
+                    <Image
+                        x:Name="sortTerritoryImg"
+                        x:Load="{x:Bind IsNotEmpty(ViewModel.SortTerritoryText), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(ViewModel.SortTerritoryText), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.SortColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('territory|{0}', ViewModel.SortTerritoryText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </Grid>
+                <Grid Grid.Column="9">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.80*" />
+                        <ColumnDefinition Width="0.20*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="CALL DATE" />
+                    <Image
+                        x:Name="sortCalldateImg"
+                        x:Load="{x:Bind IsNotEmpty(ViewModel.SortCalldateText), Mode=OneWay}"
+                        Source="{x:Bind GetSortImagePath(ViewModel.SortCalldateText), Mode=OneWay}" />
+                    <!--  Sort Button Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerPressed">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.SortColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('calldate|{0}', ViewModel.SortCalldateText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </Grid>
+
+                <!--  2nd Row  -->
+                <TextBox Grid.Column="0" Text="{x:Bind ViewModel.FilterCustomerNumberText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <!--  Text Box Filter Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="TextChanged">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.FilterColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('customernumber|{0}', ViewModel.FilterCustomerNumberText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </TextBox>
+                <TextBox Grid.Column="1" Text="{x:Bind ViewModel.FilterCustomerNameText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <!--  Text Box Filter Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="TextChanged">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.FilterColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('customername|{0}', ViewModel.FilterCustomerNameText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </TextBox>
+                <TextBox Grid.Column="2" Text="{x:Bind ViewModel.FilterCityText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <!--  Text Box Filter Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="TextChanged">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.FilterColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('city|{0}', ViewModel.FilterCityText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </TextBox>
+                <TextBox Grid.Column="3" Text="{x:Bind ViewModel.FilterStateText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <!--  Text Box Filter Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="TextChanged">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.FilterColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('state|{0}', ViewModel.FilterStateText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </TextBox>
+                <TextBox Grid.Column="4" Text="{x:Bind ViewModel.FilterSalesText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <!--  Text Box Filter Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="TextChanged">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.FilterColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('sales|{0}', ViewModel.FilterSalesText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </TextBox>
+                <TextBox Grid.Column="5" Text="{x:Bind ViewModel.FilterActivityTypeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <!--  Text Box Filter Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="TextChanged">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.FilterColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('type|{0}', ViewModel.FilterActivityTypeText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </TextBox>
+                <TextBox Grid.Column="6" Text="{x:Bind ViewModel.FilterCreatorText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <!--  Text Box Filter Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="TextChanged">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.FilterColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('creator|{0}', ViewModel.FilterCreatorText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </TextBox>
+                <TextBox Grid.Column="7" Text="{x:Bind ViewModel.FilterDistributorText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <!--  Text Box Filter Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="TextChanged">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.FilterColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('distributor|{0}', ViewModel.FilterDistributorText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </TextBox>
+                <TextBox Grid.Column="8" Text="{x:Bind ViewModel.FilterTerritoryText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <!--  Text Box Filter Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="TextChanged">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.FilterColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('distributor|{0}', ViewModel.FilterTerritoryText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </TextBox>
+                <TextBox Grid.Column="9" Text="{x:Bind ViewModel.FilterCalldateText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <!--  Text Box Filter Click  -->
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="TextChanged">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.FilterColumnClickCommand, Mode=OneWay}" CommandParameter="{x:Bind sys:String.Format('calldate|{0}', ViewModel.FilterCalldateText), Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </TextBox>
+            </Grid>
+            <!--  gridAllActivities.Grid.Row=1  -->
+            <ListView
+                x:Name="lstAllActivities"
+                Grid.Row="1"
+                x:Load="{x:Bind ViewModel.LoadAllCustomerGrid, Mode=OneWay}"
+                ContainerContentChanging="AllCustomerDataGrid_ContainerContentChanging"
+                Holding="lstAllActivities_Holding"
+                IsItemClickEnabled="True"
+                ItemClick="AllCustomerDataGrid_ItemClick"
+                ItemsSource="{x:Bind ViewModel.AllCustomerActivitiesItemSource, Mode=OneWay}"
+                RightTapped="gridItem_RightTapped">
+                <ListView.Resources>
+                    <MenuFlyout x:Name="deleteflyout">
+                        <MenuFlyout.Items>
+                            <MenuFlyoutItem
+                                x:Name="Noactionavailable"
+                                Text="No action available"
+                                Visibility="{x:Bind ViewModel.IsNoActionVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="{StaticResource NoAction}" Style="{StaticResource FontIconStyle}" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem
+                                x:Name="Remove"
+                                Click="DeleteActivity_Click"
+                                Foreground="Red"
+                                Text="Delete"
+                                Visibility="{x:Bind ViewModel.IsDeleteActivityVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="{StaticResource DeleteIcon}" Style="{StaticResource FontIconStyle}" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout.Items>
+                    </MenuFlyout>
+                </ListView.Resources>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                        <Setter Property="Padding" Value="0" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="local:ActivityForAllCustomerUIModel">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <!--  customerno  -->
+                                <ColumnDefinition Width="4.2*" />
+                                <!--  customername  -->
+                                <ColumnDefinition Width="4.4*" />
+                                <!--  city  -->
+                                <ColumnDefinition Width="3.2*" />
+                                <!--  state  -->
+                                <ColumnDefinition Width="2.6*" />
+                                <!--  sales  -->
+                                <ColumnDefinition Width="2.7*" />
+                                <!--  activity  -->
+                                <ColumnDefinition Width="4.4*" />
+                                <!--  creator  -->
+                                <ColumnDefinition Width="3.6*" />
+                                <!--  dist  -->
+                                <ColumnDefinition Width="2.8*" />
+                                <!--  terrname  -->
+                                <ColumnDefinition Width="4*" />
+                                <!--  calldate  -->
+                                <ColumnDefinition Width="3.6*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="15" />
+                                    <Setter Property="FontWeight" Value="Normal" />
+                                    <Setter Property="Foreground" Value="Gray" />
+                                    <Setter Property="TextWrapping" Value="Wrap" />
+                                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="Margin" Value="10,0,0,0" />
+                                </Style>
+
+                            </Grid.Resources>
+                            <TextBlock Grid.Column="0" Text="{x:Bind CustomerNumber, Mode=OneWay}" />
+                            <TextBlock Grid.Column="1" Text="{x:Bind CustomerName, Mode=OneWay}" />
+                            <TextBlock Grid.Column="2" Text="{x:Bind PhysicalAddressCityID, Mode=OneWay}" />
+                            <TextBlock Grid.Column="3" Text="{x:Bind StateName, Mode=OneWay}" />
+                            <TextBlock Grid.Column="4" Text="{x:Bind Sales, Mode=OneWay}" />
+                            <TextBlock Grid.Column="5" Text="{x:Bind ActivityType, Mode=OneWay}" />
+                            <TextBlock Grid.Column="6" Text="{x:Bind UserName, Mode=OneWay}" />
+                            <TextBlock Grid.Column="7" Text="{x:Bind DistributorNo, Mode=OneWay}" />
+                            <TextBlock Grid.Column="8" Text="{x:Bind UserNameFull, Mode=OneWay}" />
+                            <TextBlock Grid.Column="9" Text="{x:Bind sys:String.Format('{0:MM-dd-yyyy}', LastcallDate), Mode=OneWay}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+        </Grid>
+
+        <!--  outerPanel.Grid.Row="2"  -->
+        <Button
+            Grid.Row="2"
+            Height="35"
+            Margin="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Command="{x:Bind ViewModel.AddActivityCommand}"
+            Content="Add Activity"
+            Style="{StaticResource LoginButtonStyle}" />
+        <!--  outerPanel.Grid.Row="1"  -->
+        <TextBlock
+            x:Name="NoActivityTextBlock"
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            x:Load="{x:Bind ViewModel.IsNoActivityMsgVisible, Mode=OneWay}"
+            FontSize="{StaticResource LargeFontSize}"
+            Text="No Activity Exists" />
+        <!--  outerPanel.Grid.Row="0"  -->
+        <Grid
+            x:Name="ProgressRingGrid"
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            d:Visibility="Collapsed"
+            x:Load="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+            Background="Black"
+            Opacity="0.7">
+            <ProgressRing
+                Width="100"
+                Height="100"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Foreground="White"
+                IsActive="True" />
+        </Grid>
+    </Grid>
+</Page>

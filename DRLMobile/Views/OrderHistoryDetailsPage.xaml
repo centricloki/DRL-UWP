@@ -1,0 +1,1575 @@
+﻿<Page
+    x:Class="DRLMobile.Views.OrderHistoryDetailsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:DE="using:DevExpress.UI.Xaml.Grid"
+    xmlns:Editors="using:DevExpress.UI.Xaml.Editors"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:converters="using:DRLMobile.Converters"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:customControl="using:DRLMobile.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:DRLMobile.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style x:Key="NoExpanderHeaderStyle" TargetType="ToggleButton">
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
+
+        <Style x:Key="GridHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="{StaticResource CartTextColor}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="HorizontalTextAlignment" Value="Center" />
+        </Style>
+
+        <Style
+            x:Key="ValueTextBlock"
+            BasedOn="{StaticResource FieldTextBlockStyle}"
+            TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="20,10,0,0" />
+        </Style>
+
+        <Flyout
+            x:Key="CustomPriceKeyPadFlyout"
+            x:Name="PriceKeyPadFlyout"
+            Closing="Flyout_Closing"
+            FlyoutPresenterStyle="{StaticResource ErrorFlyoutPresenterStyle}"
+            LightDismissOverlayMode="Off"
+            Placement="Left">
+            <customControl:CustomKeypad
+                DoneClickEvent="CustomKeypad_DoneClickEvent_1"
+                IsDotButtonVisible="Visible"
+                IsMinusButtonVisible="Collapsed"
+                NumPadButtonClick="{x:Bind ViewModel.NumPadButtonClickCommand}" />
+        </Flyout>
+
+        <Flyout
+            x:Key="CustomKeyPadFlyout"
+            x:Name="QuantityCustomKeyPadFlyout"
+            Closing="QuantityCustomKeyPadFlyout_Closing"
+            FlyoutPresenterStyle="{StaticResource ErrorFlyoutPresenterStyle}"
+            LightDismissOverlayMode="Off"
+            Placement="Left">
+            <customControl:CustomKeypad
+                DoneClickEvent="CustomKeypad_DoneClickEvent"
+                IsDotButtonVisible="Collapsed"
+                IsMinusButtonVisible="Visible"
+                NumPadButtonClick="{x:Bind ViewModel.NumPadButtonClickCommand}" />
+        </Flyout>
+
+        <converters:InvertBoolToVisibilityConverter x:Key="InvertBoolVisibilityConverter" />
+        <converters:BoolToImageSourceConverter x:Key="BoolToImageConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:BoolToStyleConverter x:Key="BoolToStyleConverter" />
+    </Page.Resources>
+
+
+    <Grid Background="{StaticResource LoginBackgroundColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="62" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+
+        <Grid Grid.Row="0" Background="{StaticResource FooterBackgroundColor}">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="{StaticResource LargeFontSize}"
+                FontWeight="SemiBold"
+                Foreground="{StaticResource FooterTextColor}"
+                Text="ORDER DETAILS" />
+
+            <StackPanel
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                Spacing="30">
+                <customControl:DashboardButton
+                    Margin="5"
+                    ButtonClick="{x:Bind ViewModel.EditSaveCommand}"
+                    HoverStateImageSource="{x:Bind ViewModel.IsEditmode, Mode=OneWay, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Hover'}"
+                    ImageHeightWidth="39"
+                    IsBadgeVisible="Collapsed"
+                    NormalStateImageSource="{x:Bind ViewModel.IsEditmode, Mode=OneWay, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Normal'}"
+                    Visibility="{x:Bind ViewModel.IsEditIconVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                <FontIcon
+                    Margin="0,0,10,0"
+                    FontSize="35"
+                    Foreground="{StaticResource FooterTextColor}"
+                    Glyph="{StaticResource MailIcon}"
+                    Style="{StaticResource FontIconStyle}">
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Tapped">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.PrintEmailCommand}" CommandParameter="Email" />
+                        </core:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </FontIcon>
+                <FontIcon
+                    Margin="0,0,20,0"
+                    FontSize="30"
+                    Foreground="{StaticResource FooterTextColor}"
+                    Glyph="{StaticResource PrintIcon}"
+                    Style="{StaticResource FontIconStyle}" />
+
+
+
+            </StackPanel>
+
+        </Grid>
+
+        <ScrollViewer Grid.Row="1">
+            <Grid RowSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!--#region Details Left-->
+                <StackPanel Grid.Row="0" Grid.Column="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="Transaction #" />
+                                <Run Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource ValueTextBlock}"
+                            Text="{x:Bind ViewModel.UiModel.OrderHistoryModel.Invoice, Mode=OneWay}" />
+
+
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="Purchase Order " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <TextBox
+                            Grid.Column="1"
+                            Style="{x:Bind ViewModel.IsEditmode, Mode=OneWay, Converter={StaticResource BoolToStyleConverter}, ConverterParameter='TextBox'}"
+                            Text="{x:Bind ViewModel.UiModel.PurchaseOrder, Mode=TwoWay}" />
+
+
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="Account " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource ValueTextBlock}"
+                            Text="{x:Bind ViewModel.UiModel.CustomerNumber, Mode=TwoWay}" />
+
+
+                    </Grid>
+
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="Address " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <TextBox
+                            Grid.Column="1"
+                            Style="{x:Bind ViewModel.IsEditmode, Mode=OneWay, Converter={StaticResource BoolToStyleConverter}, ConverterParameter='TextBox'}"
+                            Text="{x:Bind ViewModel.UiModel.PhysicalAddress, Mode=TwoWay}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="City " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <TextBox
+                            Grid.Column="1"
+                            Style="{x:Bind ViewModel.IsEditmode, Mode=OneWay, Converter={StaticResource BoolToStyleConverter}, ConverterParameter='TextBox'}"
+                            Text="{x:Bind ViewModel.UiModel.PhysicalCity, Mode=TwoWay}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="State " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <ComboBox
+                            x:Name="PhysicalStateComboBox"
+                            Grid.Column="1"
+                            Margin="20,10,0,0"
+                            FontSize="16"
+                            ItemsSource="{Binding UiModel.StateDictionary.Values}"
+                            SelectedItem="{x:Bind ViewModel.UiModel.SelectedPhysicalState, Mode=TwoWay}"
+                            Style="{x:Bind ViewModel.IsEditmode, Mode=OneWay, Converter={StaticResource BoolToStyleConverter}, ConverterParameter='ComboBox'}">
+
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+
+                        </ComboBox>
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="Zip " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <TextBox
+                            Grid.Column="1"
+                            d:Text="zip"
+                            BeforeTextChanging="NumericTextBox_BeforeTextChanging"
+                            MaxLength="10"
+                            Style="{x:Bind ViewModel.IsEditmode, Mode=OneWay, Converter={StaticResource BoolToStyleConverter}, ConverterParameter='TextBox'}"
+                            Text="{x:Bind ViewModel.UiModel.PhysicalZip, Mode=TwoWay}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="State Tobacco License " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <TextBox
+                            Grid.Column="1"
+                            Style="{x:Bind ViewModel.IsEditmode, Mode=OneWay, Converter={StaticResource BoolToStyleConverter}, ConverterParameter='TextBox'}"
+                            Text="{x:Bind ViewModel.UiModel.StateTobaccoLicense, Mode=TwoWay}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="Retailer License " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <TextBox
+                            Grid.Column="1"
+                            Style="{x:Bind ViewModel.IsEditmode, Mode=OneWay, Converter={StaticResource BoolToStyleConverter}, ConverterParameter='TextBox'}"
+                            Text="{x:Bind ViewModel.UiModel.RetailerLicense, Mode=TwoWay}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="Retailer Sales Certificate " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <TextBox
+                            Grid.Column="1"
+                            Style="{x:Bind ViewModel.IsEditmode, Mode=OneWay, Converter={StaticResource BoolToStyleConverter}, ConverterParameter='TextBox'}"
+                            Text="{x:Bind ViewModel.UiModel.RetailerSalesTaxCertificate, Mode=TwoWay}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="Email To " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <TextBox
+                            Grid.Column="1"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Style="{x:Bind ViewModel.IsEditmode, Mode=OneWay, Converter={StaticResource BoolToStyleConverter}, ConverterParameter='TextBox'}"
+                            Text="{x:Bind ViewModel.UiModel.EmailTo, Mode=TwoWay}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="Custom Tax Statement " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <TextBox
+                            Grid.Column="1"
+                            Height="70"
+                            Style="{x:Bind ViewModel.IsEditmode, Mode=OneWay, Converter={StaticResource BoolToStyleConverter}, ConverterParameter='TextBox'}"
+                            Text="{x:Bind ViewModel.UiModel.CustomTaxStatement, Mode=TwoWay}" />
+                    </Grid>
+
+                </StackPanel>
+                <!--#endregion-->
+
+                <!--#region details Right-->
+                <StackPanel Grid.Row="0" Grid.Column="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="Created Date " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource ValueTextBlock}"
+                            Text="{x:Bind ViewModel.UiModel.CreatedDate, Mode=OneWay}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="Republic Sales Rep " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource ValueTextBlock}"
+                            Text="{x:Bind ViewModel.UiModel.OrderMasterData.RepublicSalesRepository, Mode=OneWay}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="Seller's Name " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource ValueTextBlock}"
+                            Text="{x:Bind ViewModel.UiModel.OrderMasterData.OrderMasterSellerName, Mode=OneWay}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="Sellers Representative Tobacco Permit " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <TextBox
+                            Grid.Column="1"
+                            Style="{x:Bind ViewModel.IsEditmode, Mode=OneWay, Converter={StaticResource BoolToStyleConverter}, ConverterParameter='TextBox'}"
+                            Text="{x:Bind ViewModel.UiModel.OrderMasterSellerRepTobacco, Mode=TwoWay}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="Pre book Ship Date " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <CalendarDatePicker
+                            Grid.Column="1"
+                            Margin="20,10,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="White"
+                            Date="{x:Bind ViewModel.UiModel.PreBookDate, Mode=TwoWay}"
+                            Style="{x:Bind ViewModel.IsEditmode, Mode=OneWay, Converter={StaticResource BoolToStyleConverter}, ConverterParameter='Date'}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text=" Sales Type " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource ValueTextBlock}"
+                            Text="{x:Bind ViewModel.UiModel.SalesType, Mode=OneWay}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}">
+                            <TextBlock.Inlines>
+                                <Run Text="Comments " />
+                                <Run x:Uid="Colon" d:Text=":" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+
+                        <TextBox
+                            Grid.Column="1"
+                            Style="{x:Bind ViewModel.IsEditmode, Mode=OneWay, Converter={StaticResource BoolToStyleConverter}, ConverterParameter='TextBox'}"
+                            Text="{x:Bind ViewModel.UiModel.Comments, Mode=TwoWay}" />
+                    </Grid>
+
+                </StackPanel>
+                <!--#endregion-->
+
+                <!--#region Add button-->
+                <Border
+                    x:Name="AddButtonBorder"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="0,0,90,0"
+                    HorizontalAlignment="Right"
+                    x:Load="{x:Bind ViewModel.IsEditmode, Mode=OneWay}"
+                    Background="Transparent"
+                    BorderBrush="Black"
+                    BorderThickness="1"
+                    CornerRadius="30"
+                    Visibility="{x:Bind ViewModel.IsEditmode, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Tapped">
+                            <core:InvokeCommandAction Command="{x:Bind ViewModel.AddButtonCommand}" />
+                        </core:EventTriggerBehavior>
+
+                    </i:Interaction.Behaviors>
+                    <FontIcon
+                        Margin="10"
+                        FontSize="{StaticResource MediumFontSize}"
+                        FontWeight="ExtraBold"
+                        Foreground="Black"
+                        Glyph="{StaticResource AddIcon}"
+                        Style="{StaticResource FontIconStyle}" />
+                </Border>
+                <!--#endregion-->
+
+                <!--#region Tobacco Grid-->
+                <StackPanel
+                    Name="TobaccoGrid"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="90,0"
+                    Visibility="{x:Bind ViewModel.IsTobaccoGridVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <controls:Expander HorizontalAlignment="Stretch" IsExpanded="True">
+                        <controls:Expander.Header>
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                FontWeight="Bold"
+                                Foreground="{StaticResource CartTextColor}"
+                                Text="Tobacco Products" />
+                        </controls:Expander.Header>
+
+                        <Grid HorizontalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <DE:GridControl
+                                x:Name="TobaccoGridControl"
+                                Grid.Row="0"
+                                x:Load="{x:Bind ViewModel.LoadTobaccoGrid, Mode=OneWay}"
+                                AlternationCount="2"
+                                AutoGenerateColumns="False"
+                                ItemClickCommand="{x:Bind ViewModel.ItemClickCommand}"
+                                ItemsSource="{x:Bind ViewModel.TobaccoGridItemSource, Mode=TwoWay}"
+                                ShowAutoFilterRow="False"
+                                ShowCriteriaInAutoFilterRow="True"
+                                ShowGroupPanel="False"
+                                ShowGroupedColumns="False"
+                                Visibility="{x:Bind ViewModel.IsTobaccoGridVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <DE:GridControl.Columns>
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayBrandName"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Brand" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayStyleName"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Style" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductName"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Item" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductDesc"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Item Description" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductQty"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Quantity" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductUnit"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Unit" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductUnitPrice"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Unit Price" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductSubtotal"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Sub Total" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                </DE:GridControl.Columns>
+                            </DE:GridControl>
+
+                            <StackPanel
+                                Grid.Row="1"
+                                HorizontalAlignment="Right"
+                                Background="{ThemeResource LoginButtonBackground}">
+                                <StackPanel
+                                    Padding="10,10,50,10"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontWeight="Bold"
+                                        Foreground="{StaticResource CartTextColor}"
+                                        Text="Sub Total:" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        Foreground="{StaticResource CartTextColor}"
+                                        Text="{x:Bind ViewModel.TotalTobacco, Mode=OneWay}" />
+                                </StackPanel>
+                            </StackPanel>
+
+                        </Grid>
+                    </controls:Expander>
+                </StackPanel>
+                <!--#endregion-->
+
+                <!--#region  non tobacco gird-->
+                <StackPanel
+                    Name="nonTobaccoGrid"
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="90,0"
+                    Visibility="{x:Bind ViewModel.IsNonTobaccoGridVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <controls:Expander HorizontalAlignment="Stretch" IsExpanded="True">
+                        <controls:Expander.Header>
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                FontWeight="Bold"
+                                Foreground="{StaticResource CartTextColor}"
+                                Text="NonTobacco Products" />
+                        </controls:Expander.Header>
+
+                        <Grid HorizontalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <DE:GridControl
+                                x:Name="NonTobaccoGrid"
+                                Grid.Row="0"
+                                x:Load="{x:Bind ViewModel.LoadNonTobaccoGrid, Mode=OneWay}"
+                                AlternationCount="2"
+                                AutoGenerateColumns="False"
+                                ItemClickCommand="{x:Bind ViewModel.ItemClickCommand}"
+                                ItemsSource="{x:Bind ViewModel.NonTobaccoGridItemSource, Mode=TwoWay}"
+                                ShowAutoFilterRow="False"
+                                ShowCriteriaInAutoFilterRow="True"
+                                ShowGroupPanel="False"
+                                ShowGroupedColumns="False"
+                                Visibility="{x:Bind ViewModel.IsNonTobaccoGridVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <DE:GridControl.Columns>
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayBrandName"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Brand" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayStyleName"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Style" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductName"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Item" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductDesc"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Item Description" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductQty"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Quantity" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductUnit"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Unit" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductUnitPrice"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Unit Price" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductSubtotal"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Sub Total" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                </DE:GridControl.Columns>
+                            </DE:GridControl>
+
+                            <StackPanel
+                                Grid.Row="1"
+                                HorizontalAlignment="Right"
+                                Background="{ThemeResource LoginButtonBackground}">
+                                <StackPanel
+                                    Padding="10,10,50,10"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontWeight="Bold"
+                                        Foreground="{StaticResource CartTextColor}"
+                                        Text="Sub Total:" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        Foreground="{StaticResource CartTextColor}"
+                                        Text="{x:Bind ViewModel.TotalNonTobacco, Mode=OneWay}" />
+                                </StackPanel>
+                            </StackPanel>
+
+                        </Grid>
+                    </controls:Expander>
+                </StackPanel>
+                <!--#endregion-->
+
+                <!--#region RTN Grid-->
+                <StackPanel
+                    Name="RtnStack"
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="40,0"
+                    x:Load="{x:Bind ViewModel.IsRtnGridVisible, Mode=OneWay}"
+                    Visibility="{x:Bind ViewModel.IsRtnGridVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <controls:Expander HorizontalAlignment="Stretch" IsExpanded="True">
+                        <controls:Expander.Header>
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                FontWeight="Bold"
+                                Foreground="{StaticResource CartTextColor}"
+                                Text="RTN" />
+                        </controls:Expander.Header>
+
+                        <Grid HorizontalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <DE:GridControl
+                                x:Name="RtnGrid"
+                                Grid.Row="0"
+                                x:Load="{x:Bind ViewModel.LoadRtnGrid, Mode=OneWay}"
+                                AlternationCount="2"
+                                AutoGenerateColumns="False"
+                                ItemClickCommand="{x:Bind ViewModel.ItemClickCommand}"
+                                ItemsSource="{x:Bind ViewModel.RtnGridItemSource, Mode=TwoWay}"
+                                ShowAutoFilterRow="False"
+                                ShowCriteriaInAutoFilterRow="True"
+                                ShowGroupPanel="False"
+                                ShowGroupedColumns="False"
+                                Visibility="{x:Bind ViewModel.IsRtnGridVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <DE:GridControl.Columns>
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayBrandName"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Brand" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayStyleName"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Style" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductName"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Item" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductDesc"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Item Description" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductQty"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Quantity" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductUnit"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Unit" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="CreditRequestType"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Credit Request" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductUnitPrice"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Unit Price" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductSubtotal"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Sub Total" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                </DE:GridControl.Columns>
+                            </DE:GridControl>
+
+                            <StackPanel
+                                Grid.Row="1"
+                                HorizontalAlignment="Right"
+                                Background="{ThemeResource LoginButtonBackground}">
+                                <StackPanel
+                                    Padding="10,10,50,10"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontWeight="Bold"
+                                        Foreground="{StaticResource CartTextColor}"
+                                        Text="Sub Total:" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        Foreground="{StaticResource CartTextColor}"
+                                        Text="{x:Bind ViewModel.TotalRtnTobacco, Mode=OneWay}" />
+                                </StackPanel>
+                            </StackPanel>
+
+                        </Grid>
+                    </controls:Expander>
+                </StackPanel>
+                <!--#endregion-->
+
+                <!--#region DIF Grid-->
+                <StackPanel
+                    Name="DifStack"
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="40,0"
+                    x:Load="{x:Bind ViewModel.IsDifGridVisible, Mode=OneWay}"
+                    Visibility="{x:Bind ViewModel.IsDifGridVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <controls:Expander HorizontalAlignment="Stretch" IsExpanded="True">
+                        <controls:Expander.Header>
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                FontWeight="Bold"
+                                Foreground="{StaticResource CartTextColor}"
+                                Text="DIF" />
+                        </controls:Expander.Header>
+
+                        <Grid HorizontalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <DE:GridControl
+                                x:Name="DifGrid"
+                                Grid.Row="0"
+                                x:Load="{x:Bind ViewModel.LoadDifGrid, Mode=OneWay}"
+                                AlternationCount="2"
+                                AutoGenerateColumns="False"
+                                ItemsSource="{x:Bind ViewModel.DifGridItemSource, Mode=TwoWay}"
+                                ShowAutoFilterRow="False"
+                                ShowCriteriaInAutoFilterRow="True"
+                                ShowGroupPanel="False"
+                                ShowGroupedColumns="False"
+                                Visibility="{x:Bind ViewModel.IsDifGridVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <DE:GridControl.Columns>
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayBrandName"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Brand" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayStyleName"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Style" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductName"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Item" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductDesc"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Item Description" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductQty"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Quantity" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductUnit"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Unit" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="CreditRequestType"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Credit Request" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductUnitPrice"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Unit Price" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                    <DE:GridTextColumn
+                                        AllowSorting="True"
+                                        AutoFilterCriteria="Contains"
+                                        FieldName="DisplayProductSubtotal"
+                                        TextWrapping="Wrap">
+                                        <DE:GridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource GridHeaderStyle}" Text="Sub Total" />
+                                            </DataTemplate>
+                                        </DE:GridTextColumn.HeaderTemplate>
+                                    </DE:GridTextColumn>
+
+                                </DE:GridControl.Columns>
+                            </DE:GridControl>
+
+                            <StackPanel
+                                Grid.Row="1"
+                                HorizontalAlignment="Right"
+                                Background="{ThemeResource LoginButtonBackground}">
+                                <StackPanel
+                                    Padding="10,10,50,10"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontWeight="Bold"
+                                        Foreground="{StaticResource CartTextColor}"
+                                        Text="Sub Total:" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        Foreground="{StaticResource CartTextColor}"
+                                        Text="{x:Bind ViewModel.TotalRtnTobacco, Mode=OneWay}" />
+                                </StackPanel>
+                            </StackPanel>
+
+                        </Grid>
+                    </controls:Expander>
+                </StackPanel>
+                <!--#endregion-->
+
+            </Grid>
+        </ScrollViewer>
+
+        <TextBox
+            Grid.Row="2"
+            Height="60"
+            Margin="0,5,20,5"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            PlaceholderForeground="Gray"
+            Style="{StaticResource EditTextBoxStyle}"
+            Text=""
+            TextAlignment="Center" />
+
+        <Grid
+            Name="PopupScreen"
+            Grid.Row="0"
+            Grid.RowSpan="4"
+            d:Visibility="Visible"
+            x:Load="{x:Bind ViewModel.IsAddEditPopupVisible, Mode=OneWay}"
+            Visibility="{x:Bind ViewModel.IsAddEditPopupVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Grid
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Background="Black"
+                Opacity="0.7" />
+
+            <Grid
+                MinWidth="700"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                CornerRadius="10,10,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Background="{StaticResource FooterBackgroundColor}">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="{StaticResource MediumFontSize}"
+                        Foreground="{StaticResource FooterTextColor}"
+                        Text="{x:Bind ViewModel.PopupTitle, Mode=OneWay}" />
+
+                    <FontIcon
+                        Margin="0,0,10,0"
+                        HorizontalAlignment="Right"
+                        FontSize="{StaticResource MediumFontSize}"
+                        Foreground="{StaticResource FooterTextColor}"
+                        Glyph="{StaticResource CancelIcon}"
+                        Style="{StaticResource FontIconStyle}">
+                        <i:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="Tapped">
+                                <core:InvokeCommandAction Command="{x:Bind ViewModel.ClosePopupCommand}" />
+                            </core:EventTriggerBehavior>
+
+                        </i:Interaction.Behaviors>
+                    </FontIcon>
+                </Grid>
+
+                <StackPanel
+                    Grid.Row="1"
+                    Background="{StaticResource LoginBackgroundColor}"
+                    CornerRadius="0,0,10,10"
+                    Spacing="10">
+                    <AutoSuggestBox
+                        Name="AutoSuggestBox"
+                        Margin="40,10"
+                        DisplayMemberPath="SearchDisplayPath"
+                        ItemsSource="{x:Bind ViewModel.AddEditUIModel.ProductList, Mode=OneWay}"
+                        PlaceholderText="Search by product name or number"
+                        Text="{x:Bind ViewModel.AddEditUIModel.AutoSuggestionText, Mode=TwoWay}"
+                        TextMemberPath="SearchDisplayPath"
+                        Visibility="{x:Bind ViewModel.IsAdd, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <i:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="TextChanged">
+                                <core:InvokeCommandAction Command="{x:Bind ViewModel.AutoSuggestTextChanged}" CommandParameter="{Binding ElementName=AutoSuggestBox, Path=Text}" />
+                            </core:EventTriggerBehavior>
+
+                            <core:EventTriggerBehavior EventName="SuggestionChosen">
+                                <core:InvokeCommandAction Command="{x:Bind ViewModel.AutoSuggestSuggestionChoosen}" />
+                            </core:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+
+                    </AutoSuggestBox>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}" Text="Brand : " />
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource ValueTextBlock}"
+                            Text="{x:Bind ViewModel.AddEditUIModel.BrandName, Mode=TwoWay}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}" Text="Style : " />
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource ValueTextBlock}"
+                            Text="{x:Bind ViewModel.AddEditUIModel.StyleName, Mode=TwoWay}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}" Text="Product Name : " />
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource ValueTextBlock}"
+                            Text="{x:Bind ViewModel.AddEditUIModel.ProductName, Mode=TwoWay}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}" Text="Product Description : " />
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource ValueTextBlock}"
+                            Text="{x:Bind ViewModel.AddEditUIModel.ProductDesc, Mode=TwoWay}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}" Text="Quantity : " />
+
+                        <StackPanel
+                            Grid.Column="1"
+                            Margin="20,0,0,0"
+                            Orientation="Horizontal">
+                            <TextBox
+                                x:Name="quantityTextBlock"
+                                Width="70"
+                                BeforeTextChanging="quantityTextBlock_BeforeTextChanging"
+                                FlyoutBase.AttachedFlyout="{StaticResource CustomKeyPadFlyout}"
+                                Foreground="{StaticResource LoginScreenTextFontColor}"
+                                GotFocus="quantityTextBlock_GotFocus"
+                                MaxLength="4"
+                                PointerExited="quantityTextBlock_PointerExited"
+                                Text="{x:Bind ViewModel.AddEditUIModel.Quantity, Mode=TwoWay}" />
+
+                            <Image
+                                x:Name="quantityImage"
+                                Width="15"
+                                Height="15"
+                                Margin="2,0,0,0"
+                                Source="{StaticResource EditCart}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}" Text="Unit : " />
+
+                        <ComboBox
+                            Name="UnitComboBox"
+                            Grid.Column="1"
+                            Width="80"
+                            Margin="20,0,0,0"
+                            Background="White"
+                            BorderBrush="Black"
+                            BorderThickness="0.4"
+                            Foreground="{StaticResource LoginScreenTextFontColor}"
+                            PlaceholderForeground="{StaticResource LoginScreenTextFontColor}"
+                            PlaceholderText="{Binding Unit}"
+                            SelectedItem="{x:Bind ViewModel.AddEditUIModel.SelectedUom, Mode=TwoWay}"
+                            SelectionChanged="UnitComboBox_SelectionChanged">
+                            <x:String>CA</x:String>
+                            <x:String>BX</x:String>
+                            <x:String>EA</x:String>
+                            <x:String>IP</x:String>
+                            <x:String>BK</x:String>
+                        </ComboBox>
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}" Text="Credit Request : " />
+
+                        <ComboBox
+                            Grid.Column="1"
+                            Width="auto"
+                            MinWidth="80"
+                            Margin="20,0,0,0"
+                            Background="White"
+                            BorderBrush="Black"
+                            BorderThickness="0.4"
+                            Foreground="{StaticResource LoginScreenTextFontColor}"
+                            ItemsSource="{x:Bind ViewModel.CreditRequestComoBoxSource, Mode=OneWay}"
+                            SelectedItem="{x:Bind ViewModel.AddEditUIModel.SelectedCreditRequest, Mode=TwoWay}"
+                            Visibility="{x:Bind ViewModel.AddEditUIModel.IsCreditRequest, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}" Text="Unit Price : " />
+
+                        <StackPanel
+                            Grid.Column="1"
+                            Margin="20,0,0,0"
+                            Orientation="Horizontal">
+                            <Editors:TextEdit
+                                x:Name="TobaccoTextEdit"
+                                Width="80"
+                                CornerRadius="10"
+                                FlyoutBase.AttachedFlyout="{StaticResource CustomPriceKeyPadFlyout}"
+                                GotFocus="nonTobaccoTextEdit_GotFocus"
+                                PointerExited="nonTobaccoTextEdit_PointerExited"
+                                Text="{x:Bind ViewModel.AddEditUIModel.Price, Mode=TwoWay}">
+                                <Editors:TextEdit.TextInputSettings>
+                                    <Editors:TextInputMaskSettings
+                                        IgnoreBlank="True"
+                                        Mask="\$(\d{0,4}\.?\d{1,2})?"
+                                        MaskType="RegEx"
+                                        SaveLiteral="True" />
+                                </Editors:TextEdit.TextInputSettings>
+                            </Editors:TextEdit>
+                            <Image
+                                x:Name="unitPriceImage"
+                                Width="15"
+                                Height="15"
+                                Margin="3,0,0,0"
+                                Source="{StaticResource EditCart}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource FieldTextBlockStyle}" Text="Sub Total : " />
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource ValueTextBlock}"
+                            Text="{x:Bind ViewModel.AddEditUIModel.SubTotal, Mode=TwoWay}" />
+                    </Grid>
+
+                    <StackPanel
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal"
+                        Spacing="30">
+                        <Button
+                            Width="100"
+                            Margin="7"
+                            Command="{x:Bind ViewModel.SaveDeleteCommand}"
+                            CommandParameter="SAVE"
+                            Content="Save"
+                            Style="{StaticResource LoginButtonStyle}" />
+                        <Button
+                            Width="100"
+                            Margin="7"
+                            Command="{x:Bind ViewModel.SaveDeleteCommand}"
+                            CommandParameter="DELETE"
+                            Content="Delete"
+                            Style="{StaticResource LoginButtonStyle}"
+                            Visibility="{x:Bind ViewModel.IsAdd, Mode=OneWay, Converter={StaticResource InvertBoolVisibilityConverter}}" />
+
+                    </StackPanel>
+
+                </StackPanel>
+            </Grid>
+
+        </Grid>
+
+
+        <toolkit:Loading
+            x:Name="LoadingView"
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            x:Load="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+            IsLoading="{x:Bind ViewModel.IsLoading, Mode=OneWay}">
+            <controls:Loading.Background>
+                <SolidColorBrush Opacity="0.4" Color="Black" />
+            </controls:Loading.Background>
+            <ProgressRing
+                x:Name="ProgressRing"
+                x:Load="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                Foreground="White"
+                IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+        </toolkit:Loading>
+
+    </Grid>
+</Page>
