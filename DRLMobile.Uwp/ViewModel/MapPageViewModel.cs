@@ -1,4 +1,4 @@
-using DevExpress.Mvvm.Native;
+﻿using DevExpress.Mvvm.Native;
 using Microsoft.Toolkit.Mvvm.Input;
 
 using DRLMobile.Core.Enums;
@@ -25,8 +25,6 @@ using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
-using DRLMobile.Uwp.Services;
-using DRLMobile.Uwp.View;
 
 namespace DRLMobile.Uwp.ViewModel
 {
@@ -73,7 +71,6 @@ namespace DRLMobile.Uwp.ViewModel
         public ICommand TerritorySelectionCommand { get; private set; }
         public ICommand FilterApplyCommand { get; private set; }
         public ICommand CloseCustomMapPushPinCommand { get; private set; }
-        public ICommand AdvanceGoogleMapPageCommand { get; private set; }
         #endregion
 
         #region Properties
@@ -414,7 +411,6 @@ namespace DRLMobile.Uwp.ViewModel
             TerritorySelectionCommand = new RelayCommand<TerritoryMasterUIModel>(TerritorySelectionCommandHandler);
             FilterApplyCommand = new AsyncRelayCommand(FilterApplyCommandHandler);
             CloseCustomMapPushPinCommand = new RelayCommand(CloseCustomMapPushPinCommandHandler);
-            AdvanceGoogleMapPageCommand = new RelayCommand(() => NavigationService.NavigateShellFrame(typeof(GoogleMapPage)));
         }
 
         private void CloseCustomMapPushPinCommandHandler()
@@ -960,9 +956,9 @@ namespace DRLMobile.Uwp.ViewModel
             }
         }
 
-        public async Task OnMapLegendItemClickCommandHandler(MapsLegendFilterUIModel selectedItem, CancellationToken token)
+        public async Task OnMapLegendItemClickCommandHandler( MapsLegendFilterUIModel selectedItem, CancellationToken token)
         {
-            token.ThrowIfCancellationRequested();
+            token.ThrowIfCancellationRequested();   
 
             if (CustomMapPinVisibility == Visibility.Visible)
             { CustomMapPinVisibility = Visibility.Collapsed; }
@@ -1401,8 +1397,8 @@ namespace DRLMobile.Uwp.ViewModel
                     await GetCustomerDataForCallActivity();
                 }
 
-                if (PointOfIntrestSource.Count > 0)
-                    Center = CalculateCenter(PointOfIntrestSource);
+                //if (PointOfIntrestSource.Count > 0)
+                //    Center = CalculateCenter(PointOfIntrestSource);
             }
             catch (Exception ex)
             {
@@ -1685,8 +1681,8 @@ namespace DRLMobile.Uwp.ViewModel
                             PointOfIntrestSource.Add(new PointOfInterest
                             {
                                 CustomerData = item,
-                                Location = new Geopoint(
-                                                new BasicGeoposition()
+                                OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(
+                                                new OnTerra.MapsControl.UWP.BasicGeoposition()
                                                 {
                                                     Latitude = Convert.ToDouble(item?.Latitude),
                                                     Longitude = Convert.ToDouble(item?.Longitude)
@@ -1739,7 +1735,7 @@ namespace DRLMobile.Uwp.ViewModel
                                 PointOfIntrestSource.Add(new PointOfInterest
                                 {
                                     CustomerData = item,
-                                    Location = new Geopoint(new BasicGeoposition()
+                                    OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(new OnTerra.MapsControl.UWP.BasicGeoposition()
                                     {
                                         Latitude = Convert.ToDouble(item?.Latitude),
                                         Longitude = Convert.ToDouble(item?.Longitude)
@@ -1805,8 +1801,8 @@ namespace DRLMobile.Uwp.ViewModel
                             PointOfIntrestSource.Add(new PointOfInterest
                             {
                                 CustomerData = item,
-                                Location = new Geopoint(
-                                        new BasicGeoposition()
+                                OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(
+                                        new OnTerra.MapsControl.UWP.BasicGeoposition()
                                         {
                                             Latitude = Convert.ToDouble(item?.Latitude),
                                             Longitude = Convert.ToDouble(item?.Longitude)
@@ -1865,8 +1861,8 @@ namespace DRLMobile.Uwp.ViewModel
                             PointOfIntrestSource.Add(new PointOfInterest
                             {
                                 CustomerData = item,
-                                Location = new Geopoint(
-                                        new BasicGeoposition()
+                                OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(
+                                        new OnTerra.MapsControl.UWP.BasicGeoposition()
                                         {
                                             Latitude = Convert.ToDouble(item?.Latitude),
                                             Longitude = Convert.ToDouble(item?.Longitude)
@@ -1933,7 +1929,7 @@ namespace DRLMobile.Uwp.ViewModel
                             PointOfIntrestSource.Add(new PointOfInterest
                             {
                                 CustomerData = item,
-                                Location = new Geopoint(new BasicGeoposition()
+                                OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(new OnTerra.MapsControl.UWP.BasicGeoposition()
                                 {
                                     Latitude = Convert.ToDouble(item?.Latitude),
                                     Longitude = Convert.ToDouble(item?.Longitude)
@@ -2028,7 +2024,7 @@ namespace DRLMobile.Uwp.ViewModel
             return distanceSquared < threshold * threshold;
         }
 
-        private Geopoint CalculateCenter(ICollection<PointOfInterest> places)
+        private OnTerra.MapsControl.UWP.Geopoint CalculateCenter(ICollection<PointOfInterest> places)
         {
             double totalLatitude = 0.0;
             double totalLongitude = 0.0;
@@ -2039,10 +2035,10 @@ namespace DRLMobile.Uwp.ViewModel
                 totalLongitude += place.Location.Position.Longitude;
             }
 
-            return new Geopoint(new BasicGeoposition { Latitude = Convert.ToDouble(totalLatitude / places.Count), Longitude = Convert.ToDouble(totalLongitude / places.Count) });
+            return new OnTerra.MapsControl.UWP.Geopoint(new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = Convert.ToDouble(totalLatitude / places.Count), Longitude = Convert.ToDouble(totalLongitude / places.Count) });
         }
 
-        public Point GetMapCoordinates(BasicGeoposition geoposition)
+        public Point GetMapCoordinates(OnTerra.MapsControl.UWP.BasicGeoposition geoposition)
         {
             double latitude = Math.Max(Math.Min(geoposition.Latitude, 85.05112878), -85.05112878);
 
@@ -2058,9 +2054,9 @@ namespace DRLMobile.Uwp.ViewModel
         #endregion
 
         #region Public Methods
-
-        public async void SetLoader(bool isOpen) => await coreDispatcher.RunAsync(CoreDispatcherPriority.Normal, () => IsLoading = isOpen);
-
+        
+        public async void SetLoader(bool isOpen)=> await coreDispatcher.RunAsync(CoreDispatcherPriority.Normal, () => IsLoading = isOpen);
+        
         internal void SetTheStateFlyoutList()
         {
             StateDictionary = DbStateDict.ToDictionary(x => x.Key, y => y.Value);

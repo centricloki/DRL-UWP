@@ -1,4 +1,4 @@
-using DRLMobile.Core.Helpers;
+﻿using DRLMobile.Core.Helpers;
 using DRLMobile.Core.Models;
 using DRLMobile.Core.Models.UIModels;
 using DRLMobile.Uwp.Services;
@@ -146,7 +146,7 @@ namespace DRLMobile.Uwp.ViewModel
                     NavigationService.NavigateShellFrame(typeof(TravelVripPage));
                     break;
                 case "Map":
-                    NavigationService.NavigateShellFrame(typeof(AdvanceGoogleMapPage));
+                    NavigationService.NavigateShellFrame(typeof(MapPage));
                     break;
                 case "Route":
                     NavigationService.NavigateShellFrame(typeof(RouteListPage));

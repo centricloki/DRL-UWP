@@ -80,16 +80,16 @@ namespace DRLMobile.Uwp.View
                 {
                     foreach (var item in ViewModel.PointOfIntrestSource)
                     {
-                        var streamImage = RandomAccessStreamReference.CreateFromUri(new Uri(item.ImageSourceUri));
-                        MapIcon mapIcon = new MapIcon();
-                        mapIcon.Image = streamImage;
-                        mapIcon.Location = item.Location;
-                        mapIcon.NormalizedAnchorPoint = new Windows.Foundation.Point(0.5, 1);
-                        mapIcon.Title = item.PinText;
-                        mapIcon.Tag = item;
-                        mapIcon.CollisionBehaviorDesired = MapElementCollisionBehavior.RemainVisible;
+                        //var streamImage = RandomAccessStreamReference.CreateFromUri(new Uri(item.ImageSourceUri));
+                        //MapIcon mapIcon = new MapIcon();
+                        //mapIcon.Image = streamImage;
+                        //mapIcon.Location = item.Location;
+                        //mapIcon.NormalizedAnchorPoint = new Windows.Foundation.Point(0.5, 1);
+                        //mapIcon.Title = item.PinText;
+                        //mapIcon.Tag = item;
+                        //mapIcon.CollisionBehaviorDesired = MapElementCollisionBehavior.RemainVisible;
 
-                        myMap.MapElements.Add(mapIcon);
+                        //myMap.MapElements.Add(mapIcon);
                     }
                 }
             }

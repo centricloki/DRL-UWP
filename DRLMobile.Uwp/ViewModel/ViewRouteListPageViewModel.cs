@@ -1,4 +1,4 @@
-using DevExpress.Xpo.DB;
+﻿using DevExpress.Xpo.DB;
 
 using DRLMobile.Core.Models;
 using DRLMobile.Core.Models.DataModels;
@@ -172,22 +172,22 @@ namespace DRLMobile.Uwp.ViewModel
             set { SetProperty(ref _pointOfIntrestSource, value); }
         }
 
-        private Geopoint _center;
-        public Geopoint Center
+        private OnTerra.MapsControl.UWP.Geopoint _center;
+        public OnTerra.MapsControl.UWP.Geopoint Center
         {
             get { return _center; }
             set { SetProperty(ref _center, value); }
         }
 
-        private Geopoint _endGeopoint;
-        public Geopoint EndGeopoint
+        private OnTerra.MapsControl.UWP.Geopoint _endGeopoint;
+        public OnTerra.MapsControl.UWP.Geopoint EndGeopoint
         {
             get { return _endGeopoint; }
             set { SetProperty(ref _endGeopoint, value); }
         }
 
-        private Geopoint _startGeopoint;
-        public Geopoint StartGeopoint
+        private OnTerra.MapsControl.UWP.Geopoint _startGeopoint;
+        public OnTerra.MapsControl.UWP.Geopoint StartGeopoint
         {
             get { return _startGeopoint; }
             set { SetProperty(ref _startGeopoint, value); }
@@ -216,6 +216,7 @@ namespace DRLMobile.Uwp.ViewModel
 
         public ViewRouteDetailsUIModel SelectedCustomerForPopup;
         const int MaxWaypointsLimit = 17;
+        public OnTerra.MapsControl.UWP.MapControl OnTerraMap { get; set; }
         #endregion
 
         #region Command
@@ -224,13 +225,11 @@ namespace DRLMobile.Uwp.ViewModel
         public ICommand EditButtonCommand { get; private set; }
         public ICommand DeleteButtonCommand { get; private set; }
         public ICommand NavigationButtonCommand { get; private set; }
-        public IAsyncRelayCommand<MapControl> CalculateButtonCommand { get; private set; }
+        public IAsyncRelayCommand<OnTerra.MapsControl.UWP.MapControl> CalculateButtonCommand { get; private set; }
         public ICommand HeaderSearchTextChangeCommand { private set; get; }
         public ICommand HeaderSearchSuggestionChoosenCommand { private set; get; }
         public ICommand CloseCustomMapPushPinCommand { get; private set; }
         public ICommand SelectAllCommand { get; set; }
-
-        public ICommand GoolgeRouteButtonCommand { get; private set; }
 
         #endregion
 
@@ -274,14 +273,12 @@ namespace DRLMobile.Uwp.ViewModel
             EditButtonCommand = new RelayCommand(EditButtonCommandHandler);
             DeleteButtonCommand = new AsyncRelayCommand(DeleteButtonCommandHandler);
             NavigationButtonCommand = new RelayCommand(NavigationButtonCommandHandler);
-            CalculateButtonCommand = new AsyncRelayCommand<MapControl>(CalculateButtonCommandHandler);
+            CalculateButtonCommand = new AsyncRelayCommand<OnTerra.MapsControl.UWP.MapControl>(CalculateButtonCommandHandler);
             HeaderSearchTextChangeCommand = new AsyncRelayCommand<string>(HeaderSearchTextChangeCommandHandler);
             HeaderSearchSuggestionChoosenCommand = new RelayCommand<ViewRouteDetailsUIModel>(SuggestionChoosen);
             OnCheckBoxClicked = new RelayCommand<ViewRouteDetailsUIModel>(OnCheckBoxClickedHandler);
             CloseCustomMapPushPinCommand = new RelayCommand(CloseCustomMapPushPinCommandHandler);
             SelectAllCommand = new RelayCommand(SelectAllCommandHandler);
-
-            GoolgeRouteButtonCommand = new RelayCommand(() => NavigationService.NavigateShellFrame(typeof(ViewGoogleRoutePage), SelectedRoute));
         }
 
         private void CloseCustomMapPushPinCommandHandler()
@@ -476,12 +473,13 @@ namespace DRLMobile.Uwp.ViewModel
             RouteDetailsItemSource.Add(_filterItem);
         }
 
-        private async Task CalculateButtonCommandHandler(MapControl myMap)
+        private async Task CalculateButtonCommandHandler(OnTerra.MapsControl.UWP.MapControl myMap)
         {
             LoadingVisibilityHandler(isLoading: true);
+            OnTerraMap = myMap;
             StartGeopoint = null;
             EndGeopoint = null;
-            myMap.Routes.Clear();
+            OnTerraMap.Routes.Clear();
             var isSelected = RouteDetailsItemSource.Any(x => x.IsChecked);
             var isValidStart = !string.IsNullOrWhiteSpace(StartLocation.Trim()) || IsStartCurrentLocation;
             var isValidEnd = !string.IsNullOrWhiteSpace(EndLocation.Trim()) || IsEndCurrentLocation;
@@ -601,30 +599,35 @@ namespace DRLMobile.Uwp.ViewModel
             LoadingVisibilityHandler(isLoading: false);
         }
 
-        private async Task<Geopoint> GetGeoLocationFromAddress(string address, char type)
+        private async Task<OnTerra.MapsControl.UWP.Geopoint> GetGeoLocationFromAddress(string address, char type)
         {
-            MapLocationFinderResult result = await MapLocationFinder.FindLocationsAsync(address, null, 1);
-            if (result.Status == MapLocationFinderStatus.Success && result.Locations.Any())
+            OnTerra.MapsControl.UWP.GeocodeResult result = await OnTerraMap.GeocodeAndPlotAsync(address);
+            if (result.SuccessCount > 1 && result.Locations.Any())
             {
                 var bestMatch = result.Locations[0];
-                var addr = bestMatch.Address;
-                if (!addr.Country.Contains("United States", StringComparison.OrdinalIgnoreCase))
+                var addr = bestMatch.Input;
+                if (!addr.Contains("United States", StringComparison.OrdinalIgnoreCase))
                 {
                     return null;
                 }
                 else
                 {
-                    if (!int.TryParse(address, out int presult))
-                    {
-                        //if (!ContainsCityOrState(address, addr.Town, addr.Region))
-                        if (!ContainsCityOrState(address, addr.Town))
-                            return null;
-                    }
+                  return  new OnTerra.MapsControl.UWP.Geopoint(
+                                                new OnTerra.MapsControl.UWP.BasicGeoposition()
+                                                {
+                                                    Latitude = bestMatch.Latitude,
+                                                    Longitude = bestMatch.Longitude
+                                                });
+                    //    if (!int.TryParse(address, out int presult))
+                    //    {
+                    //        if (!ContainsCityOrState(address, addr.Town))
+                    //            return null;
+                    //    }
 
-                    System.Diagnostics.Debug.WriteLine($@"[Debug] Type {type} Addr// 
-                StreetNumber-{addr.StreetNumber}, Street- {addr.Street}
-                , City- {addr.Town}, State- {addr.Region}, postalCode-{addr.PostCode}");
-                    return result?.Locations?.FirstOrDefault()?.Point;
+                    //    System.Diagnostics.Debug.WriteLine($@"[Debug] Type {type} Addr// 
+                    //StreetNumber-{addr.StreetNumber}, Street- {addr.Street}
+                    //, City- {addr.Town}, State- {addr.Region}, postalCode-{addr.PostCode}");
+                    //    return result?.Locations?.FirstOrDefault()?.Point;
                 }
             }
             else
@@ -666,7 +669,6 @@ namespace DRLMobile.Uwp.ViewModel
             try
             {
                 var accessStatus = await Geolocator.RequestAccessAsync();
-
                 switch (accessStatus)
                 {
                     case GeolocationAccessStatus.Allowed:
@@ -677,11 +679,21 @@ namespace DRLMobile.Uwp.ViewModel
 
                         if (IsStartCurrentLocation)
                         {
-                            StartGeopoint = pos.Coordinate.Point;
+                            StartGeopoint = new OnTerra.MapsControl.UWP.Geopoint(
+                                                new OnTerra.MapsControl.UWP.BasicGeoposition()
+                                                {
+                                                    Latitude = Convert.ToDouble(pos.Coordinate.Point.Position.Latitude),
+                                                    Longitude = Convert.ToDouble(pos.Coordinate.Point.Position.Longitude)
+                                                });
                         }
                         if (IsEndCurrentLocation)
                         {
-                            EndGeopoint = pos.Coordinate.Point;
+                            EndGeopoint = new OnTerra.MapsControl.UWP.Geopoint(
+                                                new OnTerra.MapsControl.UWP.BasicGeoposition()
+                                                {
+                                                    Latitude = Convert.ToDouble(pos.Coordinate.Point.Position.Latitude),
+                                                    Longitude = Convert.ToDouble(pos.Coordinate.Point.Position.Longitude)
+                                                });
                         }
                         return true;
 
@@ -712,7 +724,7 @@ namespace DRLMobile.Uwp.ViewModel
             }
         }
 
-        private async Task PlotPinsForSelectedCustomers(ObservableCollection<ViewRouteDetailsUIModel> SelectedCustomerList, MapControl myMap)
+        private async Task PlotPinsForSelectedCustomers(ObservableCollection<ViewRouteDetailsUIModel> SelectedCustomerList, OnTerra.MapsControl.UWP.MapControl myMap)
         {
             if (SelectedCustomerList != null && SelectedCustomerList.Any())
             {
@@ -744,11 +756,12 @@ namespace DRLMobile.Uwp.ViewModel
                                     PointOfIntrestSource.Add(new PointOfInterest
                                     {
                                         RouteData = item,
-                                        Location = new Geopoint(new BasicGeoposition()
-                                        {
-                                            Latitude = Convert.ToDouble(item?.Latitude),
-                                            Longitude = Convert.ToDouble(item?.Longitude)
-                                        }),
+                                        OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(
+                                            new OnTerra.MapsControl.UWP.BasicGeoposition()
+                                            {
+                                                Latitude = Convert.ToDouble(item?.Latitude),
+                                                Longitude = Convert.ToDouble(item?.Longitude)
+                                            }),
                                         NormalizedAnchorPoint = new Point(0.5, 1),
                                         PinColor = new SolidColorBrush(Colors.Red),
                                         IsPinTextVisible = true,
@@ -775,11 +788,12 @@ namespace DRLMobile.Uwp.ViewModel
                                     PointOfIntrestSource.Add(new PointOfInterest
                                     {
                                         RouteData = item,
-                                        Location = new Geopoint(new BasicGeoposition()
-                                        {
-                                            Latitude = Convert.ToDouble(item?.Latitude),
-                                            Longitude = Convert.ToDouble(item?.Longitude)
-                                        }),
+                                        OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(
+                                            new OnTerra.MapsControl.UWP.BasicGeoposition()
+                                            {
+                                                Latitude = Convert.ToDouble(item?.Latitude),
+                                                Longitude = Convert.ToDouble(item?.Longitude)
+                                            }),
                                         NormalizedAnchorPoint = new Point(0.5, 1),
                                         PinColor = new SolidColorBrush(Colors.Red),
                                         IsPinTextVisible = true,
@@ -806,13 +820,13 @@ namespace DRLMobile.Uwp.ViewModel
                     }
                     else
                     {
-                        GeoboundingBox geoboundingBox = GeoboundingBox.TryCompute(PointOfIntrestSource.Select(x =>
-                        new BasicGeoposition
+                        OnTerra.MapsControl.UWP.GeoboundingBox geoboundingBox = OnTerra.MapsControl.UWP.GeoboundingBox.TryCompute(PointOfIntrestSource.Select(x =>
+                        new OnTerra.MapsControl.UWP.BasicGeoposition
                         {
                             Latitude = x.Location.Position.Latitude,
                             Longitude = x.Location.Position.Longitude,
                         }));
-                        await myMap.TrySetViewBoundsAsync(geoboundingBox, null, MapAnimationKind.None);
+                       // await myMap.TrySetViewBoundsAsync(geoboundingBox, null, MapAnimationKind.None);
                     }
                 }
             }
@@ -826,7 +840,7 @@ namespace DRLMobile.Uwp.ViewModel
         {
             PointOfIntrestSource.Add(new PointOfInterest
             {
-                Location = StartGeopoint,
+                OnTerraLocation = StartGeopoint,
                 NormalizedAnchorPoint = new Point(0.5, 1),
                 PinColor = new SolidColorBrush(Colors.Green),
                 PinText = "start",
@@ -835,7 +849,7 @@ namespace DRLMobile.Uwp.ViewModel
 
             PointOfIntrestSource.Add(new PointOfInterest
             {
-                Location = EndGeopoint,
+                OnTerraLocation = EndGeopoint,
                 NormalizedAnchorPoint = new Point(0.5, 1),
                 PinColor = new SolidColorBrush(Colors.Yellow),
                 PinText = "End",
@@ -843,7 +857,7 @@ namespace DRLMobile.Uwp.ViewModel
             });
         }
 
-        private async Task<bool> ShowRouteOnMap(MapControl myMap, ObservableCollection<ViewRouteDetailsUIModel> SelectedCustomerList)
+        private async Task<bool> ShowRouteOnMap(OnTerra.MapsControl.UWP.MapControl myMap, ObservableCollection<ViewRouteDetailsUIModel> SelectedCustomerList)
         {
             var webServiceResponse = await PathActivities(SelectedCustomerList);
             if (webServiceResponse != null && webServiceResponse.Any(x => x.type == "InvalidRoute"))
@@ -906,32 +920,32 @@ namespace DRLMobile.Uwp.ViewModel
                 }
                 else
                 {
-                    path.Add(new EnhancedWaypoint(StartGeopoint, WaypointKind.Stop));
-                    foreach (var activity in webServiceResponse)
-                    {
-                        if (activity.type == "service")
-                        {
-                            OptimizedListRoutes.Add(activity); //to get in the navigated button click
-                            BasicGeoposition point = new BasicGeoposition() { Latitude = activity.address.lat, Longitude = activity.address.lon };
-                            path.Add(new EnhancedWaypoint(new Geopoint(point), WaypointKind.Via));
-                        }
-                    }
-                    path.Add(new EnhancedWaypoint(EndGeopoint, WaypointKind.Stop));
+                    //path.Add(new EnhancedWaypoint(StartGeopoint, WaypointKind.Stop));
+                    //foreach (var activity in webServiceResponse)
+                    //{
+                    //    if (activity.type == "service")
+                    //    {
+                    //        OptimizedListRoutes.Add(activity); //to get in the navigated button click
+                    //        BasicGeoposition point = new BasicGeoposition() { Latitude = activity.address.lat, Longitude = activity.address.lon };
+                    //        path.Add(new EnhancedWaypoint(new Geopoint(point), WaypointKind.Via));
+                    //    }
+                    //}
+                    //path.Add(new EnhancedWaypoint(EndGeopoint, WaypointKind.Stop));
                 }
             }
             else
             {
-                path.Add(new EnhancedWaypoint(StartGeopoint, WaypointKind.Stop));
-                for (int index = 0; index < SelectedCustomerList.Count; index++)
-                {
-                    var item = SelectedCustomerList[index];
-                    if (!string.IsNullOrEmpty(item.Latitude) && !string.IsNullOrEmpty(item.Longitude))
-                    {
-                        BasicGeoposition point = new BasicGeoposition() { Latitude = Convert.ToDouble(item.Latitude), Longitude = Convert.ToDouble(item.Longitude) };
-                        path.Add(new EnhancedWaypoint(new Geopoint(point), WaypointKind.Via));
-                    }
-                }
-                path.Add(new EnhancedWaypoint(EndGeopoint, WaypointKind.Stop));
+                //path.Add(new EnhancedWaypoint(StartGeopoint, WaypointKind.Stop));
+                //for (int index = 0; index < SelectedCustomerList.Count; index++)
+                //{
+                //    var item = SelectedCustomerList[index];
+                //    if (!string.IsNullOrEmpty(item.Latitude) && !string.IsNullOrEmpty(item.Longitude))
+                //    {
+                //        BasicGeoposition point = new BasicGeoposition() { Latitude = Convert.ToDouble(item.Latitude), Longitude = Convert.ToDouble(item.Longitude) };
+                //        path.Add(new EnhancedWaypoint(new Geopoint(point), WaypointKind.Via));
+                //    }
+                //}
+                //path.Add(new EnhancedWaypoint(EndGeopoint, WaypointKind.Stop));
             }
             try
             {
@@ -956,15 +970,15 @@ namespace DRLMobile.Uwp.ViewModel
 
                 if (routeResult.Status == MapRouteFinderStatus.Success)
                 {
-                    MapRouteView viewOfRoute = new MapRouteView(routeResult.Route);
-                    viewOfRoute.RouteColor = Colors.Blue;
-                    viewOfRoute.OutlineColor = Colors.Blue;
-                    myMap.Routes.Add(viewOfRoute);
+                    //MapRouteView viewOfRoute = new MapRouteView(routeResult.Route);
+                    //viewOfRoute.RouteColor = Colors.Blue;
+                    //viewOfRoute.OutlineColor = Colors.Blue;
+                    //myMap.Routes.Add(viewOfRoute);
 
-                    await myMap.TrySetViewBoundsAsync(
-                    routeResult.Route.BoundingBox,
-                    new Thickness(105),
-                    MapAnimationKind.Linear);
+                    //await myMap.TrySetViewBoundsAsync(
+                    //routeResult.Route.BoundingBox,
+                    //new Thickness(105),
+                    //MapAnimationKind.Linear);
                     return true;
                 }
                 else

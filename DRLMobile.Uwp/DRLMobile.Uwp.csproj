@@ -12,7 +12,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -38,7 +38,7 @@
     <AppInstallerUri>https://honeyrel.drl-ent.com/IPadApp/9.2.2</AppInstallerUri>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
-    <AppxPackageDir>C:\AppCodeStore\DRL\DRL-UWP\DRLMobile.Uwp\AppPackages\stag\</AppxPackageDir>
+    <AppxPackageDir>C:\AppCodeStore\DRL\DRL-UWP\DRLMobile.Uwp\AppPackages\uat\</AppxPackageDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -249,7 +249,6 @@
     <Compile Include="ViewModel\AddActivityPageViewModel.cs" />
     <Compile Include="ViewModel\AddCustomerPageViewModel.cs" />
     <Compile Include="ViewModel\AddEditRoutePageViewModel.cs" />
-    <Compile Include="ViewModel\AdvanceGoogleMapPageViewModel.cs" />
     <Compile Include="ViewModel\CartPageViewModel.cs" />
     <Compile Include="ViewModel\CustomerDetailsPageViewModel.cs" />
     <Compile Include="ViewModel\CustomersListPageViewModel.cs" />
@@ -272,7 +271,6 @@
     <Compile Include="ViewModel\SrcProductPageViewModel.cs" />
     <Compile Include="ViewModel\TravelVripPageViewModel.cs" />
     <Compile Include="ViewModel\TravelVripPromotionContractPageViewModel.cs" />
-    <Compile Include="ViewModel\ViewGoogleRoutePageViewModel.cs" />
     <Compile Include="ViewModel\ViewRouteListPageViewModel.cs" />
     <Compile Include="View\ActivitiesPage.xaml.cs">
       <DependentUpon>ActivitiesPage.xaml</DependentUpon>
@@ -285,9 +283,6 @@
     </Compile>
     <Compile Include="View\AddEditRoutePage.xaml.cs">
       <DependentUpon>AddEditRoutePage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\AdvanceGoogleMapPage.xaml.cs">
-      <DependentUpon>AdvanceGoogleMapPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\CartPage.xaml.cs">
       <DependentUpon>CartPage.xaml</DependentUpon>
@@ -313,9 +308,6 @@
     <Compile Include="View\FavoritePage.xaml.cs">
       <DependentUpon>FavoritePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\GoogleMapPage.xaml.cs">
-      <DependentUpon>GoogleMapPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\HeadQuarterPage.xaml.cs">
       <DependentUpon>HeadQuarterPage.xaml</DependentUpon>
     </Compile>
@@ -333,12 +325,6 @@
     </Compile>
     <Compile Include="View\OrderHistoryPage.xaml.cs">
       <DependentUpon>OrderHistoryPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\POCAzureMapPage.xaml.cs">
-      <DependentUpon>POCAzureMapPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\POCGoogleMapPage.xaml.cs">
-      <DependentUpon>POCGoogleMapPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\PopOrderPage.xaml.cs">
       <DependentUpon>PopOrderPage.xaml</DependentUpon>
@@ -372,9 +358,6 @@
     </Compile>
     <Compile Include="View\TravelVripPage.xaml.cs">
       <DependentUpon>TravelVripPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\ViewGoogleRoutePage.xaml.cs">
-      <DependentUpon>ViewGoogleRoutePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ViewRouteListPage.xaml.cs">
       <DependentUpon>ViewRouteListPage.xaml</DependentUpon>
@@ -438,8 +421,6 @@
     <Content Include="Assets\LargeTile.scale-200.png" />
     <Content Include="Assets\LargeTile.scale-400.png" />
     <Content Include="Assets\Login\logo-login.png" />
-    <Content Include="Assets\Maps\AdvanceGoogleMap.html" />
-    <Content Include="Assets\Maps\GoogleRoute.html" />
     <Content Include="Assets\Maps\MapPin-1.png" />
     <Content Include="Assets\Maps\MapPin-2.png" />
     <Content Include="Assets\Maps\MapPin-3.png" />
@@ -481,18 +462,6 @@
     <Content Include="Assets\Maps\MapPin-Voilet.png" />
     <Content Include="Assets\Maps\MapPin-White.png" />
     <Content Include="Assets\Maps\MapPin-Yellow.png" />
-    <Content Include="Assets\Maps\AzureMap.html" />
-    <Content Include="Assets\Maps\AzureMapTest.html" />
-    <Content Include="Assets\Maps\AzureRouteMap.html" />
-    <Content Include="Assets\Maps\GoogleMap.html" />
-    <Content Include="Assets\Maps\GoogleMapTest.html" />
-    <Content Include="Assets\Maps\POCAzureMap.html" />
-    <Content Include="Scripts\AdvanceGoogleMap.js" />
-    <Content Include="Scripts\AzureMap.js" />
-    <Content Include="Scripts\AzureRouteMap.js" />
-    <Content Include="Scripts\GoogleMap.js" />
-    <Content Include="Scripts\GoogleRoute.js" />
-    <Content Include="Scripts\POCAzureMap.js" />
     <Content Include="Assets\ProductDetail\button_active.png" />
     <Content Include="Assets\ProductDetail\button_hover.png" />
     <Content Include="Assets\ProductDetail\button_inactive.png" />
@@ -683,10 +652,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\AdvanceGoogleMapPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="View\CartPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -719,10 +684,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\GoogleMapPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\HeadQuarterPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -746,14 +707,6 @@
     <Page Include="View\OrderHistoryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\POCAzureMapPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\POCGoogleMapPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\PopOrderPage.xaml">
       <SubType>Designer</SubType>
@@ -799,10 +752,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ViewGoogleRoutePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="View\ViewRouteListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -829,9 +778,6 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.8.6</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit">
       <Version>7.1.2</Version>
     </PackageReference>
@@ -852,6 +798,9 @@
     </PackageReference>
     <PackageReference Include="MsgKit">
       <Version>2.5.1</Version>
+    </PackageReference>
+    <PackageReference Include="OnTerra.MapsControl.UWP">
+      <Version>1.0.33</Version>
     </PackageReference>
     <PackageReference Include="SharpDX.Direct2D1">
       <Version>4.2.0</Version>

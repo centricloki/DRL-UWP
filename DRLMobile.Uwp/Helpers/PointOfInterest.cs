@@ -12,6 +12,7 @@ namespace DRLMobile.Uwp.Helpers
     public class PointOfInterest : BaseModel
     {
         public Geopoint Location { get; set; }
+        public OnTerra.MapsControl.UWP.Geopoint OnTerraLocation { get; set; }
 
         public Point NormalizedAnchorPoint { get; set; }
 

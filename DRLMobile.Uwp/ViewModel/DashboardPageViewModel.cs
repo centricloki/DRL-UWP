@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -125,11 +125,6 @@ namespace DRLMobile.Uwp.ViewModel
         public ICommand RouteListCommand { get; private set; }
         public ICommand ActivityCommand { get; private set; }
         public ICommand AssignedAreaCommand { get; private set; }
-
-        public ICommand GoogleMapCommand { get; private set; }
-        public ICommand POCAzureMapCommand { get; private set; }
-        public ICommand AzureMapCommand { get; private set; }
-        public ICommand AzureRouteMapCommand { get; private set; }
         #endregion
 
         #region Constructor
@@ -151,15 +146,6 @@ namespace DRLMobile.Uwp.ViewModel
             resourceLoader = ResourceLoader.GetForCurrentView();
             LoadingVisibility = Visibility.Collapsed;
             coreDispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
-
-
-            GoogleMapCommand = new RelayCommand(() => NavigationService.NavigateShellFrame(typeof(GoogleMapPage)));
-            POCAzureMapCommand = new RelayCommand(() => NavigationService.NavigateShellFrame(typeof(POCAzureMapPage)));
-
-            //GoogleMapCommand = new RelayCommand(() => NavigationService.NavigateShellFrame(typeof(GoogleMapPage)));
-
-            //AzureMapCommand = new RelayCommand(() => NavigationService.NavigateShellFrame(typeof(AzureMapPage)));
-            //AzureRouteMapCommand = new RelayCommand(() => NavigationService.NavigateShellFrame(typeof(AzureRouteMapPage)));
         }
         #endregion
 

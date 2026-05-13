@@ -1,4 +1,4 @@
-<Page
+﻿<Page
     x:Class="DRLMobile.Uwp.View.ViewRouteListPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,7 +6,7 @@
     xmlns:converter="using:DRLMobile.Uwp.Converters"
     xmlns:customControls="using:DRLMobile.Uwp.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:map="using:Windows.UI.Xaml.Controls.Maps"
+    xmlns:map="using:OnTerra.MapsControl.UWP" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     NavigationCacheMode="Required"
@@ -46,16 +46,6 @@
             SuggestionChoosenCommand="{x:Bind ViewModel.HeaderSearchSuggestionChoosenCommand}"
             TextValueChangedCommand="{x:Bind ViewModel.HeaderSearchTextChangeCommand}" />
         <!--#endregion-->
-
-        <Button
-                Width="100"
-                Height="35"
-                Margin="20,1,0,1"
-                Command="{x:Bind ViewModel.GoolgeRouteButtonCommand}"
-                Content="Navigation"
-                FontSize="15"
-                Foreground="{StaticResource CartTextColor}"
-                Style="{StaticResource LoginButtonStyle}" />
 
         <!--#region Customer List-->
         <StackPanel
@@ -493,7 +483,7 @@
         <!--#endregion-->
 
         <!--#region MapControl-->
-        <map:MapControl
+        <!--<map:MapControl
             x:Name="myMap"
             Grid.Row="5"
             MapElementClick="myMap_MapElementClick"
@@ -501,7 +491,15 @@
             TransitFeaturesVisible="False"
             ZoomLevel="19">
             <map:MapItemsControl x:Name="MapItems" ItemsSource="{x:Bind ViewModel.PointOfIntrestSource, Mode=OneWay}" />
+        </map:MapControl>-->
+        <map:MapControl
+            x:Name="myMap"
+            Grid.Row="5"
+            
+            MapServiceToken="{StaticResource OnTerraMapServiceKey}">
+            <!--<map:MapItemsControl x:Name="MapItems" ItemsSource="{x:Bind ViewModel.PointOfIntrestSource, Mode=OneWay}" />-->
         </map:MapControl>
+
         <Grid
             Grid.Row="5"
             Grid.RowSpan="2"
@@ -540,15 +538,6 @@
                 Foreground="{StaticResource CartTextColor}"
                 Style="{StaticResource LoginButtonStyle}"
                 Visibility="{x:Bind ViewModel.IsDeleteIconVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
-            <Button
-                Width="100"
-                Height="35"
-                Margin="20,1,0,1"
-                Command="{x:Bind ViewModel.GoolgeRouteButtonCommand}"
-                Content="Google Map"
-                FontSize="15"
-                Foreground="{StaticResource CartTextColor}"
-                Style="{StaticResource LoginButtonStyle}" />
             <Button
                 Width="100"
                 Height="35"

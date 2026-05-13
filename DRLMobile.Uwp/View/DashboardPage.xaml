@@ -86,7 +86,6 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <customControls:DashboardButton
@@ -188,37 +187,6 @@
                 ButtonClick="{x:Bind ViewModel.TravelVripButtonCommand}"
                 HoverStateImageSource="{StaticResource TravelHover}"
                 NormalStateImageSource="{StaticResource TravelNormal}" />
-
-            <customControls:DashboardButton 
-    Grid.Row="4"
-    Grid.Column="0"
-    ButtonClick="{x:Bind ViewModel.GoogleMapCommand}"
-    HoverStateImageSource="{StaticResource RackOrderHover}"
-    NormalStateImageSource="{StaticResource RackOrderNormal}" />
-
-            <customControls:DashboardButton
-    Grid.Row="4"
-    Grid.Column="1"
-    ButtonClick="{x:Bind ViewModel.POCAzureMapCommand}"
-    HoverStateImageSource="{StaticResource PopOrderHover}"
-    NormalStateImageSource="{StaticResource PopOrderNormal}" />
-
-            <!--<customControls:DashboardButton
-    Grid.Row="4"
-    Grid.Column="0"
-    ButtonClick="{x:Bind ViewModel.AzureMapCommand}"
-    HoverStateImageSource="{StaticResource PopOrderHover}"
-    NormalStateImageSource="{StaticResource PopOrderNormal}" />
-
-
-            <customControls:DashboardButton
-    Grid.Row="4"
-    Grid.Column="0"
-    ButtonClick="{x:Bind ViewModel.AzureRouteMapCommand}"
-    HoverStateImageSource="{StaticResource PopOrderHover}"
-    NormalStateImageSource="{StaticResource PopOrderNormal}" />-->
-
-
         </Grid>
 
         <Grid

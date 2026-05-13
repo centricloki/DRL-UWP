@@ -8,6 +8,7 @@ using DRLMobile.Uwp.Helpers;
 using DRLMobile.Uwp.ViewModel;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,6 +23,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Maps;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+
+using onTerra = OnTerra.MapsControl.UWP;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -46,10 +49,14 @@ namespace DRLMobile.Uwp.View
             Unloaded += MapPage_Unloaded;
         }
 
+        private async Task InitializeMap()
+        {
+            await myMap.InitializeAsync();
+        }
         private void MapPage_Unloaded(object sender, RoutedEventArgs e)
         {
-            myMap?.MapElements?.Clear();
-            myMap?.Children?.Clear();
+            //myMap?.MapElements?.Clear();
+            //myMap?.Children?.Clear();
             OptionsAllCheckBox.Checked -= OptionsAllCheckBox_Checked;
             OptionsAllCheckBox.Unchecked -= OptionsAllCheckBox_Unchecked;
             if (ViewModel.PointOfIntrestSource.Count == 0)
@@ -68,6 +75,7 @@ namespace DRLMobile.Uwp.View
             ViewModel.SetLoader(true);
             try
             {
+                await InitializeMap();
                 await ViewModel.OnNavigatedToCommandHandler();
                 await RefreshMapIcons();
             }
@@ -360,7 +368,6 @@ namespace DRLMobile.Uwp.View
         {
             try
             {
-
                 ViewModel.SetLoader(true);
                 cancellationTokenSource.Token.ThrowIfCancellationRequested();
 
@@ -368,17 +375,21 @@ namespace DRLMobile.Uwp.View
                 OptionsAllCheckBox.Unchecked -= OptionsAllCheckBox_Unchecked;
 
                 // Erase the old map icons.
-                myMap?.MapElements?.Clear();
-                myMap?.Children?.Clear();
+                //myMap?.MapElements?.Clear();
+                //myMap?.Children?.Clear();
+                await myMap.ClearAllAsync();
 
                 if (ViewModel.PointOfIntrestSource != null && ViewModel.PointOfIntrestSource.Count > 0)
                 {
+                    var pins = new List<OnTerra.MapsControl.UWP.MapIcon>(ViewModel.PointOfIntrestSource.Count);
+                    OnTerra.MapsControl.UWP.MapIcon mapIcon;
                     foreach (var item in ViewModel.PointOfIntrestSource)
                     {
-                        cancellationTokenSource.Token.ThrowIfCancellationRequested();
-                        await AddMapIconAsync(item);
+                        pins.Add(await AddMapIconAsync(item));
                     }
-                    SetMapCenterAsync();
+                    await myMap.PushpinAsync(pins);
+                    await SetMapCenterAsync();
+                    //await myMap.SetZoomLevelAsync(4);
                 }
                 SetCheckedState();
                 OptionsAllCheckBox.Checked += OptionsAllCheckBox_Checked;
@@ -398,61 +409,59 @@ namespace DRLMobile.Uwp.View
                 ViewModel.SetLoader(false);
             }
         }
-        public async void SetMapCenterAsync()
+        public async Task SetMapCenterAsync()
         {
             cancellationTokenSource.Token.ThrowIfCancellationRequested();
-
-            if (ViewModel.PointOfIntrestSource.Count > 1)
+            if (ViewModel.PointOfIntrestSource.Count == 1)
             {
-                GeoboundingBox geoboundingBox = GeoboundingBox.TryCompute(ViewModel.PointOfIntrestSource.Select(x =>
-                new BasicGeoposition
-                {
-                    Latitude = x.Location.Position.Latitude,
-                    Longitude = x.Location.Position.Longitude,
-                }));
-                await myMap.TrySetViewBoundsAsync(geoboundingBox, null, MapAnimationKind.None);
+                var singleItem = ViewModel.PointOfIntrestSource.FirstOrDefault();
+                await myMap.SetCenterAsync(singleItem.OnTerraLocation.Position.Latitude, singleItem.OnTerraLocation.Position.Longitude, 10);
             }
             else
             {
-                PointOfInterest place = ViewModel.PointOfIntrestSource.FirstOrDefault();
-                if (place != null)
-                    await myMap.TrySetViewAsync(new Geopoint(new BasicGeoposition { Latitude = place.Location.Position.Latitude, Longitude = place.Location.Position.Longitude })
-                        , 14, null, null, MapAnimationKind.None);
+                OnTerra.MapsControl.UWP.GeoboundingBox geoboundingBox = OnTerra.MapsControl.UWP.GeoboundingBox.TryCompute(ViewModel.PointOfIntrestSource.Select(x =>
+                    new OnTerra.MapsControl.UWP.BasicGeoposition
+                    {
+                        Latitude = x.OnTerraLocation.Position.Latitude,
+                        Longitude = x.OnTerraLocation.Position.Longitude,
+                    }));
+                await myMap.TrySetViewBoundsAsync(geoboundingBox, null, OnTerra.MapsControl.UWP.MapAnimationKind.Default);
+
             }
         }
-        private async Task AddMapIconAsync(PointOfInterest item)
+        private async Task<OnTerra.MapsControl.UWP.MapIcon> AddMapIconAsync(PointOfInterest item)
         {
-            await Windows.ApplicationModel.Core.CoreApplication
-                       .MainView.CoreWindow.Dispatcher
-                       .RunAsync(CoreDispatcherPriority.Normal,
-                    async () =>
-                    {
-                        try
-                        {
-                            cancellationTokenSource.Token.ThrowIfCancellationRequested();
+            try
+            {
+                cancellationTokenSource?.Token.ThrowIfCancellationRequested();
 
-                            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(item.ImageSourceUri));
-                            var imageReference = await ResizeImageAsync(file, 25, 40);
-                            //var streamImage = RandomAccessStreamReference.CreateFromUri(new Uri(item.ImageSourceUri));
-                            MapIcon mapIcon = new MapIcon();
-                            //mapIcon.Image = streamImage;
-                            mapIcon.Image = imageReference;
-                            mapIcon.Location = item.Location;
-                            mapIcon.NormalizedAnchorPoint = new Windows.Foundation.Point(0.5, 0.5);
-                            mapIcon.Title = string.IsNullOrEmpty(item.CustomerData?.CustomerNumber) ? "" : item.CustomerData?.CustomerNumber;
-                            mapIcon.Tag = item;
-                            mapIcon.CollisionBehaviorDesired = MapElementCollisionBehavior.RemainVisible;
-                            myMap.MapElements.Add(mapIcon);
-                        }
-                        catch (AggregateException ae)
-                        {
-                            ae.Handle(e => e is OperationCanceledException);
-                        }
-                        catch (Exception ex)
-                        {
-                            ErrorLogger.WriteToErrorLog(nameof(MapPage), nameof(AddMapIconAsync), ex);
-                        }
-                    });
+                var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(item.ImageSourceUri));
+                var imageReference = await ResizeImageAsync(file, 25, 40);
+
+                var mapIcon = new OnTerra.MapsControl.UWP.MapIcon
+                {
+                    Image = imageReference,
+                    Location = item.OnTerraLocation,
+                    NormalizedAnchorPoint = new Windows.Foundation.Point(0.5, 1),
+                    Title = string.IsNullOrEmpty(item.CustomerData?.CustomerNumber)
+                        ? string.Empty
+                        : item.CustomerData.CustomerNumber,
+                    Tag = item,
+                    CollisionBehaviorDesired = OnTerra.MapsControl.UWP.MapElementCollisionBehavior.RemainVisible
+                };
+
+                return mapIcon;
+            }
+            catch (OperationCanceledException)
+            {
+                // Cancellation is expected - return null silently
+                return null;
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.WriteToErrorLog(nameof(MapPage), nameof(AddMapIconAsync), ex);
+                return null; // Or throw, depending on your error handling strategy
+            }
         }
         private async Task<RandomAccessStreamReference> ResizeImageAsync(StorageFile imageFile, uint scaledWidth, uint scaledHeight)
         {
@@ -478,12 +487,11 @@ namespace DRLMobile.Uwp.View
             }
         }
 
-        private void myMap_MapElementClick(MapControl sender, MapElementClickEventArgs args)
+        private void myMap_MapElementClick(object sender, OnTerra.MapsControl.UWP.MapElementClickEventArgs args)
         {
             try
             {
-                MapIcon mapClickedIcon = args.MapElements.FirstOrDefault(x => x is MapIcon) as MapIcon;
-
+                OnTerra.MapsControl.UWP.MapIcon mapClickedIcon = args.MapElements.FirstOrDefault(x => x is OnTerra.MapsControl.UWP.MapIcon) as OnTerra.MapsControl.UWP.MapIcon;
                 if (mapClickedIcon != null && mapClickedIcon.Tag != null)
                 {
                     if ((mapClickedIcon.Tag as PointOfInterest) != null)

@@ -1,4 +1,4 @@
-<Page
+﻿<Page
     x:Class="DRLMobile.Uwp.View.MapPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,7 +7,7 @@
     xmlns:customControls="using:DRLMobile.Uwp.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:map="using:Windows.UI.Xaml.Controls.Maps"
+    xmlns:maps="using:OnTerra.MapsControl.UWP" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     NavigationCacheMode="Required"
@@ -397,16 +397,6 @@
                 Grid.Column="0"
                 VerticalAlignment="Center"
                 Orientation="Vertical">
-                <Button
-                    Width="110"
-                    Height="35"
-                    Margin="0,0,0,10"
-                    HorizontalAlignment="Left"
-                    Command="{x:Bind ViewModel.AdvanceGoogleMapPageCommand}"
-                    Content="Google Map"
-                    FontSize="15"
-                    Foreground="{StaticResource CartTextColor}"
-                    Style="{StaticResource LoginButtonStyle}" />
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Style="{StaticResource LabelStyle}" Text="{x:Bind ViewModel.SelectedZone.ZoneName, Mode=OneWay}" />
                     <TextBlock Style="{StaticResource LabelStyle}" Text="{x:Bind ViewModel.SelectedRegion.Regioname, Mode=OneWay}" />
@@ -1331,7 +1321,7 @@
 
         <!--#region Map Section-->
         <!--  ZoomLevelChanged="myMap_ZoomLevelChanged"  -->
-        <map:MapControl
+        <!--<map:MapControl
             x:Name="myMap"
             Grid.Row="2"
             BusinessLandmarksVisible="False"
@@ -1341,17 +1331,20 @@
             CacheMode="BitmapCache"
             LandmarksVisible="True"
             MapElementClick="myMap_MapElementClick"
-            MapServiceToken="{StaticResource MapServiceKey}"
+            MapServiceToken="{StaticResource OnTerraMapServiceKey}"
             TransitFeaturesVisible="False"
             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InvertBoolToVisibilityConverter}}"
-            />
-
+            />-->
+        <maps:MapControl x:Name="myMap" 
+        Grid.Row="2"
+        MapElementClick="myMap_MapElementClick"
+        MapServiceToken="{StaticResource OnTerraMapServiceKey}"/>
         <Grid
             x:Name="CustomPinVisibiltyGrid"
             Grid.Row="2"
             Grid.RowSpan="2"
             HorizontalAlignment="Center"
-            VerticalAlignment="Center"
+            VerticalAlignment="Center"            
             x:Load="{x:Bind InvertBool(ViewModel.IsLoading), Mode=OneWay}"
             Visibility="{x:Bind ViewModel.CustomMapPinVisibility, Mode=TwoWay}">
             <Grid Background="Black" Opacity="0.7" />
