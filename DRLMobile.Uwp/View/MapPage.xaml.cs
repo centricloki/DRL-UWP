@@ -8,6 +8,7 @@ using DRLMobile.Uwp.Helpers;
 using DRLMobile.Uwp.ViewModel;
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -37,9 +38,11 @@ namespace DRLMobile.Uwp.View
     {
         private MapPageViewModel ViewModel = new MapPageViewModel();
         private int intZoomLevel;
-
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         private bool itemStatus = true;
+
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, Task<RandomAccessStreamReference>> _iconCache =
+      new System.Collections.Concurrent.ConcurrentDictionary<string, Task<RandomAccessStreamReference>>();
 
         public MapPage()
         {
@@ -364,6 +367,19 @@ namespace DRLMobile.Uwp.View
         {
             ViewModel?.ZoneSearchHeaderTextChangeCommand.Execute(FlyoutZoneTextBox.Text);
         }
+
+        private async Task<OnTerra.MapsControl.UWP.MapIcon> ProcessPinAsync(PointOfInterest item, SemaphoreSlim semaphore)
+        {
+            await semaphore.WaitAsync(cancellationTokenSource.Token);
+            try
+            {               
+                return await AddMapIconAsync(item);
+            }
+            finally
+            {
+                semaphore.Release();
+            }
+        }
         private async Task RefreshMapIcons()
         {
             try
@@ -374,22 +390,24 @@ namespace DRLMobile.Uwp.View
                 OptionsAllCheckBox.Checked -= OptionsAllCheckBox_Checked;
                 OptionsAllCheckBox.Unchecked -= OptionsAllCheckBox_Unchecked;
 
-                // Erase the old map icons.
-                //myMap?.MapElements?.Clear();
-                //myMap?.Children?.Clear();
                 await myMap.ClearAllAsync();
 
                 if (ViewModel.PointOfIntrestSource != null && ViewModel.PointOfIntrestSource.Count > 0)
                 {
-                    var pins = new List<OnTerra.MapsControl.UWP.MapIcon>(ViewModel.PointOfIntrestSource.Count);
-                    OnTerra.MapsControl.UWP.MapIcon mapIcon;
+                    // ---- parallelism limiter ----
+                    var maxParallel = 8; // 8 works well on low-end UWP devices, raise to 12 if needed
+                    var semaphore = new SemaphoreSlim(maxParallel);
+                    var tasks = new List<Task<OnTerra.MapsControl.UWP.MapIcon>>();
+
                     foreach (var item in ViewModel.PointOfIntrestSource)
                     {
-                        pins.Add(await AddMapIconAsync(item));
+                        var currentItem = item;
+                        tasks.Add(ProcessPinAsync(currentItem, semaphore));
                     }
-                    await myMap.PushpinAsync(pins);
+                    var icons = await Task.WhenAll(tasks);
+                    var pushPins = icons.Where(p => p != null).ToList();
+                    await myMap.PushpinAsync(pushPins);
                     await SetMapCenterAsync();
-                    //await myMap.SetZoomLevelAsync(4);
                 }
                 SetCheckedState();
                 OptionsAllCheckBox.Checked += OptionsAllCheckBox_Checked;
@@ -429,15 +447,35 @@ namespace DRLMobile.Uwp.View
 
             }
         }
+
+        private Task<RandomAccessStreamReference> GetIconAsync(string uri)
+        {
+            return _iconCache.GetOrAdd(uri, key => LoadAndResizeAsync(key));
+        }
+
+        private async Task<RandomAccessStreamReference> LoadAndResizeAsync(string uri)
+        {
+            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(uri));
+            using (IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read))
+            {
+                var decoder = await BitmapDecoder.CreateAsync(fileStream);
+                var memStream = new InMemoryRandomAccessStream();
+                var encoder = await BitmapEncoder.CreateForTranscodingAsync(memStream, decoder);
+                encoder.BitmapTransform.ScaledWidth = 25;
+                encoder.BitmapTransform.ScaledHeight = 40;
+                encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Linear; // faster than default Fant
+                await encoder.FlushAsync();
+                memStream.Seek(0);
+                return RandomAccessStreamReference.CreateFromStream(memStream);
+            }
+        }
+
         private async Task<OnTerra.MapsControl.UWP.MapIcon> AddMapIconAsync(PointOfInterest item)
         {
             try
             {
                 cancellationTokenSource?.Token.ThrowIfCancellationRequested();
-
-                var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(item.ImageSourceUri));
-                var imageReference = await ResizeImageAsync(file, 25, 40);
-
+                var imageReference = await GetIconAsync(item.ImageSourceUri).ConfigureAwait(false);
                 var mapIcon = new OnTerra.MapsControl.UWP.MapIcon
                 {
                     Image = imageReference,

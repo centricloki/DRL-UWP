@@ -25,6 +25,7 @@ using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
+using System.Collections.Concurrent;
 
 namespace DRLMobile.Uwp.ViewModel
 {
@@ -49,7 +50,7 @@ namespace DRLMobile.Uwp.ViewModel
         public RandomAccessStreamReference[] numberIconReferences = new RandomAccessStreamReference[8];
         public List<PointOfInterest> places = new List<PointOfInterest>();
         public int previousZoomLevel = 0;
-
+        
         #endregion
 
         #region Commands
