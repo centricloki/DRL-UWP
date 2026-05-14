@@ -16,6 +16,8 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using System.Linq;
+using DRLMobile.ExceptionHandler;
+using Windows.UI;
 
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -28,7 +30,7 @@ namespace DRLMobile.Uwp.View
     public sealed partial class ViewRouteListPage : Page
     {
         ViewRouteListPageViewModel ViewModel = new ViewRouteListPageViewModel();
-
+        private RouteListUIModel _navigationEventParam = null;
         public ObservableCollection<string> Numbers { get; set; }
         /// private CancellationTokenSource _cts = null;
         ///private uint _desireAccuracyInMetersValue = 0;
@@ -38,64 +40,122 @@ namespace DRLMobile.Uwp.View
             DataContext = ViewModel;
             this.InitializeComponent();
             DownArrow.Glyph = "\xe936";
+            Loaded += ViewRouteListPage_Loaded;
+            Unloaded += ViewRouteListPage_Unloaded;
+        }
+
+        private void ViewRouteListPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private async void ViewRouteListPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            ShellPage shellPage = ((Window.Current.Content as Frame).Content as ShellPage);
+            if (shellPage != null)
+            {
+                shellPage.ViewModel.IsSideMenuItemClickable = false;
+            }
+            try
+            {
+                await InitializeMap();
+                if (_navigationEventParam != null)
+                {
+                    ViewModel?.RouteDetailsItemSource.Clear();
+                    ViewModel?.OnNavigatedToCommand?.Execute(_navigationEventParam);
+
+                    ViewModel.StartLocation = ViewModel.EndLocation = "";
+                    CustomerListPanel.Visibility = Visibility.Collapsed;
+                    DownArrow.Glyph = "\xe936";
+                    DownArrowButton.Padding = new Thickness(15, 10, 15, 0);
+
+                    ViewModel.PointOfIntrestSource.Clear();
+                    ViewModel.CustomMapPinVisibility = Visibility.Collapsed;
+                    ViewModel.CustomMapPinIsVisible = false;
+                    myMap.Routes.Clear();
+                    RefreshMapIcons();
+                    ViewModel.IsAllChecked = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.WriteToErrorLog(nameof(ViewRouteListPage), nameof(ViewRouteListPage_Loaded), ex);
+            }
+            finally
+            {
+                if (shellPage != null)
+                {
+                    shellPage.ViewModel.IsSideMenuItemClickable = true;
+                }
+            }
+        }
+        private async Task InitializeMap()
+        {
+            await myMap.InitializeAsync();
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-                
             if (e.NavigationMode == NavigationMode.New)
             {
-                var parameters = (RouteListUIModel)e.Parameter;
-                ViewModel?.RouteDetailsItemSource.Clear();
-                ViewModel?.OnNavigatedToCommand?.Execute(parameters);
-
-                ViewModel.StartLocation = ViewModel.EndLocation = "";
-                CustomerListPanel.Visibility = Visibility.Collapsed;
-                DownArrow.Glyph = "\xe936";
-                DownArrowButton.Padding = new Thickness(15, 10, 15, 0);
-
-                ViewModel.PointOfIntrestSource.Clear();
-                ViewModel.CustomMapPinVisibility = Visibility.Collapsed;
-                ViewModel.CustomMapPinIsVisible = false;
-                myMap.Routes.Clear(); RefreshMapIcons();
-                ViewModel.IsAllChecked = false;
+                _navigationEventParam = (RouteListUIModel)e.Parameter;
             }
         }
         private async void CalculateButton_Click(object sender, RoutedEventArgs e)
         {
             await ViewModel.CalculateButtonCommand.ExecuteAsync(myMap);
-            RefreshMapIcons();
+            await RefreshMapIcons();
         }
 
-        private void RefreshMapIcons()
+        private async Task RefreshMapIcons()
         {
             try
             {
-                // Erase the old map icons.
-                myMap?.MapElements?.Clear();
-                myMap?.Children?.Clear();
-
+                await myMap.ClearAllAsync();
 
                 if (ViewModel.PointOfIntrestSource != null && ViewModel.PointOfIntrestSource.Count > 0)
                 {
-                    foreach (var item in ViewModel.PointOfIntrestSource)
-                    {
-                        //var streamImage = RandomAccessStreamReference.CreateFromUri(new Uri(item.ImageSourceUri));
-                        //MapIcon mapIcon = new MapIcon();
-                        //mapIcon.Image = streamImage;
-                        //mapIcon.Location = item.Location;
-                        //mapIcon.NormalizedAnchorPoint = new Windows.Foundation.Point(0.5, 1);
-                        //mapIcon.Title = item.PinText;
-                        //mapIcon.Tag = item;
-                        //mapIcon.CollisionBehaviorDesired = MapElementCollisionBehavior.RemainVisible;
+                    //var pushPins = new List<OnTerra.MapsControl.UWP.MapIcon>(ViewModel.PointOfIntrestSource.Count);
+                    //foreach (var item in ViewModel.PointOfIntrestSource)
+                    //{
+                    //    var streamImage = RandomAccessStreamReference.CreateFromUri(new Uri(item.ImageSourceUri));
+                    //    OnTerra.MapsControl.UWP.MapIcon mapIcon = new OnTerra.MapsControl.UWP.MapIcon();
+                    //    mapIcon.Image = streamImage;
+                    //    mapIcon.Location = item.OnTerraLocation;
+                    //    mapIcon.NormalizedAnchorPoint = new Windows.Foundation.Point(0.5, 1);
+                    //    mapIcon.Title = item.PinText;
+                    //    mapIcon.Tag = item;
+                    //    mapIcon.CollisionBehaviorDesired = OnTerra.MapsControl.UWP.MapElementCollisionBehavior.RemainVisible;
+                    //    pushPins.Add(mapIcon);
+                    //}
+                    //await myMap.PushpinAsync(pushPins);
 
-                        //myMap.MapElements.Add(mapIcon);
-                    }
+                    var startImgUri = ViewModel.PointOfIntrestSource.FirstOrDefault().ImageSourceUri;
+                    var endImgUri = ViewModel.PointOfIntrestSource.LastOrDefault().ImageSourceUri;
+
+                    OnTerra.MapsControl.UWP.MapPolyline line = new OnTerra.MapsControl.UWP.MapPolyline
+                    {
+                        StrokeColor = Colors.Blue,
+                        StrokeThickness = 4,
+                        StrokeDashed = false,
+                        StartMarkerLabel = "Start",
+                        EndMarkerLabel = "End",
+                        StartMarkerImage = RandomAccessStreamReference.CreateFromUri(
+        new Uri(startImgUri)),
+                        EndMarkerImage = RandomAccessStreamReference.CreateFromUri(
+        new Uri(endImgUri)),
+                        IntermediateMarkerImage = RandomAccessStreamReference.CreateFromUri(
+        new Uri("ms-appx:///Assets/Maps/MapPin-Red.png")),
+                        Path = new OnTerra.MapsControl.UWP.Geopath(
+                            ViewModel.PointOfIntrestSource.Select(x => x.OnTerraLocation.Position)
+                            )
+                    };
+                    await myMap.PolylineAsync(line);
                 }
             }
             catch (Exception ex)
             {
-                //// ErrorLogger.WriteToErrorLog(nameof(MapPage), "RefreshMapIcons", ex.Message);
+                ErrorLogger.WriteToErrorLog(nameof(ViewRouteListPage), nameof(RefreshMapIcons), ex);
             }
         }
 

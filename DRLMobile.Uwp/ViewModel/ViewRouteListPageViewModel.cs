@@ -252,7 +252,6 @@ namespace DRLMobile.Uwp.ViewModel
 
             LoadingVisibility = Visibility.Collapsed;
         }
-
         private void RouteDetailsItemSource_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (RouteDetailsItemSource != null)
@@ -601,34 +600,34 @@ namespace DRLMobile.Uwp.ViewModel
 
         private async Task<OnTerra.MapsControl.UWP.Geopoint> GetGeoLocationFromAddress(string address, char type)
         {
-            OnTerra.MapsControl.UWP.GeocodeResult result = await OnTerraMap.GeocodeAndPlotAsync(address);
-            if (result.SuccessCount > 1 && result.Locations.Any())
+            OnTerra.MapsControl.UWP.GeocodeResult result = await OnTerraMap.GeocodeAndPlotAsync($"{address},USA");
+            if (result.SuccessCount > 0 && result.Locations.Any())
             {
                 var bestMatch = result.Locations[0];
-                var addr = bestMatch.Input;
-                if (!addr.Contains("United States", StringComparison.OrdinalIgnoreCase))
-                {
-                    return null;
-                }
-                else
-                {
-                  return  new OnTerra.MapsControl.UWP.Geopoint(
-                                                new OnTerra.MapsControl.UWP.BasicGeoposition()
-                                                {
-                                                    Latitude = bestMatch.Latitude,
-                                                    Longitude = bestMatch.Longitude
-                                                });
-                    //    if (!int.TryParse(address, out int presult))
-                    //    {
-                    //        if (!ContainsCityOrState(address, addr.Town))
-                    //            return null;
-                    //    }
+                //var addr = bestMatch.Input;
+                //if (!addr.Contains("United States", StringComparison.OrdinalIgnoreCase))
+                //{
+                //    return null;
+                //}
+                //else
+                //{
+                return new OnTerra.MapsControl.UWP.Geopoint(
+                                              new OnTerra.MapsControl.UWP.BasicGeoposition()
+                                              {
+                                                  Latitude = bestMatch.Latitude,
+                                                  Longitude = bestMatch.Longitude
+                                              });
+                //    if (!int.TryParse(address, out int presult))
+                //    {
+                //        if (!ContainsCityOrState(address, addr.Town))
+                //            return null;
+                //    }
 
-                    //    System.Diagnostics.Debug.WriteLine($@"[Debug] Type {type} Addr// 
-                    //StreetNumber-{addr.StreetNumber}, Street- {addr.Street}
-                    //, City- {addr.Town}, State- {addr.Region}, postalCode-{addr.PostCode}");
-                    //    return result?.Locations?.FirstOrDefault()?.Point;
-                }
+                //    System.Diagnostics.Debug.WriteLine($@"[Debug] Type {type} Addr// 
+                //StreetNumber-{addr.StreetNumber}, Street- {addr.Street}
+                //, City- {addr.Town}, State- {addr.Region}, postalCode-{addr.PostCode}");
+                //    return result?.Locations?.FirstOrDefault()?.Point;
+                //}
             }
             else
             {
@@ -732,7 +731,16 @@ namespace DRLMobile.Uwp.ViewModel
 
                 if (isValidRoute)
                 {
-                    PlotStartEndPins();
+                    PointOfIntrestSource.Add(new PointOfInterest
+                    {
+                        OnTerraLocation = StartGeopoint,
+                        NormalizedAnchorPoint = new Point(0.5, 1),
+                        PinColor = new SolidColorBrush(Colors.Green),
+                        PinText = "start",
+                        ImageSourceUri = "ms-appx:///Assets/Maps/MapPin-Green.png"
+                    });
+
+
                     if (OptimizedListRoutes != null && OptimizedListRoutes.Count > 0)
                     {
                         int num = 1;
@@ -812,21 +820,19 @@ namespace DRLMobile.Uwp.ViewModel
                             }
                         }
                     }
-                    //Center = PointOfIntrestSource?.FirstOrDefault()?.Location;
+
+                    PointOfIntrestSource.Add(new PointOfInterest
+                    {
+                        OnTerraLocation = EndGeopoint,
+                        NormalizedAnchorPoint = new Point(0.5, 1),
+                        PinColor = new SolidColorBrush(Colors.Yellow),
+                        PinText = "End",
+                        ImageSourceUri = "ms-appx:///Assets/Maps/MapPin-Yellow.png"
+                    });
 
                     if (!PointOfIntrestSource.Any())
                     {
                         await ShowNoRouteAlert();
-                    }
-                    else
-                    {
-                        OnTerra.MapsControl.UWP.GeoboundingBox geoboundingBox = OnTerra.MapsControl.UWP.GeoboundingBox.TryCompute(PointOfIntrestSource.Select(x =>
-                        new OnTerra.MapsControl.UWP.BasicGeoposition
-                        {
-                            Latitude = x.Location.Position.Latitude,
-                            Longitude = x.Location.Position.Longitude,
-                        }));
-                       // await myMap.TrySetViewBoundsAsync(geoboundingBox, null, MapAnimationKind.None);
                     }
                 }
             }
@@ -902,7 +908,7 @@ namespace DRLMobile.Uwp.ViewModel
             }
 
             OptimizedListRoutes = new List<RouteRespActivity>();
-            var path = new List<EnhancedWaypoint>();
+            //var path = new List<EnhancedWaypoint>();
             if (webServiceResponse != null)
             {
                 if (webServiceResponse.Where(x => x.type == "service").Count() < SelectedCustomerList.Count)
@@ -921,76 +927,77 @@ namespace DRLMobile.Uwp.ViewModel
                 else
                 {
                     //path.Add(new EnhancedWaypoint(StartGeopoint, WaypointKind.Stop));
-                    //foreach (var activity in webServiceResponse)
-                    //{
-                    //    if (activity.type == "service")
-                    //    {
-                    //        OptimizedListRoutes.Add(activity); //to get in the navigated button click
-                    //        BasicGeoposition point = new BasicGeoposition() { Latitude = activity.address.lat, Longitude = activity.address.lon };
-                    //        path.Add(new EnhancedWaypoint(new Geopoint(point), WaypointKind.Via));
-                    //    }
-                    //}
+                    foreach (var activity in webServiceResponse)
+                    {
+                        if (activity.type == "service")
+                        {
+                            OptimizedListRoutes.Add(activity); //to get in the navigated button click
+                            //BasicGeoposition point = new BasicGeoposition() { Latitude = activity.address.lat, Longitude = activity.address.lon };
+                            //path.Add(new EnhancedWaypoint(new Geopoint(point), WaypointKind.Via));
+                        }
+                    }
                     //path.Add(new EnhancedWaypoint(EndGeopoint, WaypointKind.Stop));
                 }
+                return true;
             }
-            else
-            {
-                //path.Add(new EnhancedWaypoint(StartGeopoint, WaypointKind.Stop));
-                //for (int index = 0; index < SelectedCustomerList.Count; index++)
-                //{
-                //    var item = SelectedCustomerList[index];
-                //    if (!string.IsNullOrEmpty(item.Latitude) && !string.IsNullOrEmpty(item.Longitude))
-                //    {
-                //        BasicGeoposition point = new BasicGeoposition() { Latitude = Convert.ToDouble(item.Latitude), Longitude = Convert.ToDouble(item.Longitude) };
-                //        path.Add(new EnhancedWaypoint(new Geopoint(point), WaypointKind.Via));
-                //    }
-                //}
-                //path.Add(new EnhancedWaypoint(EndGeopoint, WaypointKind.Stop));
-            }
-            try
-            {
-                MapRouteFinderResult routeResult = await MapRouteFinder.GetDrivingRouteFromEnhancedWaypointsAsync(path, new MapRouteDrivingOptions()
-                {
-                    RouteOptimization = MapRouteOptimization.Distance,
-                    RouteRestrictions = MapRouteRestrictions.Ferries
-                });
-                if (routeResult.Status != MapRouteFinderStatus.Success)
-                {
-                    routeResult = await MapRouteFinder.GetDrivingRouteFromEnhancedWaypointsAsync(path, new MapRouteDrivingOptions()
-                    {
-                        RouteOptimization = MapRouteOptimization.Distance,
-                        RouteRestrictions = MapRouteRestrictions.Ferries
-                    });
-                    if (routeResult.Status != MapRouteFinderStatus.Success)
-                    {
-                        await FindDistantWaypointsAsync(path, maxDistanceKm: 100);
-                        return false;
-                    }
-                }
+            //else
+            //{
+            //    //path.Add(new EnhancedWaypoint(StartGeopoint, WaypointKind.Stop));
+            //    //for (int index = 0; index < SelectedCustomerList.Count; index++)
+            //    //{
+            //    //    var item = SelectedCustomerList[index];
+            //    //    if (!string.IsNullOrEmpty(item.Latitude) && !string.IsNullOrEmpty(item.Longitude))
+            //    //    {
+            //    //        BasicGeoposition point = new BasicGeoposition() { Latitude = Convert.ToDouble(item.Latitude), Longitude = Convert.ToDouble(item.Longitude) };
+            //    //        path.Add(new EnhancedWaypoint(new Geopoint(point), WaypointKind.Via));
+            //    //    }
+            //    //}
+            //    //path.Add(new EnhancedWaypoint(EndGeopoint, WaypointKind.Stop));
+            //}
+            //try
+            //{
+            //    //MapRouteFinderResult routeResult = await MapRouteFinder.GetDrivingRouteFromEnhancedWaypointsAsync(path, new MapRouteDrivingOptions()
+            //    //{
+            //    //    RouteOptimization = MapRouteOptimization.Distance,
+            //    //    RouteRestrictions = MapRouteRestrictions.Ferries
+            //    //});
+            //    //if (routeResult.Status != MapRouteFinderStatus.Success)
+            //    //{
+            //    //    routeResult = await MapRouteFinder.GetDrivingRouteFromEnhancedWaypointsAsync(path, new MapRouteDrivingOptions()
+            //    //    {
+            //    //        RouteOptimization = MapRouteOptimization.Distance,
+            //    //        RouteRestrictions = MapRouteRestrictions.Ferries
+            //    //    });
+            //    //    if (routeResult.Status != MapRouteFinderStatus.Success)
+            //    //    {
+            //    //        await FindDistantWaypointsAsync(path, maxDistanceKm: 100);
+            //    //        return false;
+            //    //    }
+            //    //}
 
-                if (routeResult.Status == MapRouteFinderStatus.Success)
-                {
-                    //MapRouteView viewOfRoute = new MapRouteView(routeResult.Route);
-                    //viewOfRoute.RouteColor = Colors.Blue;
-                    //viewOfRoute.OutlineColor = Colors.Blue;
-                    //myMap.Routes.Add(viewOfRoute);
+            //    //if (routeResult.Status == MapRouteFinderStatus.Success)
+            //    //{
+            //    //    //MapRouteView viewOfRoute = new MapRouteView(routeResult.Route);
+            //    //    //viewOfRoute.RouteColor = Colors.Blue;
+            //    //    //viewOfRoute.OutlineColor = Colors.Blue;
+            //    //    //myMap.Routes.Add(viewOfRoute);
 
-                    //await myMap.TrySetViewBoundsAsync(
-                    //routeResult.Route.BoundingBox,
-                    //new Thickness(105),
-                    //MapAnimationKind.Linear);
-                    return true;
-                }
-                else
-                {
-                    await ShowNoRouteAlert();
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                ErrorLogger.WriteToErrorLog(nameof(ViewRouteListPageViewModel), nameof(ShowRouteOnMap), ex);
-            }
+            //    //    //await myMap.TrySetViewBoundsAsync(
+            //    //    //routeResult.Route.BoundingBox,
+            //    //    //new Thickness(105),
+            //    //    //MapAnimationKind.Linear);
+            //    //    return true;
+            //    //}
+            //    //else
+            //    //{
+            //    //    await ShowNoRouteAlert();
+            //    //    return false;
+            //    //}
+            //}
+            //catch (Exception ex)
+            //{
+            //    ErrorLogger.WriteToErrorLog(nameof(ViewRouteListPageViewModel), nameof(ShowRouteOnMap), ex);
+            //}
             await ShowNoRouteAlert();
             return false;
         }
@@ -1011,8 +1018,6 @@ namespace DRLMobile.Uwp.ViewModel
             var endloc = new RouteAddress() { location_id = "endloc", lat = EndGeopoint.Position.Latitude, lon = EndGeopoint.Position.Longitude };
             var webServiceResponse = await InvokeWebService.GetOptmizedRoute(startloc, optpath, endloc).ConfigureAwait(false);
             return webServiceResponse;
-
-
         }
         private Task ShowNoEndLocationAlert()
         {
