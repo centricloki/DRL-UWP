@@ -1,4 +1,4 @@
-﻿using DevExpress.Mvvm.Native;
+using DevExpress.Mvvm.Native;
 
 using DRLMobile.Core.Enums;
 using DRLMobile.Core.Models.UIModels;
@@ -469,7 +469,6 @@ namespace DRLMobile.Uwp.View
                 return RandomAccessStreamReference.CreateFromStream(memStream);
             }
         }
-
         private async Task<OnTerra.MapsControl.UWP.MapIcon> AddMapIconAsync(PointOfInterest item)
         {
             try
