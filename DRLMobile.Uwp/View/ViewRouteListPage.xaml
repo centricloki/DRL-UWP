@@ -494,7 +494,8 @@
         </map:MapControl>-->
         <map:MapControl
             x:Name="myMap"
-            Grid.Row="5"            
+            Grid.Row="5"   
+            MapElementClick="myMap_MapElementClick"
             MapServiceToken="{StaticResource OnTerraMapServiceKey}">
         </map:MapControl>
 

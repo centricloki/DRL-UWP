@@ -169,33 +169,58 @@ namespace DRLMobile.Uwp.View
             DownArrowButton.Padding = (CustomerListPanel.Visibility == Visibility.Visible) ? upArrowPadding : downArrowPadding;
         }
 
-
-        private async void myMap_MapElementClick(MapControl sender, MapElementClickEventArgs args)
+        private void myMap_MapElementClick(object sender, OnTerra.MapsControl.UWP.MapElementClickEventArgs args)
         {
             try
             {
-                MapIcon mapClickedIcon = args.MapElements.FirstOrDefault(x => x is MapIcon) as MapIcon;
-
+                OnTerra.MapsControl.UWP.MapIcon mapClickedIcon = args.MapElements.FirstOrDefault(x => x is OnTerra.MapsControl.UWP.MapIcon) as OnTerra.MapsControl.UWP.MapIcon;
                 if (mapClickedIcon != null && mapClickedIcon.Tag != null)
                 {
                     if ((mapClickedIcon.Tag as PointOfInterest) != null)
                     {
                         var currentPoint = mapClickedIcon.Tag as PointOfInterest;
-                        if (currentPoint.CustomerData != null)
-                        {
-                            customMapPinPopup.DeviceCustomerId = currentPoint.CustomerData.DeviceCustomerID;
-                            customMapPinPopup.CustomerId = currentPoint.CustomerData.CustomerID;
-                            ViewModel.CustomMapPinVisibility = Visibility.Visible;
-                            ViewModel.CustomMapPinIsVisible = true;
-                        }
+
+                        customMapPinPopup.DeviceCustomerId = currentPoint.CustomerData.DeviceCustomerID;
+                        customMapPinPopup.CustomerId = currentPoint.CustomerData.CustomerID;
+
+                        ViewModel.CustomMapPinVisibility = Visibility.Visible;
+                        ViewModel.CustomMapPinIsVisible = true;
                     }
                 }
             }
             catch (Exception ex)
             {
-                //ErrorLogger.WriteToErrorLog(nameof(MapPage), "myMap_MapElementClick", ex.Message);
+                ErrorLogger.WriteToErrorLog(nameof(MapPage), "myMap_MapElementClick", ex.Message);
             }
         }
+
+
+        //private async void myMap_MapElementClick(MapControl sender, MapElementClickEventArgs args)
+        //{
+        //    try
+        //    {
+        //        MapIcon mapClickedIcon = args.MapElements.FirstOrDefault(x => x is MapIcon) as MapIcon;
+
+        //        if (mapClickedIcon != null && mapClickedIcon.Tag != null)
+        //        {
+        //            if ((mapClickedIcon.Tag as PointOfInterest) != null)
+        //            {
+        //                var currentPoint = mapClickedIcon.Tag as PointOfInterest;
+        //                if (currentPoint.CustomerData != null)
+        //                {
+        //                    customMapPinPopup.DeviceCustomerId = currentPoint.CustomerData.DeviceCustomerID;
+        //                    customMapPinPopup.CustomerId = currentPoint.CustomerData.CustomerID;
+        //                    ViewModel.CustomMapPinVisibility = Visibility.Visible;
+        //                    ViewModel.CustomMapPinIsVisible = true;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //ErrorLogger.WriteToErrorLog(nameof(MapPage), "myMap_MapElementClick", ex.Message);
+        //    }
+        //}
 
         private void mapItemButton_Click(object sender, RoutedEventArgs e)
         {
