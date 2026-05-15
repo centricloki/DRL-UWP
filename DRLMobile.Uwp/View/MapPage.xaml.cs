@@ -513,8 +513,8 @@ namespace DRLMobile.Uwp.View
                 BitmapEncoder encoder = await BitmapEncoder.CreateForTranscodingAsync(memStream, decoder);
 
                 //resize the image
-                encoder.BitmapTransform.ScaledWidth = scaledWidth;
-                encoder.BitmapTransform.ScaledHeight = scaledHeight;
+                //encoder.BitmapTransform.ScaledWidth = scaledWidth;
+                //encoder.BitmapTransform.ScaledHeight = scaledHeight;
 
                 //commits and flushes all of the image data
                 await encoder.FlushAsync();

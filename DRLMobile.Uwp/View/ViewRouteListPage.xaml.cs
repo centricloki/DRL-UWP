@@ -2,79 +2,108 @@
 using DRLMobile.Uwp.CustomControls;
 using DRLMobile.Uwp.Helpers;
 using DRLMobile.Uwp.ViewModel;
+using DRLMobile.ExceptionHandler;
 using System;
-using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Maps;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using System.Linq;
-using DRLMobile.ExceptionHandler;
-using Windows.UI;
-
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace DRLMobile.Uwp.View
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class ViewRouteListPage : Page
     {
-        ViewRouteListPageViewModel ViewModel = new ViewRouteListPageViewModel();
-        private RouteListUIModel _navigationEventParam = null;
-        public ObservableCollection<string> Numbers { get; set; }
-        /// private CancellationTokenSource _cts = null;
-        ///private uint _desireAccuracyInMetersValue = 0;
+        // C# 7.3 Compatible Constants
+        private const string GLYPH_ARROW_DOWN = "\xE936";
+        private const string GLYPH_ARROW_UP = "\xE935";
+        private static readonly Thickness PADDING_ARROW_DOWN = new Thickness(15, 10, 15, 0);
+        private static readonly Thickness PADDING_ARROW_UP = new Thickness(15, 0, 15, 10);
+
+        private const int TARGET_MARKER_SIZE = 48;
+        private const int MAX_ICON_CACHE_SIZE = 50;
+
+        // C# 7.3 Compatible Field Initialization
+        private static readonly ConcurrentDictionary<string, Task<RandomAccessStreamReference>>
+            _routeIconCache = new ConcurrentDictionary<string, Task<RandomAccessStreamReference>>(StringComparer.OrdinalIgnoreCase);
+
+        private readonly ViewRouteListPageViewModel ViewModel = new ViewRouteListPageViewModel();
+        private RouteListUIModel _navigationEventParam;
+        private CancellationTokenSource _cts = new CancellationTokenSource();
 
         public ViewRouteListPage()
         {
             DataContext = ViewModel;
-            this.InitializeComponent();
-            DownArrow.Glyph = "\xe936";
+            InitializeComponent();
+            DownArrow.Glyph = GLYPH_ARROW_DOWN;
             Loaded += ViewRouteListPage_Loaded;
             Unloaded += ViewRouteListPage_Unloaded;
         }
 
         private void ViewRouteListPage_Unloaded(object sender, RoutedEventArgs e)
         {
-            //throw new NotImplementedException();
+            if (_cts != null)
+            {
+                _cts.Cancel();
+                _cts.Dispose();
+            }
+            _cts = new CancellationTokenSource();
+
+            Loaded -= ViewRouteListPage_Loaded;
+            Unloaded -= ViewRouteListPage_Unloaded;
         }
 
         private async void ViewRouteListPage_Loaded(object sender, RoutedEventArgs e)
         {
-            ShellPage shellPage = ((Window.Current.Content as Frame).Content as ShellPage);
+            var shellPage = (Window.Current.Content as Frame) != null ? (Window.Current.Content as Frame).Content as ShellPage : null;
             if (shellPage != null)
-            {
                 shellPage.ViewModel.IsSideMenuItemClickable = false;
-            }
+
             try
             {
                 await InitializeMap();
+
                 if (_navigationEventParam != null)
                 {
-                    ViewModel?.RouteDetailsItemSource.Clear();
-                    ViewModel?.OnNavigatedToCommand?.Execute(_navigationEventParam);
+                    if (ViewModel != null && ViewModel.RouteDetailsItemSource != null)
+                        ViewModel.RouteDetailsItemSource.Clear();
 
-                    ViewModel.StartLocation = ViewModel.EndLocation = "";
+                    if (ViewModel != null && ViewModel.OnNavigatedToCommand != null)
+                        ViewModel.OnNavigatedToCommand.Execute(_navigationEventParam);
+
+                    if (ViewModel != null)
+                    {
+                        ViewModel.StartLocation = string.Empty;
+                        ViewModel.EndLocation = string.Empty;
+                    }
+
                     CustomerListPanel.Visibility = Visibility.Collapsed;
-                    DownArrow.Glyph = "\xe936";
-                    DownArrowButton.Padding = new Thickness(15, 10, 15, 0);
+                    UpdateArrowState(false);
 
-                    ViewModel.PointOfIntrestSource.Clear();
-                    ViewModel.CustomMapPinVisibility = Visibility.Collapsed;
-                    ViewModel.CustomMapPinIsVisible = false;
-                    myMap.Routes.Clear();
-                    RefreshMapIcons();
-                    ViewModel.IsAllChecked = false;
+                    if (ViewModel != null)
+                    {
+                        if (ViewModel.PointOfIntrestSource != null)
+                            ViewModel.PointOfIntrestSource.Clear();
+                        ViewModel.CustomMapPinVisibility = Visibility.Collapsed;
+                        ViewModel.CustomMapPinIsVisible = false;
+                    }
+
+                    if (myMap != null && myMap.Routes != null)
+                        myMap.Routes.Clear();
+
+                    await RefreshMapIcons(_cts.Token);
+
+                    if (ViewModel != null)
+                        ViewModel.IsAllChecked = false;
                 }
             }
             catch (Exception ex)
@@ -84,15 +113,16 @@ namespace DRLMobile.Uwp.View
             finally
             {
                 if (shellPage != null)
-                {
                     shellPage.ViewModel.IsSideMenuItemClickable = true;
-                }
             }
         }
+
         private async Task InitializeMap()
         {
-            await myMap.InitializeAsync();
+            if (myMap != null)
+                await myMap.InitializeAsync();
         }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -101,57 +131,155 @@ namespace DRLMobile.Uwp.View
                 _navigationEventParam = (RouteListUIModel)e.Parameter;
             }
         }
+
         private async void CalculateButton_Click(object sender, RoutedEventArgs e)
         {
-            await ViewModel.CalculateButtonCommand.ExecuteAsync(myMap);
-            await RefreshMapIcons();
+            if (ViewModel != null && ViewModel.CalculateButtonCommand != null)
+                await ViewModel.CalculateButtonCommand.ExecuteAsync(myMap);
+
+            await RefreshMapIcons(_cts.Token);
         }
 
-        private async Task RefreshMapIcons()
+        // ✅ CS1674 FIX: Removed 'using' on BitmapDecoder/BitmapEncoder.
+        // WinRT types sometimes fail compiler IDisposable checks. 
+        // Explicit try/finally with .Dispose() is the safe, compatible workaround.
+        private static async Task<RandomAccessStreamReference> GetCachedIconAsync(string uri, CancellationToken token = default(CancellationToken))
+        {
+            if (string.IsNullOrEmpty(uri))
+                return null;
+
+            Task<RandomAccessStreamReference> cachedTask;
+            if (_routeIconCache.TryGetValue(uri, out cachedTask))
+                return await cachedTask.ConfigureAwait(false);
+
+            var loadTask = Task.Run(async () =>
+            {
+                try
+                {
+                    if (token.IsCancellationRequested)
+                        token.ThrowIfCancellationRequested();
+
+                    if (uri.StartsWith("ms-appx:", StringComparison.OrdinalIgnoreCase) ||
+                        uri.StartsWith("ms-appdata:", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(uri));
+                        var stream = await file.OpenAsync(FileAccessMode.Read);
+
+                        try
+                        {
+                            var decoder = await BitmapDecoder.CreateAsync(stream);
+                            var transform = new BitmapTransform
+                            {
+                                ScaledWidth = (uint)TARGET_MARKER_SIZE,
+                                ScaledHeight = (uint)TARGET_MARKER_SIZE,
+                                InterpolationMode = BitmapInterpolationMode.Linear
+                            };
+
+                            var pixelData = await decoder.GetPixelDataAsync(
+                                BitmapPixelFormat.Bgra8,
+                                BitmapAlphaMode.Straight,
+                                transform,
+                                ExifOrientationMode.RespectExifOrientation,
+                                ColorManagementMode.DoNotColorManage);
+
+                            // outStream must NOT be disposed here. Map control holds reference to it.
+                            var outStream = new InMemoryRandomAccessStream();
+                            var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, outStream);
+                            encoder.SetPixelData(
+                                BitmapPixelFormat.Bgra8,
+                                BitmapAlphaMode.Straight,
+                                (uint)TARGET_MARKER_SIZE,
+                                (uint)TARGET_MARKER_SIZE,
+                                decoder.DpiX,
+                                decoder.DpiY,
+                                pixelData.DetachPixelData());
+
+                            await encoder.FlushAsync();
+                            outStream.Seek(0);
+                            return RandomAccessStreamReference.CreateFromStream(outStream);
+                        }
+                        finally
+                        {
+                            stream.Dispose();
+                        }
+                    }
+                    else
+                    {
+                        return RandomAccessStreamReference.CreateFromUri(new Uri(uri));
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch
+                {
+                    return RandomAccessStreamReference.CreateFromUri(new Uri(uri));
+                }
+            }, token);
+
+            if (_routeIconCache.Count >= MAX_ICON_CACHE_SIZE)
+            {
+                var itemsToRemove = _routeIconCache.Keys.Take(MAX_ICON_CACHE_SIZE / 4).ToList();
+                foreach (var key in itemsToRemove)
+                {
+                    _routeIconCache.TryRemove(key, out _);
+                }
+            }
+
+            _routeIconCache[uri] = loadTask;
+            return await loadTask.ConfigureAwait(false);
+        }
+
+        private async Task RefreshMapIcons(CancellationToken token = default(CancellationToken))
         {
             try
             {
-                await myMap.ClearAllAsync();
+                if (token.IsCancellationRequested)
+                    token.ThrowIfCancellationRequested();
 
-                if (ViewModel.PointOfIntrestSource != null && ViewModel.PointOfIntrestSource.Count > 0)
+                if (myMap != null)
+                    await myMap.ClearAllAsync();
+
+                if (ViewModel != null && ViewModel.PointOfIntrestSource != null && ViewModel.PointOfIntrestSource.Count > 0)
                 {
-                    //var pushPins = new List<OnTerra.MapsControl.UWP.MapIcon>(ViewModel.PointOfIntrestSource.Count);
-                    //foreach (var item in ViewModel.PointOfIntrestSource)
-                    //{
-                    //    var streamImage = RandomAccessStreamReference.CreateFromUri(new Uri(item.ImageSourceUri));
-                    //    OnTerra.MapsControl.UWP.MapIcon mapIcon = new OnTerra.MapsControl.UWP.MapIcon();
-                    //    mapIcon.Image = streamImage;
-                    //    mapIcon.Location = item.OnTerraLocation;
-                    //    mapIcon.NormalizedAnchorPoint = new Windows.Foundation.Point(0.5, 1);
-                    //    mapIcon.Title = item.PinText;
-                    //    mapIcon.Tag = item;
-                    //    mapIcon.CollisionBehaviorDesired = OnTerra.MapsControl.UWP.MapElementCollisionBehavior.RemainVisible;
-                    //    pushPins.Add(mapIcon);
-                    //}
-                    //await myMap.PushpinAsync(pushPins);
+                    var startItem = ViewModel.PointOfIntrestSource.FirstOrDefault();
+                    var endItem = ViewModel.PointOfIntrestSource.LastOrDefault();
 
-                    var startImgUri = ViewModel.PointOfIntrestSource.FirstOrDefault().ImageSourceUri;
-                    var endImgUri = ViewModel.PointOfIntrestSource.LastOrDefault().ImageSourceUri;
+                    string startImgUri = startItem != null ? startItem.ImageSourceUri : null;
+                    string endImgUri = endItem != null ? endItem.ImageSourceUri : null;
+                    const string intermediateUri = "ms-appx:///Assets/Maps/MapPin-Red.png";
 
-                    OnTerra.MapsControl.UWP.MapPolyline line = new OnTerra.MapsControl.UWP.MapPolyline
+                    if (!string.IsNullOrEmpty(startImgUri) && !string.IsNullOrEmpty(endImgUri))
                     {
-                        StrokeColor = Colors.Blue,
-                        StrokeThickness = 4,
-                        StrokeDashed = false,
-                        StartMarkerLabel = "Start",
-                        EndMarkerLabel = "End",
-                        StartMarkerImage = RandomAccessStreamReference.CreateFromUri(
-        new Uri(startImgUri)),
-                        EndMarkerImage = RandomAccessStreamReference.CreateFromUri(
-        new Uri(endImgUri)),
-                        IntermediateMarkerImage = RandomAccessStreamReference.CreateFromUri(
-        new Uri("ms-appx:///Assets/Maps/MapPin-Red.png")),
-                        Path = new OnTerra.MapsControl.UWP.Geopath(
-                            ViewModel.PointOfIntrestSource.Select(x => x.OnTerraLocation.Position)
-                            )
-                    };
-                    await myMap.PolylineAsync(line);
+                        var startIconTask = GetCachedIconAsync(startImgUri, token);
+                        var endIconTask = GetCachedIconAsync(endImgUri, token);
+                        var intermediateIconTask = GetCachedIconAsync(intermediateUri, token);
+
+                        await Task.WhenAll(startIconTask, endIconTask, intermediateIconTask);
+
+                        var line = new OnTerra.MapsControl.UWP.MapPolyline
+                        {
+                            StrokeColor = Colors.Blue,
+                            StrokeThickness = 4,
+                            StrokeDashed = false,
+                            StartMarkerLabel = "Start",
+                            EndMarkerLabel = "End",
+                            StartMarkerImage = await startIconTask,
+                            EndMarkerImage = await endIconTask,
+                            IntermediateMarkerImage = await intermediateIconTask,
+                            Path = new OnTerra.MapsControl.UWP.Geopath(
+                                ViewModel.PointOfIntrestSource.Select(x => x.OnTerraLocation.Position).ToList())
+                        };
+
+                        if (myMap != null)
+                            await myMap.PolylineAsync(line);
+                    }
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected when page is unloaded
             }
             catch (Exception ex)
             {
@@ -159,96 +287,60 @@ namespace DRLMobile.Uwp.View
             }
         }
 
+        private void UpdateArrowState(bool isExpanded)
+        {
+            DownArrow.Glyph = isExpanded ? GLYPH_ARROW_UP : GLYPH_ARROW_DOWN;
+            DownArrowButton.Padding = isExpanded ? PADDING_ARROW_UP : PADDING_ARROW_DOWN;
+            CustomerListPanel.Visibility = isExpanded ? Visibility.Visible : Visibility.Collapsed;
+        }
 
         private void DownArrowButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            CustomerListPanel.Visibility = (CustomerListPanel.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
-            DownArrow.Glyph = (CustomerListPanel.Visibility == Visibility.Visible) ? "\xe935" : "\xe936";
-            var downArrowPadding = new Thickness(15, 10, 15, 0);
-            var upArrowPadding = new Thickness(15, 0, 15, 10);
-            DownArrowButton.Padding = (CustomerListPanel.Visibility == Visibility.Visible) ? upArrowPadding : downArrowPadding;
+            var isExpanded = CustomerListPanel.Visibility == Visibility.Visible;
+            UpdateArrowState(!isExpanded);
         }
 
         private void myMap_MapElementClick(object sender, OnTerra.MapsControl.UWP.MapElementClickEventArgs args)
         {
             try
             {
-                OnTerra.MapsControl.UWP.MapIcon mapClickedIcon = args.MapElements.FirstOrDefault(x => x is OnTerra.MapsControl.UWP.MapIcon) as OnTerra.MapsControl.UWP.MapIcon;
-                if (mapClickedIcon != null && mapClickedIcon.Tag != null)
-                {
-                    if ((mapClickedIcon.Tag as PointOfInterest) != null)
-                    {
-                        var currentPoint = mapClickedIcon.Tag as PointOfInterest;
+                var mapClickedIcon = args.MapElements
+                    .OfType<OnTerra.MapsControl.UWP.MapIcon>()
+                    .FirstOrDefault();
 
+                if (mapClickedIcon != null)
+                {
+                    var currentPoint = mapClickedIcon.Tag as PointOfInterest;
+                    if (currentPoint != null && currentPoint.CustomerData != null)
+                    {
                         customMapPinPopup.DeviceCustomerId = currentPoint.CustomerData.DeviceCustomerID;
                         customMapPinPopup.CustomerId = currentPoint.CustomerData.CustomerID;
 
-                        ViewModel.CustomMapPinVisibility = Visibility.Visible;
-                        ViewModel.CustomMapPinIsVisible = true;
+                        if (ViewModel != null)
+                        {
+                            ViewModel.CustomMapPinVisibility = Visibility.Visible;
+                            ViewModel.CustomMapPinIsVisible = true;
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                ErrorLogger.WriteToErrorLog(nameof(MapPage), "myMap_MapElementClick", ex.Message);
-            }
-        }
-
-
-        //private async void myMap_MapElementClick(MapControl sender, MapElementClickEventArgs args)
-        //{
-        //    try
-        //    {
-        //        MapIcon mapClickedIcon = args.MapElements.FirstOrDefault(x => x is MapIcon) as MapIcon;
-
-        //        if (mapClickedIcon != null && mapClickedIcon.Tag != null)
-        //        {
-        //            if ((mapClickedIcon.Tag as PointOfInterest) != null)
-        //            {
-        //                var currentPoint = mapClickedIcon.Tag as PointOfInterest;
-        //                if (currentPoint.CustomerData != null)
-        //                {
-        //                    customMapPinPopup.DeviceCustomerId = currentPoint.CustomerData.DeviceCustomerID;
-        //                    customMapPinPopup.CustomerId = currentPoint.CustomerData.CustomerID;
-        //                    ViewModel.CustomMapPinVisibility = Visibility.Visible;
-        //                    ViewModel.CustomMapPinIsVisible = true;
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        //ErrorLogger.WriteToErrorLog(nameof(MapPage), "myMap_MapElementClick", ex.Message);
-        //    }
-        //}
-
-        private void mapItemButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button)
-            {
-                ViewModel.SelectedCustomerForPopup = ((sender as Button).DataContext as PointOfInterest)?.RouteData;
-
-                if (ViewModel?.SelectedCustomerForPopup != null)
-                {
-                    //FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
-                    customMapPinPopup.DeviceCustomerId = ViewModel?.SelectedCustomerForPopup.DeviceCustomerID;
-                    customMapPinPopup.CustomerId = (int)(ViewModel?.SelectedCustomerForPopup.CustomerID);
-                    ViewModel.CustomMapPinVisibility = Visibility.Visible;
-                }
+                ErrorLogger.WriteToErrorLog(nameof(ViewRouteListPage), nameof(myMap_MapElementClick), ex);
             }
         }
 
         private void PinPopUpFlyout_Opened(object sender, object e)
         {
-            if (sender is Flyout && (sender as Flyout).Content is MapPinCustomPopUp)
+            if (sender is Flyout flyout && flyout.Content is MapPinCustomPopUp popup)
             {
-                var popup = (sender as Flyout).Content as MapPinCustomPopUp;
-
-                popup.DeviceCustomerId = ViewModel?.SelectedCustomerForPopup?.DeviceCustomerID;
-
                 if (ViewModel != null)
                 {
-                    popup.CustomerId = ViewModel.SelectedCustomerForPopup.CustomerID;
+                    popup.DeviceCustomerId = ViewModel.SelectedCustomerForPopup != null ? ViewModel.SelectedCustomerForPopup.DeviceCustomerID : string.Empty;
+                    if (ViewModel.SelectedCustomerForPopup != null)
+                    {
+                        popup.CustomerId = ViewModel.SelectedCustomerForPopup.CustomerID;
+                    }
                 }
             }
         }
@@ -259,12 +351,12 @@ namespace DRLMobile.Uwp.View
             {
                 EndTextBox.Text = string.Empty;
                 EndTextBox.IsReadOnly = true;
-                ViewModel.IsEndCurrentLocation = true;
+                if (ViewModel != null) ViewModel.IsEndCurrentLocation = true;
             }
             else
             {
                 EndTextBox.IsReadOnly = false;
-                ViewModel.IsEndCurrentLocation = false;
+                if (ViewModel != null) ViewModel.IsEndCurrentLocation = false;
             }
         }
 
@@ -274,26 +366,29 @@ namespace DRLMobile.Uwp.View
             {
                 StartTextBox.Text = string.Empty;
                 StartTextBox.IsReadOnly = true;
-                ViewModel.IsStartCurrentLocation = true;
+                if (ViewModel != null) ViewModel.IsStartCurrentLocation = true;
             }
             else
             {
                 StartTextBox.IsReadOnly = false;
-                ViewModel.IsStartCurrentLocation = false;
+                if (ViewModel != null) ViewModel.IsStartCurrentLocation = false;
             }
         }
 
         private void CheckBoxGrid_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (sender is Grid)
+            if (sender is Grid grid && ViewModel != null && ViewModel.OnCheckBoxClicked != null)
             {
-                ViewModel?.OnCheckBoxClicked?.Execute((sender as Grid).DataContext);
+                ViewModel.OnCheckBoxClicked.Execute(grid.DataContext);
             }
         }
 
         private void SelectAllCheckBox_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            ViewModel?.SelectAllCommand?.Execute(null);
+            if (ViewModel != null && ViewModel.SelectAllCommand != null)
+            {
+                ViewModel.SelectAllCommand.Execute(null);
+            }
         }
     }
 }
