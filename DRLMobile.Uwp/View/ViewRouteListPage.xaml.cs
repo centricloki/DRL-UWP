@@ -70,6 +70,8 @@ namespace DRLMobile.Uwp.View
 
             try
             {
+                if (ViewModel != null)
+                ViewModel.LoadingVisibilityHandler(true);
                 await InitializeMap();
 
                 if (_navigationEventParam != null)
@@ -91,8 +93,8 @@ namespace DRLMobile.Uwp.View
 
                     if (ViewModel != null)
                     {
-                        if (ViewModel.PointOfIntrestSource != null)
-                            ViewModel.PointOfIntrestSource.Clear();
+                        if (ViewModel.PointOfInterestSource != null)
+                            ViewModel.PointOfInterestSource.Clear();
                         ViewModel.CustomMapPinVisibility = Visibility.Collapsed;
                         ViewModel.CustomMapPinIsVisible = false;
                     }
@@ -103,7 +105,7 @@ namespace DRLMobile.Uwp.View
                     await RefreshMapIcons(_cts.Token);
 
                     if (ViewModel != null)
-                        ViewModel.IsAllChecked = false;
+                        ViewModel.IsAllChecked = false;                          
                 }
             }
             catch (Exception ex)
@@ -112,6 +114,8 @@ namespace DRLMobile.Uwp.View
             }
             finally
             {
+                if (ViewModel != null)
+                    ViewModel.LoadingVisibilityHandler(false);
                 if (shellPage != null)
                     shellPage.ViewModel.IsSideMenuItemClickable = true;
             }
@@ -241,10 +245,10 @@ namespace DRLMobile.Uwp.View
                 if (myMap != null)
                     await myMap.ClearAllAsync();
 
-                if (ViewModel != null && ViewModel.PointOfIntrestSource != null && ViewModel.PointOfIntrestSource.Count > 0)
+                if (ViewModel != null && ViewModel.PointOfInterestSource != null && ViewModel.PointOfInterestSource.Count > 0)
                 {
-                    var startItem = ViewModel.PointOfIntrestSource.FirstOrDefault();
-                    var endItem = ViewModel.PointOfIntrestSource.LastOrDefault();
+                    var startItem = ViewModel.PointOfInterestSource.FirstOrDefault();
+                    var endItem = ViewModel.PointOfInterestSource.LastOrDefault();
 
                     string startImgUri = startItem != null ? startItem.ImageSourceUri : null;
                     string endImgUri = endItem != null ? endItem.ImageSourceUri : null;
@@ -269,7 +273,7 @@ namespace DRLMobile.Uwp.View
                             EndMarkerImage = await endIconTask,
                             IntermediateMarkerImage = await intermediateIconTask,
                             Path = new OnTerra.MapsControl.UWP.Geopath(
-                                ViewModel.PointOfIntrestSource.Select(x => x.OnTerraLocation.Position).ToList())
+                                ViewModel.PointOfInterestSource.Select(x => x.OnTerraLocation.Position).ToList())
                         };
 
                         if (myMap != null)
