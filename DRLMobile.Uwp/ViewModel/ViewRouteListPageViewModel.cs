@@ -202,6 +202,7 @@ namespace DRLMobile.Uwp.ViewModel
         /// <summary>
         /// Gets or sets the collection of route details displayed in the DataGrid.
         /// Bound to XAML ItemsSource for customer list display.
+        /// This collection contains independent copies of database objects to prevent reference sharing.
         /// </summary>
         public ObservableCollection<ViewRouteDetailsUIModel> RouteDetailsItemSource
         {
@@ -231,7 +232,7 @@ namespace DRLMobile.Uwp.ViewModel
 
         /// <summary>
         /// Gets or sets the raw route details fetched from the database.
-        /// Internal use only; not bound to UI.
+        /// Internal use only; not bound to UI. Contains original database objects.
         /// </summary>
         public List<ViewRouteDetailsUIModel> RouteDetailsDBSource { get; set; } = new List<ViewRouteDetailsUIModel>();
 
@@ -347,7 +348,7 @@ namespace DRLMobile.Uwp.ViewModel
 
         /// <summary>
         /// Gets or sets the selected customer for popup display.
-        /// Used by ViewRouteListPage.xaml.cs line 339 for MapPinCustomPopUp binding.
+        /// Used by ViewRouteListPage.xaml.cs for MapPinCustomPopUp binding.
         /// </summary>
         public ViewRouteDetailsUIModel SelectedCustomerForPopup
         {
@@ -612,7 +613,7 @@ namespace DRLMobile.Uwp.ViewModel
 
         /// <summary>
         /// Handles page navigation initialization.
-        /// Loads route details from database and populates UI collections.
+        /// Loads route details from database and populates UI collections with independent copies.
         /// </summary>
         /// <param name="selectedRoute">The route selected from the previous page.</param>
         /// <returns>A Task representing the asynchronous operation.</returns>
@@ -637,8 +638,10 @@ namespace DRLMobile.Uwp.ViewModel
                 int indexItem = 1;
                 foreach (var item in RouteDetailsDBSource)
                 {
-                    item.ListIndex = indexItem++;
-                    RouteDetailsItemSource.Add(item);
+                    // Create independent copy to prevent reference sharing between collections
+                    var itemCopy = CreateIndependentCopy(item);
+                    itemCopy.ListIndex = indexItem++;
+                    RouteDetailsItemSource.Add(itemCopy);
                 }
             }
             LoadingVisibilityHandler(isLoading: false);
@@ -653,9 +656,9 @@ namespace DRLMobile.Uwp.ViewModel
         private async Task HeaderSearchTextChangeCommandHandlerAsync(string searchText)
         {
             HeaderSearchItemSource.Clear();
-
             if (string.IsNullOrWhiteSpace(searchText))
             {
+                IsAllChecked = false;
                 var ifDataGridHasAlreadyData = RouteDetailsDBSource?.Count == RouteDetailsItemSource?.Count;
                 if (ifDataGridHasAlreadyData) LoadHeaderSearchWithInitialData();
                 else await LoadDataGridAndHeaderSearchWithInitialDataAsync();
@@ -663,7 +666,6 @@ namespace DRLMobile.Uwp.ViewModel
             else
             {
                 var tempList = RouteDetailsDBSource?.Where(x => x.SearchDisplayPath.ToLower().Contains(searchText.ToLower())).ToList();
-
                 if (tempList == null || tempList.Count == 0)
                 {
                     HeaderSearchItemSource.Add(new ViewRouteDetailsUIModel { CustomerName = ResourceExtensions.GetLocalized("NoResultsErrorMessage") });
@@ -677,7 +679,7 @@ namespace DRLMobile.Uwp.ViewModel
 
         /// <summary>
         /// Loads initial data into both the main DataGrid and header search collection.
-        /// Used when search is cleared or page first loads.
+        /// Uses cloned copies to ensure UI collection is independent of database source.
         /// </summary>
         /// <returns>A Task representing the asynchronous operation.</returns>
         private async Task LoadDataGridAndHeaderSearchWithInitialDataAsync()
@@ -686,7 +688,11 @@ namespace DRLMobile.Uwp.ViewModel
             await Task.Delay(100);
 
             RouteDetailsItemSource.Clear();
-            foreach (var item in RouteDetailsDBSource) RouteDetailsItemSource.Add(item);
+            // Use cloned copies for UI collection to maintain independence
+            foreach (var item in RouteDetailsDBSource)
+            {
+                RouteDetailsItemSource.Add(CreateIndependentCopy(item));
+            }
 
             HeaderSearchItemSource.Clear();
             LoadingVisibilityHandler(isLoading: false);
@@ -703,7 +709,7 @@ namespace DRLMobile.Uwp.ViewModel
 
         /// <summary>
         /// Handles search suggestion selection.
-        /// Filters the main DataGrid to show only the selected customer.
+        /// Filters the main DataGrid to show only the selected customer using a cloned copy.
         /// </summary>
         /// <param name="selectedItem">The customer item selected from suggestions.</param>
         private void SuggestionChoosen(ViewRouteDetailsUIModel selectedItem)
@@ -711,8 +717,13 @@ namespace DRLMobile.Uwp.ViewModel
             if (selectedItem?.SearchDisplayPath?.Contains(ResourceExtensions.GetLocalized("NoResultsErrorMessage")) == true) return;
 
             RouteDetailsItemSource.Clear();
+            IsAllChecked = false;
             var filterItem = RouteDetailsDBSource.FirstOrDefault(x => x.CustomerName.Equals(selectedItem.CustomerName));
-            if (filterItem != null) RouteDetailsItemSource.Add(filterItem);
+            if (filterItem != null)
+            {
+                // Add cloned copy to maintain collection independence
+                RouteDetailsItemSource.Add(CreateIndependentCopy(filterItem));
+            }
         }
 
         #endregion
@@ -1264,6 +1275,34 @@ namespace DRLMobile.Uwp.ViewModel
         #endregion
 
         #region Utility & UI Helpers
+
+        /// <summary>
+        /// Creates a deep copy of a ViewRouteDetailsUIModel to ensure independent collections.
+        /// Changes to the copy won't affect the original database source object.
+        /// </summary>
+        /// <param name="source">The source model to copy.</param>
+        /// <returns>A new ViewRouteDetailsUIModel instance with copied property values.</returns>
+        private ViewRouteDetailsUIModel CreateIndependentCopy(ViewRouteDetailsUIModel source)
+        {
+            if (source == null) return null;
+
+            return new ViewRouteDetailsUIModel
+            {
+                // Copy all public properties - adjust if your model has additional properties
+                CustomerID = source.CustomerID,
+                DeviceCustomerID = source.DeviceCustomerID,
+                CustomerName = source.CustomerName,
+                PhysicalAddress = source.PhysicalAddress,
+                PhysicalAddressCityID = source.PhysicalAddressCityID,
+                StateName = source.StateName,
+                CustomerNumber = source.CustomerNumber,
+                Latitude = source.Latitude,
+                Longitude = source.Longitude,
+                ListIndex = source.ListIndex,
+                IsChecked = source.IsChecked
+                // Copy any additional properties your model contains
+            };
+        }
 
         /// <summary>
         /// Toggles the loading visibility indicator.
