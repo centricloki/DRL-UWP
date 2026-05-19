@@ -372,7 +372,7 @@ namespace DRLMobile.Uwp.View
         {
             await semaphore.WaitAsync(cancellationTokenSource.Token);
             try
-            {               
+            {
                 return await AddMapIconAsync(item);
             }
             finally
@@ -404,10 +404,11 @@ namespace DRLMobile.Uwp.View
                         var currentItem = item;
                         tasks.Add(ProcessPinAsync(currentItem, semaphore));
                     }
+                    await myMap.SetMapStyleAsync("blank");
+                    await SetMapCenterAsync();
                     var icons = await Task.WhenAll(tasks);
                     var pushPins = icons.Where(p => p != null).ToList();
                     await myMap.PushpinAsync(pushPins);
-                    await SetMapCenterAsync();
                 }
                 SetCheckedState();
                 OptionsAllCheckBox.Checked += OptionsAllCheckBox_Checked;
@@ -444,10 +445,8 @@ namespace DRLMobile.Uwp.View
                         Longitude = x.OnTerraLocation.Position.Longitude,
                     }));
                 await myMap.TrySetViewBoundsAsync(geoboundingBox, null, OnTerra.MapsControl.UWP.MapAnimationKind.Default);
-
             }
         }
-
         private Task<RandomAccessStreamReference> GetIconAsync(string uri)
         {
             return _iconCache.GetOrAdd(uri, key => LoadAndResizeAsync(key));
@@ -469,7 +468,7 @@ namespace DRLMobile.Uwp.View
                 return RandomAccessStreamReference.CreateFromStream(memStream);
             }
         }
-        private async Task<OnTerra.MapsControl.UWP.MapIcon> AddMapIconAsync(PointOfInterest item)
+        private async Task<OnTerra.MapsControl.UWP.MapIcon> AddMapIconAsync(DRLMobile.Uwp.Helpers.PointOfInterest item)
         {
             try
             {
@@ -484,7 +483,8 @@ namespace DRLMobile.Uwp.View
                         ? string.Empty
                         : item.CustomerData.CustomerNumber,
                     Tag = item,
-                    CollisionBehaviorDesired = OnTerra.MapsControl.UWP.MapElementCollisionBehavior.RemainVisible
+                    ZIndex = 5,
+                    CollisionBehaviorDesired = OnTerra.MapsControl.UWP.MapElementCollisionBehavior.Hide
                 };
 
                 return mapIcon;
@@ -531,9 +531,9 @@ namespace DRLMobile.Uwp.View
                 OnTerra.MapsControl.UWP.MapIcon mapClickedIcon = args.MapElements.FirstOrDefault(x => x is OnTerra.MapsControl.UWP.MapIcon) as OnTerra.MapsControl.UWP.MapIcon;
                 if (mapClickedIcon != null && mapClickedIcon.Tag != null)
                 {
-                    if ((mapClickedIcon.Tag as PointOfInterest) != null)
+                    if ((mapClickedIcon.Tag as DRLMobile.Uwp.Helpers.PointOfInterest) != null)
                     {
-                        var currentPoint = mapClickedIcon.Tag as PointOfInterest;
+                        var currentPoint = mapClickedIcon.Tag as DRLMobile.Uwp.Helpers.PointOfInterest;
 
                         customMapPinPopup.DeviceCustomerId = currentPoint.CustomerData.DeviceCustomerID;
                         customMapPinPopup.CustomerId = currentPoint.CustomerData.CustomerID;

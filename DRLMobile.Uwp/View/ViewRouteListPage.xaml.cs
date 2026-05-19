@@ -71,7 +71,7 @@ namespace DRLMobile.Uwp.View
             try
             {
                 if (ViewModel != null)
-                ViewModel.LoadingVisibilityHandler(true);
+                    ViewModel.LoadingVisibilityHandler(true);
                 await InitializeMap();
 
                 if (_navigationEventParam != null)
@@ -105,7 +105,7 @@ namespace DRLMobile.Uwp.View
                     await RefreshMapIcons(_cts.Token);
 
                     if (ViewModel != null)
-                        ViewModel.IsAllChecked = false;                          
+                        ViewModel.IsAllChecked = false;
                 }
             }
             catch (Exception ex)
@@ -277,7 +277,17 @@ namespace DRLMobile.Uwp.View
                         };
 
                         if (myMap != null)
+                        {
                             await myMap.PolylineAsync(line);
+                            OnTerra.MapsControl.UWP.GeoboundingBox geoboundingBox = OnTerra.MapsControl.UWP.GeoboundingBox.TryCompute(
+                                ViewModel.PointOfInterestSource.Select(x =>
+                             new OnTerra.MapsControl.UWP.BasicGeoposition
+                             {
+                                 Latitude = x.OnTerraLocation.Position.Latitude,
+                                 Longitude = x.OnTerraLocation.Position.Longitude,
+                             }));
+                            await myMap.TrySetViewBoundsAsync(geoboundingBox, null, OnTerra.MapsControl.UWP.MapAnimationKind.Default);
+                        }
                     }
                 }
             }

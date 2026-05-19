@@ -800,7 +800,7 @@
       <Version>2.5.1</Version>
     </PackageReference>
     <PackageReference Include="OnTerra.MapsControl.UWP">
-      <Version>1.0.33</Version>
+      <Version>1.0.40</Version>
     </PackageReference>
     <PackageReference Include="SharpDX.Direct2D1">
       <Version>4.2.0</Version>
