@@ -404,11 +404,11 @@ namespace DRLMobile.Uwp.View
                         var currentItem = item;
                         tasks.Add(ProcessPinAsync(currentItem, semaphore));
                     }
-                    await myMap.SetMapStyleAsync("blank");
-                    await SetMapCenterAsync();
                     var icons = await Task.WhenAll(tasks);
                     var pushPins = icons.Where(p => p != null).ToList();
                     await myMap.PushpinAsync(pushPins);
+                    await myMap.SetMapStyleAsync("blank");
+                    await SetMapCenterAsync();
                 }
                 SetCheckedState();
                 OptionsAllCheckBox.Checked += OptionsAllCheckBox_Checked;
@@ -460,14 +460,49 @@ namespace DRLMobile.Uwp.View
                 var decoder = await BitmapDecoder.CreateAsync(fileStream);
                 var memStream = new InMemoryRandomAccessStream();
                 var encoder = await BitmapEncoder.CreateForTranscodingAsync(memStream, decoder);
-                encoder.BitmapTransform.ScaledWidth = 25;
-                encoder.BitmapTransform.ScaledHeight = 40;
-                encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Linear; // faster than default Fant
+                //encoder.BitmapTransform.ScaledWidth = 100;
+                //encoder.BitmapTransform.ScaledHeight = 100;
+                //encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
                 await encoder.FlushAsync();
                 memStream.Seek(0);
                 return RandomAccessStreamReference.CreateFromStream(memStream);
             }
         }
+
+        //private async Task<RandomAccessStreamReference> LoadAndResizeAsync(string uri)
+        //{
+        //    var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(uri));
+        //    using (IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read))
+        //    {
+        //        var decoder = await BitmapDecoder.CreateAsync(fileStream);
+        //        var softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+
+        //        // Calculate proper size
+        //        uint originalWidth = decoder.OrientedPixelWidth;
+        //        uint originalHeight = decoder.OrientedPixelHeight;
+
+        //        uint maxSize = 24; // Your desired size
+        //        double ratio = Math.Min((double)maxSize / originalWidth, (double)maxSize / originalHeight);
+        //        uint scaledWidth = (uint)(originalWidth * ratio);
+        //        uint scaledHeight = (uint)(originalHeight * ratio);
+
+        //        var memStream = new InMemoryRandomAccessStream();
+        //        var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, memStream);
+
+        //        // Set bitmap with transformation
+        //        encoder.SetSoftwareBitmap(softwareBitmap);
+        //        //encoder.BitmapTransform.ScaledWidth = scaledWidth;
+        //        //encoder.BitmapTransform.ScaledHeight = scaledHeight;
+        //        //encoder.BitmapTransform.ScaledWidth = scaledWidth;
+        //        //encoder.BitmapTransform.ScaledHeight = scaledHeight;
+        //        encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
+
+        //        await encoder.FlushAsync();
+        //        memStream.Seek(0);
+        //        return RandomAccessStreamReference.CreateFromStream(memStream);
+        //    }
+        //}
+
         private async Task<OnTerra.MapsControl.UWP.MapIcon> AddMapIconAsync(DRLMobile.Uwp.Helpers.PointOfInterest item)
         {
             try
@@ -478,7 +513,7 @@ namespace DRLMobile.Uwp.View
                 {
                     Image = imageReference,
                     Location = item.OnTerraLocation,
-                    NormalizedAnchorPoint = new Windows.Foundation.Point(0.5, 1),
+                    NormalizedAnchorPoint = new Windows.Foundation.Point(0.5, 0.5),
                     Title = string.IsNullOrEmpty(item.CustomerData?.CustomerNumber)
                         ? string.Empty
                         : item.CustomerData.CustomerNumber,

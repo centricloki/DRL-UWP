@@ -273,7 +273,13 @@ namespace DRLMobile.Uwp.View
                             EndMarkerImage = await endIconTask,
                             IntermediateMarkerImage = await intermediateIconTask,
                             Path = new OnTerra.MapsControl.UWP.Geopath(
-                                ViewModel.PointOfInterestSource.Select(x => x.OnTerraLocation.Position).ToList())
+                                ViewModel.PointOfInterestSource.Select(x =>
+                                 new OnTerra.MapsControl.UWP.BasicGeoposition
+                                 {
+                                     Latitude = x.OnTerraLocation.Position.Latitude,
+                                     Longitude = x.OnTerraLocation.Position.Longitude,
+                                     Tag = x?.CustomerData?.CustomerID.ToString()
+                                 }))
                         };
 
                         if (myMap != null)
@@ -324,16 +330,20 @@ namespace DRLMobile.Uwp.View
 
                 if (mapClickedIcon != null)
                 {
-                    var currentPoint = mapClickedIcon.Tag as PointOfInterest;
-                    if (currentPoint != null && currentPoint.CustomerData != null)
+                    // var currentPoint = mapClickedIcon.Tag as PointOfInterest;
+                    if (int.TryParse(mapClickedIcon.Title, out int _customerId))
                     {
-                        customMapPinPopup.DeviceCustomerId = currentPoint.CustomerData.DeviceCustomerID;
-                        customMapPinPopup.CustomerId = currentPoint.CustomerData.CustomerID;
-
-                        if (ViewModel != null)
+                      var currentPoint = ViewModel.PointOfInterestSource.Where(x=>x.CustomerData!=null).FirstOrDefault(x => x?.CustomerData.CustomerID == _customerId);
+                        if (currentPoint != null && currentPoint.CustomerData != null)
                         {
-                            ViewModel.CustomMapPinVisibility = Visibility.Visible;
-                            ViewModel.CustomMapPinIsVisible = true;
+                            customMapPinPopup.DeviceCustomerId = currentPoint.CustomerData.DeviceCustomerID;
+                            customMapPinPopup.CustomerId = currentPoint.CustomerData.CustomerID;
+
+                            if (ViewModel != null)
+                            {
+                                ViewModel.CustomMapPinVisibility = Visibility.Visible;
+                                ViewModel.CustomMapPinIsVisible = true;
+                            }
                         }
                     }
                 }
