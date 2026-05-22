@@ -37,7 +37,7 @@ namespace DRLMobile.Uwp.View
             _routeIconCache = new ConcurrentDictionary<string, Task<RandomAccessStreamReference>>(StringComparer.OrdinalIgnoreCase);
 
         private readonly ViewRouteListPageViewModel ViewModel = new ViewRouteListPageViewModel();
-        private RouteListUIModel _navigationEventParam;
+
         private CancellationTokenSource _cts = new CancellationTokenSource();
 
         public ViewRouteListPage()
@@ -45,7 +45,6 @@ namespace DRLMobile.Uwp.View
             DataContext = ViewModel;
             InitializeComponent();
             DownArrow.Glyph = GLYPH_ARROW_DOWN;
-            Loaded += ViewRouteListPage_Loaded;
             Unloaded += ViewRouteListPage_Unloaded;
         }
 
@@ -57,17 +56,14 @@ namespace DRLMobile.Uwp.View
                 _cts.Dispose();
             }
             _cts = new CancellationTokenSource();
-
-            Loaded -= ViewRouteListPage_Loaded;
             Unloaded -= ViewRouteListPage_Unloaded;
         }
 
-        private async void ViewRouteListPage_Loaded(object sender, RoutedEventArgs e)
+        private async Task ViewRouteListPageLoadedAsync(RouteListUIModel _navigationEventParam)
         {
             var shellPage = (Window.Current.Content as Frame) != null ? (Window.Current.Content as Frame).Content as ShellPage : null;
             if (shellPage != null)
                 shellPage.ViewModel.IsSideMenuItemClickable = false;
-
             try
             {
                 if (ViewModel != null)
@@ -110,7 +106,7 @@ namespace DRLMobile.Uwp.View
             }
             catch (Exception ex)
             {
-                ErrorLogger.WriteToErrorLog(nameof(ViewRouteListPage), nameof(ViewRouteListPage_Loaded), ex);
+                ErrorLogger.WriteToErrorLog(nameof(ViewRouteListPage), nameof(ViewRouteListPageLoadedAsync), ex);
             }
             finally
             {
@@ -127,12 +123,12 @@ namespace DRLMobile.Uwp.View
                 await myMap.InitializeAsync();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (e.NavigationMode == NavigationMode.New)
             {
-                _navigationEventParam = (RouteListUIModel)e.Parameter;
+               await this.ViewRouteListPageLoadedAsync((RouteListUIModel)e.Parameter);
             }
         }
 
@@ -333,7 +329,7 @@ namespace DRLMobile.Uwp.View
                     // var currentPoint = mapClickedIcon.Tag as PointOfInterest;
                     if (int.TryParse(mapClickedIcon.Title, out int _customerId))
                     {
-                      var currentPoint = ViewModel.PointOfInterestSource.Where(x=>x.CustomerData!=null).FirstOrDefault(x => x?.CustomerData.CustomerID == _customerId);
+                        var currentPoint = ViewModel.PointOfInterestSource.Where(x => x.CustomerData != null).FirstOrDefault(x => x?.CustomerData.CustomerID == _customerId);
                         if (currentPoint != null && currentPoint.CustomerData != null)
                         {
                             customMapPinPopup.DeviceCustomerId = currentPoint.CustomerData.DeviceCustomerID;

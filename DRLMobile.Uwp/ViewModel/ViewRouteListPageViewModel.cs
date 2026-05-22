@@ -44,12 +44,6 @@ namespace DRLMobile.Uwp.ViewModel
         /// <summary>Maximum number of waypoints (customers) allowed in a single route calculation.</summary>
         private const int MaxWaypointsLimit = 17;
 
-        /// <summary>Minimum value for a valid 5-digit US zip code.</summary>
-        private const int MinZipCode = 10000;
-
-        /// <summary>Maximum value for a valid 5-digit US zip code.</summary>
-        private const int MaxZipCode = 99999;
-
         /// <summary>Default region suffix for geocoding queries when country is not specified.</summary>
         private const string DefaultGeocodeRegion = ",USA";
 
@@ -816,13 +810,9 @@ namespace DRLMobile.Uwp.ViewModel
         /// <returns>True if validation and geocoding succeeded; otherwise false.</returns>
         private async Task<OnTerra.MapsControl.UWP.Geopoint> ValidateAndGeocodeLocationAsync(string address)
         {
-            // Check if address is a numeric zip code
-            if (int.TryParse(address, out int zipResult))
-            {
-                // Validate 5-digit US zip code range
-                if (zipResult < MinZipCode || zipResult > MaxZipCode) return null;
-            }
-            return await GetGeoLocationFromAddressAsync(address);
+            if (address.Length != 5 && !address.All(char.IsDigit))
+                return null;
+            return await GetGeoLocationFromAddressAsync(address, address.All(char.IsDigit));
         }
 
         /// <summary>
@@ -834,7 +824,7 @@ namespace DRLMobile.Uwp.ViewModel
         /// <param name="cancellationToken">Optional token to cancel the async operation.</param>
         /// <returns>OnTerra.MapsControl.UWP.Geopoint if successful; otherwise null.</returns>
         private async Task<OnTerra.MapsControl.UWP.Geopoint> GetGeoLocationFromAddressAsync(
-            string address, CancellationToken cancellationToken = default)
+            string address, bool isZipCode, CancellationToken cancellationToken = default)
         {
             var geocodeQuery = BuildGeocodeQuery(address);
             var result = await OnTerraMap.GeocodeAndPlotAsync(geocodeQuery);
@@ -842,6 +832,7 @@ namespace DRLMobile.Uwp.ViewModel
             if (result?.SuccessCount > 0 && result.Locations?.Any() == true)
             {
                 var bestMatch = result.Locations[0];
+                if (!isZipCode && !bestMatch.Input.Contains(bestMatch.Town)) return null;
                 // Use OnTerra.MapsControl.UWP.BasicGeoposition to match constructor expectations
                 return new OnTerra.MapsControl.UWP.Geopoint(new OnTerra.MapsControl.UWP.BasicGeoposition
                 {

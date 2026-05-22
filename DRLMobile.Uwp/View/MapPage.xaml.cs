@@ -407,7 +407,7 @@ namespace DRLMobile.Uwp.View
                     var icons = await Task.WhenAll(tasks);
                     var pushPins = icons.Where(p => p != null).ToList();
                     await myMap.PushpinAsync(pushPins);
-                    await myMap.SetMapStyleAsync("blank");
+                    await myMap.SetMapStyleAsync("grayscale_light");
                     await SetMapCenterAsync();
                 }
                 SetCheckedState();
@@ -521,7 +521,6 @@ namespace DRLMobile.Uwp.View
                     ZIndex = 5,
                     CollisionBehaviorDesired = OnTerra.MapsControl.UWP.MapElementCollisionBehavior.Hide
                 };
-
                 return mapIcon;
             }
             catch (OperationCanceledException)
