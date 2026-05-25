@@ -120,7 +120,10 @@ namespace DRLMobile.Uwp.View
         private async Task InitializeMap()
         {
             if (myMap != null)
+            {
                 await myMap.InitializeAsync();
+                await myMap.SetMapStyleAsync(OnTerra.MapsControl.UWP.MapStyle.CanvasLight);
+            }
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)

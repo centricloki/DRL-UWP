@@ -810,9 +810,13 @@ namespace DRLMobile.Uwp.ViewModel
         /// <returns>True if validation and geocoding succeeded; otherwise false.</returns>
         private async Task<OnTerra.MapsControl.UWP.Geopoint> ValidateAndGeocodeLocationAsync(string address)
         {
-            if (address.Length != 5 && !address.All(char.IsDigit))
-                return null;
-            return await GetGeoLocationFromAddressAsync(address, address.All(char.IsDigit));
+            bool isZipCode=false;
+            if (address.Length == 5)
+            {
+                if (address.All(char.IsDigit)) isZipCode = true;
+                else return null;
+            }               
+            return await GetGeoLocationFromAddressAsync(address, isZipCode);
         }
 
         /// <summary>
@@ -827,7 +831,7 @@ namespace DRLMobile.Uwp.ViewModel
             string address, bool isZipCode, CancellationToken cancellationToken = default)
         {
             var geocodeQuery = BuildGeocodeQuery(address);
-            var result = await OnTerraMap.GeocodeAndPlotAsync(geocodeQuery);
+            var result = await OnTerraMap.GeocodeAsync(geocodeQuery);
 
             if (result?.SuccessCount > 0 && result.Locations?.Any() == true)
             {

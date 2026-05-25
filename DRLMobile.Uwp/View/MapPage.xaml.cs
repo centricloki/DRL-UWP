@@ -54,7 +54,11 @@ namespace DRLMobile.Uwp.View
 
         private async Task InitializeMap()
         {
-            await myMap.InitializeAsync();
+            if (myMap != null)
+            {
+                await myMap.InitializeAsync();
+                await myMap.SetMapStyleAsync(OnTerra.MapsControl.UWP.MapStyle.CanvasLight);
+            }
         }
         private void MapPage_Unloaded(object sender, RoutedEventArgs e)
         {
@@ -407,7 +411,7 @@ namespace DRLMobile.Uwp.View
                     var icons = await Task.WhenAll(tasks);
                     var pushPins = icons.Where(p => p != null).ToList();
                     await myMap.PushpinAsync(pushPins);
-                    await myMap.SetMapStyleAsync("grayscale_light");
+
                     await SetMapCenterAsync();
                 }
                 SetCheckedState();
