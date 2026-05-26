@@ -194,6 +194,21 @@ namespace DRLMobile.Core.Services
             return stateMasterTable;
         }
 
+        public async Task<List<StateMaster>> GetStateMasterDataAsync(string stateName)
+        {
+            List<StateMaster> stateMasterData = null;
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH, false);
+            try
+            {
+                stateMasterData = await db.Table<StateMaster>().Where(x => x.StateName.Contains(stateName.ToUpper())).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.WriteToErrorLog(nameof(DatabaseService), nameof(GetStateMasterDataAsync), ex);
+            }
+            return stateMasterData;
+        }
+
         public async Task<Dictionary<int, string>> GetStateDictionaryAsync()
         {
             Dictionary<int, string> stateDictionary = null;

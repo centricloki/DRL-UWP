@@ -19,6 +19,7 @@ namespace DRLMobile.Core.Interface
         Task<Dictionary<int, string>> GetStateDictionaryAsync();
 
         Task<List<StateMaster>> GetAllStateMasterDataForNationalAndZoneAndRegionManagers();
+        Task<List<StateMaster>> GetStateMasterDataAsync(string stateName);
 
         Task<Dictionary<int, string>> GetCityDictionaryAsync();
 

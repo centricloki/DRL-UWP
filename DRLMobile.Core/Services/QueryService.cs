@@ -4008,6 +4008,9 @@ namespace DRLMobile.Core.Services
             }
         }
 
+        public async Task<List<StateMaster>> GetStateMasterDataAsync(string stateName)=> await DbService.GetStateMasterDataAsync(stateName).ConfigureAwait(false);
+
+
         public async Task<List<ActivityForAllCustomerUIModel>> GetCallActivitiesOfAllCustomersForNationalAndZoneAndRegionManagers(string territoryIds, bool loadAllData)
         {
             var callActivitiesList = await DbService.GetCallActivityDataForNationalAndZoneAndRegionManagers(territoryIds, loadAllData).ConfigureAwait(false);

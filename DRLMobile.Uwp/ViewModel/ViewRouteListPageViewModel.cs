@@ -810,12 +810,12 @@ namespace DRLMobile.Uwp.ViewModel
         /// <returns>True if validation and geocoding succeeded; otherwise false.</returns>
         private async Task<OnTerra.MapsControl.UWP.Geopoint> ValidateAndGeocodeLocationAsync(string address)
         {
-            bool isZipCode=false;
+            bool isZipCode = false;
             if (address.Length == 5)
             {
                 if (address.All(char.IsDigit)) isZipCode = true;
                 else return null;
-            }               
+            }
             return await GetGeoLocationFromAddressAsync(address, isZipCode);
         }
 
@@ -836,8 +836,9 @@ namespace DRLMobile.Uwp.ViewModel
             if (result?.SuccessCount > 0 && result.Locations?.Any() == true)
             {
                 var bestMatch = result.Locations[0];
-                if (!isZipCode && !bestMatch.Input.Contains(bestMatch.Town)) return null;
-                // Use OnTerra.MapsControl.UWP.BasicGeoposition to match constructor expectations
+                if ((!isZipCode && !bestMatch.Input.Contains(bestMatch.Town))) return null;
+                var validState = await IsValidUsStateAsync(bestMatch.Region);
+                if(!validState) return null;
                 return new OnTerra.MapsControl.UWP.Geopoint(new OnTerra.MapsControl.UWP.BasicGeoposition
                 {
                     Latitude = bestMatch.Latitude,
@@ -845,6 +846,13 @@ namespace DRLMobile.Uwp.ViewModel
                 });
             }
             return null;
+        }
+
+        private async Task<bool> IsValidUsStateAsync(string region)
+        {
+            var stateMasterData = await _appReference.QueryService.GetStateMasterDataAsync(region);
+            if (stateMasterData != null && stateMasterData.Any()) return true;
+            else return false;
         }
 
         /// <summary>

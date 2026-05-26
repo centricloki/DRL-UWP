@@ -130,6 +130,7 @@ namespace DRLMobile.Core.Interface
         Task<List<PopOrderCartUiModel>> GetPopOrderRemainingListData(string CurrentDeviceOrderId);
         Task<List<ActivityForAllCustomerUIModel>> GetCallActivitiesOfAllCustomersForLoggedInUser(string territoryIds, bool loadAllData);
         Task<List<ActivityForAllCustomerUIModel>> GetCallActivitiesOfAllCustomersForNationalAndZoneAndRegionManagers(string territoryIds, bool loadAllData);
+        Task<List<StateMaster>> GetStateMasterDataAsync(string stateName);
         Task<List<ActivityForAllCustomerUIModel>> GetCallActivitiesOfAllCustomers(bool loadAllData);
         Task<List<ActivityForIndividualCustomerUIModel>> GetCallActivitiesOfSelectedCustomerForLoggedInUser(string deviceCustomerId);
         Task<List<ActivityForIndividualCustomerUIModel>> GetCallActivitiesOfSelectedArea(string deviceCustomerId, int selectedArea, int roleId);

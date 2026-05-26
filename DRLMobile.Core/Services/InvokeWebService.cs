@@ -82,7 +82,7 @@ namespace DRLMobile.Core.Services
         /// <param name="password"></param>
         /// <param name="updateDate"></param>
         /// <returns>Downloaded data string</returns>
-        public async static Task<string> DataDownloadService(string userName, int password, string updateDate, string oldTerritoryId="")
+        public async static Task<string> DataDownloadService(string userName, int password, string updateDate, string oldTerritoryId = "")
         {
             string downloadedData = string.Empty;
 
@@ -94,7 +94,7 @@ namespace DRLMobile.Core.Services
                     pin = password,
                     versionnumber = ApplicationConstants.APPLICATION_VERSION,
                     updatedate = updateDate,
-                    oldterritoryid= oldTerritoryId
+                    oldterritoryid = oldTerritoryId
                 };
 
                 string serviceRequestModel = JsonConvert.SerializeObject(requestModel);
@@ -903,7 +903,7 @@ namespace DRLMobile.Core.Services
                 }
                 else
                 {
-                    var problematicServiceIds = await GetProblematicServiceIdsAsync(response.Content);
+                    var problematicServiceIds = GetProblematicServiceIds(response.Content);
                     if (problematicServiceIds.Count > 0) serverReponse = $"RouteError:{string.Join(",", problematicServiceIds)}";
                     else
                     {
@@ -928,7 +928,7 @@ namespace DRLMobile.Core.Services
             return serverReponse;
         }
 
-        private static async Task<List<string>> GetProblematicServiceIdsAsync(string apiResponse)
+        private static List<string> GetProblematicServiceIds(string apiResponse)
         {
             try
             {
