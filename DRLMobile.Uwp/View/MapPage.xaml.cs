@@ -24,6 +24,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Maps;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Navigation;
 
 using onTerra = OnTerra.MapsControl.UWP;
 
@@ -48,7 +49,7 @@ namespace DRLMobile.Uwp.View
         {
             InitializeComponent();
             DataContext = ViewModel;
-            Loaded += MapPage_Loaded;
+            //Loaded += MapPage_Loaded;
             Unloaded += MapPage_Unloaded;
         }
 
@@ -72,7 +73,17 @@ namespace DRLMobile.Uwp.View
             }
         }
 
-        private async void MapPage_Loaded(object sender, RoutedEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if (e.NavigationMode == NavigationMode.New)
+            {
+                await MapPageLoadedAsync();
+            }
+        }
+
+
+        private async Task MapPageLoadedAsync()
         {
             ShellPage shellPage = ((Window.Current.Content as Frame).Content as ShellPage);
             if (shellPage != null)
@@ -88,7 +99,7 @@ namespace DRLMobile.Uwp.View
             }
             catch (Exception ex)
             {
-                ErrorLogger.WriteToErrorLog(nameof(MapPage), nameof(MapPage_Loaded), ex);
+                ErrorLogger.WriteToErrorLog(nameof(MapPage), nameof(MapPageLoadedAsync), ex);
             }
             finally
             {
@@ -562,7 +573,7 @@ namespace DRLMobile.Uwp.View
             }
         }
 
-        private void myMap_MapElementClick(object sender, OnTerra.MapsControl.UWP.MapElementClickEventArgs args)
+        private void myMap_MapElementClick_1(object sender, OnTerra.MapsControl.UWP.MapElementClickEventArgs args)
         {
             try
             {

@@ -1337,7 +1337,7 @@
             />-->
         <maps:MapControl x:Name="myMap" 
         Grid.Row="2"
-        MapElementClick="myMap_MapElementClick"
+        MapElementClick="myMap_MapElementClick_1"
         MapServiceToken="{StaticResource OnTerraMapServiceKey}"/>
         <Grid
             x:Name="CustomPinVisibiltyGrid"
