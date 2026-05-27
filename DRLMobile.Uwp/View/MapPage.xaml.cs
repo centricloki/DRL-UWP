@@ -593,7 +593,7 @@ namespace DRLMobile.Uwp.View
             }
             catch (Exception ex)
             {
-                ErrorLogger.WriteToErrorLog(nameof(MapPage), "myMap_MapElementClick", ex.Message);
+                ErrorLogger.WriteToErrorLog(nameof(MapPage), "myMap_MapElementClick_1", ex.Message);
             }
         }
 
