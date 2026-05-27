@@ -2,7 +2,9 @@
 using DRLMobile.Core.Models.DataModels;
 using DRLMobile.Core.Models.UIModels;
 using DRLMobile.Uwp.Helpers.MapHelpers;
+
 using System;
+
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.UI.Xaml.Media;
@@ -53,5 +55,6 @@ namespace DRLMobile.Uwp.Helpers
             get { return _pinText; }
             set { SetProperty(ref _pinText, value); }
         }
+        public override string ToString() => (CustomerData != null ? CustomerData.CustomerID.ToString() : null) ?? base.ToString();
     }
 }

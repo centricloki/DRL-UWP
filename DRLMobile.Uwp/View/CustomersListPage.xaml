@@ -415,9 +415,9 @@
                 </Grid>
             </Grid>
             <!--  gridAllCustomers.Grid.Row=1  -->
-            <ListView
+            <customControls:CustomAlternateRowColorListView
                 x:Name="lstAllCustomers"
-                Grid.Row="1"
+                Grid.Row="1"  Background="#FFFFFF"
                 ContainerContentChanging="AllCustomerDataGrid_ContainerContentChanging"
                 IsTextScaleFactorEnabled="False"
                 ItemsSource="{x:Bind ViewModel.CustomerList, Mode=OneWay}"
@@ -465,7 +465,7 @@
                                         <Setter Property="TextWrapping" Value="WrapWholeWords" />
                                         <Setter Property="HorizontalAlignment" Value="Stretch" />
                                         <Setter Property="VerticalAlignment" Value="Center" />
-                                        <Setter Property="Margin" Value="10,0,0,0" />
+                                        <Setter Property="Padding" Value="10,3,0,3" />
                                     </Style>
                                 </Grid.Resources>
                                 <!--<TextBlock Text="{Binding Converter={StaticResource ListViewItemIndexConverter}, ConverterParameter={Binding}, RelativeSource={RelativeSource Mode=TemplatedParent}}"
@@ -496,7 +496,7 @@
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-            </ListView>
+                </customControls:CustomAlternateRowColorListView>
         </Grid>
         <!--  outerPanel.Grid.Row="2"  -->
         <Grid Grid.Row="2" Background="White">

@@ -765,7 +765,7 @@
                                 </Grid>
                                 <!--Tobacco Items-->
                                 <!--gridRtnOuterPanel.Grid.Row=1-->
-                                <ListView Grid.Row="1"
+                                <customControl:CustomAlternateRowColorListView Grid.Row="1"  Background="#FFFFFF"
                                 x:Name="lstTobaccoGridControl"
                                 ContainerContentChanging="DataGrid_ContainerContentChanging" 
                                 x:Load="{x:Bind ViewModel.LoadTobaccoGrid, Mode=OneWay}"
@@ -816,7 +816,7 @@
                                             </Grid>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
-                                </ListView>
+                                </customControl:CustomAlternateRowColorListView>
                             </Grid>
 
                             <StackPanel
@@ -953,7 +953,7 @@
                                 </Grid>
                                 <!--RtnGrid Items-->
                                 <!--gridNonTabaccoOuterPanel.Grid.Row=1-->
-                                <ListView Grid.Row="1"
+                                <customControl:CustomAlternateRowColorListView Grid.Row="1" Background="#FFFFFF"
                                 x:Name="lstnonTobaccoGridControl"
                                 ContainerContentChanging="DataGrid_ContainerContentChanging" 
                                 x:Load="{x:Bind ViewModel.LoadNonTobaccoGrid, Mode=OneWay}"
@@ -1004,7 +1004,7 @@
                                             </Grid>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
-                                </ListView>
+                                </customControl:CustomAlternateRowColorListView>
                             </Grid>
                             <StackPanel
                                 Grid.Row="1"
@@ -1137,8 +1137,8 @@
                                 </Grid>
                                 <!--RtnGrid Items-->
                                 <!--gridRtnOuterPanel.Grid.Row=1-->
-                                <ListView Grid.Row="1"
-                                x:Name="lstRtn"
+                                <customControl:CustomAlternateRowColorListView Grid.Row="1"
+                                x:Name="lstRtn" Background="#FFFFFF"
                                 ContainerContentChanging="DataGrid_ContainerContentChanging" 
                                 x:Load="{x:Bind ViewModel.LoadRtnGrid, Mode=OneWay}"
                                 ItemsSource="{x:Bind ViewModel.RtnGridItemSource, Mode=OneWay}"
@@ -1191,7 +1191,7 @@
                                             </Grid>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
-                                </ListView>
+                                </customControl:CustomAlternateRowColorListView>
                             </Grid>
 
                             <StackPanel
@@ -1326,8 +1326,8 @@
                                 </Grid>
                                 <!--DifGrid Items-->
                                 <!--gridRtnOuterPanel.Grid.Row=1-->
-                                <ListView Grid.Row="1"
-                                x:Name="lstAllDif"
+                                <customControl:CustomAlternateRowColorListView Grid.Row="1"
+                                x:Name="lstAllDif" Background="#FFFFFF"
                                 ContainerContentChanging="DataGrid_ContainerContentChanging" 
                                 x:Load="{x:Bind ViewModel.LoadDifGrid, Mode=OneWay}"
                                 ItemsSource="{x:Bind ViewModel.DifGridItemSource, Mode=OneWay}"
@@ -1380,7 +1380,7 @@
                                             </Grid>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
-                                </ListView>
+                                </customControl:CustomAlternateRowColorListView>
                             </Grid>
                             <StackPanel
                                 Grid.Row="1"
@@ -1461,8 +1461,8 @@
                     </Grid>
                     <!--RackPosGrid Items-->
                     <!--gridRackPosPanel.Grid.Row=1-->
-                    <ListView Grid.Row="1"
-                                x:Name="lstRackPos"
+                    <customControl:CustomAlternateRowColorListView Grid.Row="1"
+                                x:Name="lstRackPos" Background="#FFFFFF"
                                 ContainerContentChanging="DataGrid_ContainerContentChanging" 
                                 x:Load="{x:Bind ViewModel.LoadRackPosPopGrid, Mode=OneWay}"
                                 ItemsSource="{x:Bind ViewModel.RackPosPopOrderDetailsItemSource, Mode=OneWay}">
@@ -1496,7 +1496,7 @@
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
-                    </ListView>
+                    </customControl:CustomAlternateRowColorListView>
                 </Grid>
 
                 <!--#endregion-->

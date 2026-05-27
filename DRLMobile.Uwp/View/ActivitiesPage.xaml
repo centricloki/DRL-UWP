@@ -463,9 +463,9 @@
                 </TextBox>
             </Grid>
             <!--  gridAllActivities.Grid.Row=1  -->
-            <ListView
+            <customControls:CustomAlternateRowColorListView
                 x:Name="lstAllActivities"
-                Grid.Row="1"
+                Grid.Row="1" Background="#FFFFFF"
                 x:Load="{x:Bind ViewModel.LoadAllCustomerGrid, Mode=OneWay}"
                 ContainerContentChanging="AllCustomerDataGrid_ContainerContentChanging"
                 Holding="lstAllActivities_Holding"
@@ -554,8 +554,7 @@
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-
-            </ListView>
+            </customControls:CustomAlternateRowColorListView>
         </Grid>
 
         <!--  outerPanel.Grid.Row="2"  -->

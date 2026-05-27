@@ -27,7 +27,7 @@
         MaxHeight="600"
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
-        Background="White"
+        Background="#FFFFFF"
         BorderBrush="Black"
         BorderThickness="1"
         CornerRadius="10">

@@ -451,9 +451,9 @@
             StrokeThickness="1"  />
             </Grid>
             <!--  gridProducts.Grid.Row=1  Detail with No Sale Category Product List  -->
-            <ListView
+            <customControls:CustomAlternateRowColorListView
           x:Name="lvNoSaleNoCustomerProducts"
-          Grid.Row="1"
+          Grid.Row="1" Background="#FFFFFF"
           ContainerContentChanging="OnContainerContentChanging"
          x:Load="{x:Bind SrcProductPageViewModel.IsNoSelectedCustomerGrid, Mode=OneWay}"
           ItemsSource="{x:Bind SrcProductPageViewModel.ProductGridDataSource, Mode=OneWay}"
@@ -523,7 +523,7 @@
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-            </ListView>
+            </customControls:CustomAlternateRowColorListView>
 
             <!--With Selected Customer Other Category-->
             <Grid
