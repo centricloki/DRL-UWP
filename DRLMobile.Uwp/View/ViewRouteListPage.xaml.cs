@@ -131,7 +131,7 @@ namespace DRLMobile.Uwp.View
             base.OnNavigatedTo(e);
             if (e.NavigationMode == NavigationMode.New)
             {
-               await this.ViewRouteListPageLoadedAsync((RouteListUIModel)e.Parameter);
+                await this.ViewRouteListPageLoadedAsync((RouteListUIModel)e.Parameter);
             }
         }
 
@@ -242,7 +242,10 @@ namespace DRLMobile.Uwp.View
                     token.ThrowIfCancellationRequested();
 
                 if (myMap != null)
+                {
                     await myMap.ClearAllAsync();
+                    await myMap.SetMapStyleAsync(OnTerra.MapsControl.UWP.MapStyle.CanvasLight);
+                }
 
                 if (ViewModel != null && ViewModel.PointOfInterestSource != null && ViewModel.PointOfInterestSource.Count > 0)
                 {

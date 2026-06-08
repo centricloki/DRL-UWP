@@ -406,7 +406,7 @@ namespace DRLMobile.Uwp.View
                 OptionsAllCheckBox.Unchecked -= OptionsAllCheckBox_Unchecked;
 
                 await myMap.ClearAllAsync();
-
+                await myMap.SetMapStyleAsync(OnTerra.MapsControl.UWP.MapStyle.CanvasLight);
                 if (ViewModel.PointOfIntrestSource != null && ViewModel.PointOfIntrestSource.Count > 0)
                 {
                     // ---- parallelism limiter ----

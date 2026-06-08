@@ -1565,18 +1565,18 @@ namespace DRLMobile.Uwp.ViewModel
         /// </summary>
         /// <param name="allPoints">List of address strings including origin, waypoints, and destination.</param>
         /// <returns>Formatted Google Maps URL string.</returns>
-        private string BuildGoogleMapsUrlSegment(List<string> allPoints)
-        {
-            string origin = allPoints.First();
-            string destination = allPoints.Last();
-            if (allPoints.Count > 2)
-            {
-                var waypointList = allPoints.Skip(1).Take(allPoints.Count - 2).ToList();
-                string waypoints = waypointList.Any() ? string.Join("|", waypointList) : "";
-                return $"https://www.google.com/maps/dir/?api=1&origin={origin}&destination={destination}&travelmode=driving&waypoints={waypoints}";
-            }
-            return $"https://www.google.com/maps/dir/?api=1&origin={origin}&destination={destination}&travelmode=driving";
-        }
+        //private string BuildGoogleMapsUrlSegment(List<string> allPoints)
+        //{
+        //    string origin = allPoints.First();
+        //    string destination = allPoints.Last();
+        //    if (allPoints.Count > 2)
+        //    {
+        //        var waypointList = allPoints.Skip(1).Take(allPoints.Count - 2).ToList();
+        //        string waypoints = waypointList.Any() ? string.Join("|", waypointList) : "";
+        //        return $"https://www.google.com/maps/dir/?api=1&origin={origin}&destination={destination}&travelmode=driving&waypoints={waypoints}";
+        //    }
+        //    return $"https://www.google.com/maps/dir/?api=1&origin={origin}&destination={destination}&travelmode=driving";
+        //}
 
         /// <summary>
         /// Builds one or more Google Maps URLs to handle routes with many waypoints.
@@ -1586,48 +1586,138 @@ namespace DRLMobile.Uwp.ViewModel
         /// <param name="waypoints">List of waypoint locations with addresses and coordinates.</param>
         /// <param name="end">End location with address and coordinates.</param>
         /// <returns>List of Google Maps URL strings covering the full route.</returns>
+        //private List<string> BuildGoogleMapsUrlsWithAddresses(
+        //    (string Address, double Latitude, double Longitude) start,
+        //    List<(string Address, string Latitude, string Longitude)> waypoints,
+        //    (string Address, double Latitude, double Longitude) end)
+        //{
+        //    var urls = new List<string>();
+        //    if (waypoints.Count <= MaxGoogleMapsWaypointsPerSegment)
+        //    {
+        //        var allPoints = new List<string> { start.Address };
+        //        allPoints.AddRange(waypoints.Select(w => CleanAddressString(w.Address)));
+        //        allPoints.Add(end.Address);
+        //        urls.Add(BuildGoogleMapsUrlSegment(allPoints));
+        //    }
+        //    else
+        //    {
+        //        int startIndex = 0;
+        //        var currentStart = start;
+        //        int countWayPoint = waypoints.Count + 1;
+
+        //        while (startIndex < countWayPoint)
+        //        {
+        //            int takeCount = Math.Min(MaxGoogleMapsWaypointsPerSegment, countWayPoint - startIndex);
+        //            var segmentWaypoints = waypoints.Skip(startIndex).Take(takeCount).ToList();
+
+        //            (string Address, double Latitude, double Longitude) segmentEnd;
+        //            if (startIndex + takeCount >= countWayPoint) segmentEnd = end;
+        //            else
+        //            {
+        //                var lastWp = segmentWaypoints.Last();
+        //                segmentEnd = (CleanAddressString(lastWp.Address), Convert.ToDouble(lastWp.Latitude), Convert.ToDouble(lastWp.Longitude));
+        //            }
+
+        //            var points = new List<string> { currentStart.Address };
+        //            int actualTake = takeCount < MaxGoogleMapsWaypointsPerSegment ? takeCount : takeCount - 1;
+        //            points.AddRange(segmentWaypoints.Take(actualTake).Select(w => CleanAddressString(w.Address)));
+        //            points.Add(segmentEnd.Address);
+
+        //            urls.Add(BuildGoogleMapsUrlSegment(points));
+        //            currentStart = segmentEnd;
+        //            startIndex += takeCount;
+        //        }
+        //    }
+        //    return urls;
+        //}
+
+        private string BuildGoogleMapsUrlSegment(List<string> allPoints)
+        {
+            string origin = allPoints.First();
+            string destination = allPoints.Last();
+            string url = null;
+            if (allPoints.Count > 2)
+            {
+                // Exclude first and last → only middle waypoints
+                var waypointList = allPoints.Skip(1).Take(allPoints.Count - 2).ToList();
+                string waypoints = waypointList.Any()
+                    ? string.Join("|", waypointList)
+                    : ""; // Google accepts empty waypoints
+
+                url = $"https://www.google.com/maps/dir/?api=1&origin={origin}&destination={destination}&travelmode=driving";
+
+                if (!string.IsNullOrEmpty(waypoints))
+                {
+                    url += $"&waypoints={waypoints}";
+                }
+            }
+            else
+            {
+                url = $"https://www.google.com/maps/dir/?api=1&origin={origin}&destination={destination}&travelmode=driving";
+            }
+            return url;
+        }
+
+
+        // ===== Helper: Build Google Maps URLs using addresses (with fallback to coords) =====
         private List<string> BuildGoogleMapsUrlsWithAddresses(
             (string Address, double Latitude, double Longitude) start,
             List<(string Address, string Latitude, string Longitude)> waypoints,
             (string Address, double Latitude, double Longitude) end)
         {
             var urls = new List<string>();
-            if (waypoints.Count <= MaxGoogleMapsWaypointsPerSegment)
+            int MaxWaypointsPerSegment = 8; // Google allows max 8 intermediate stops
+            if (waypoints.Count <= MaxWaypointsPerSegment)
             {
-                var allPoints = new List<string> { start.Address };
+                var allPoints = new List<string>
+                {
+                    start.Address
+                };
                 allPoints.AddRange(waypoints.Select(w => CleanAddressString(w.Address)));
                 allPoints.Add(end.Address);
                 urls.Add(BuildGoogleMapsUrlSegment(allPoints));
             }
             else
             {
+                // Split into segments — overlap at boundary points
                 int startIndex = 0;
                 var currentStart = start;
+                MaxWaypointsPerSegment = 9;
                 int countWayPoint = waypoints.Count + 1;
-
                 while (startIndex < countWayPoint)
                 {
-                    int takeCount = Math.Min(MaxGoogleMapsWaypointsPerSegment, countWayPoint - startIndex);
+                    int takeCount = Math.Min(MaxWaypointsPerSegment, countWayPoint - startIndex);
                     var segmentWaypoints = waypoints.Skip(startIndex).Take(takeCount).ToList();
 
+                    // Determine segment end
                     (string Address, double Latitude, double Longitude) segmentEnd;
-                    if (startIndex + takeCount >= countWayPoint) segmentEnd = end;
+                    if (startIndex + takeCount >= countWayPoint)
+                    {
+                        segmentEnd = end; // last segment ends at final destination
+                    }
                     else
                     {
+                        // End at last waypoint of this segment (so next starts there)
                         var lastWp = segmentWaypoints.Last();
                         segmentEnd = (CleanAddressString(lastWp.Address), Convert.ToDouble(lastWp.Latitude), Convert.ToDouble(lastWp.Longitude));
                     }
 
-                    var points = new List<string> { currentStart.Address };
-                    int actualTake = takeCount < MaxGoogleMapsWaypointsPerSegment ? takeCount : takeCount - 1;
-                    points.AddRange(segmentWaypoints.Take(actualTake).Select(w => CleanAddressString(w.Address)));
+                    // Build URL for this segment
+                    var points = new List<string>
+                    {
+                        currentStart.Address
+                    };
+                    points.AddRange(segmentWaypoints.Take(takeCount < MaxWaypointsPerSegment ? takeCount : takeCount - 1)
+                    .Select(w => CleanAddressString(w.Address)));
                     points.Add(segmentEnd.Address);
-
                     urls.Add(BuildGoogleMapsUrlSegment(points));
+
+                    // Next segment starts where this one ended
                     currentStart = segmentEnd;
                     startIndex += takeCount;
                 }
             }
+
             return urls;
         }
 
@@ -1651,15 +1741,15 @@ namespace DRLMobile.Uwp.ViewModel
                 var body = new StringBuilder();
                 if (googleMapsUrls.Count > 1)
                 {
-                    body.AppendLine("\n\nPlease use these URLs for driving direction:\n\n");
-                    body.AppendLine($"\n\nKindly start with Part 1 of {googleMapsUrls.Count}, and once you complete it, continue your journey using subsequent parts.\n\n");
-                    body.AppendLine("\n\nDriving Directions:");
+                    body.AppendLine("<p>Please use these URLs for driving direction:</p>");
+                    body.AppendLine("<p>Kindly start with Part 1 of 2, and once you complete it, continue your journey using Part 2 of 2.</p>");
+                    body.AppendLine("<p>Driving Directions:</p>");
                     for (int i = 0; i < googleMapsUrls.Count; i++)
-                        body.AppendLine($"\n\n{i + 1}. Part {i + 1} of {googleMapsUrls.Count}: {googleMapsUrls[i]}\n\n");
+                        body.AppendLine($"<p>{i + 1}. Part {i + 1} of {googleMapsUrls.Count}: {googleMapsUrls[i]}</p>");
                 }
                 else
                 {
-                    body.AppendLine($"\n\nPlease use this url for driving direction: {googleMapsUrls[0]}\n\n");
+                    body.AppendLine($"<p>Please use this url for driving direction: {googleMapsUrls[0]}</p>");
                 }
 
                 var emailModel = new EmailModel
