@@ -138,7 +138,11 @@ namespace DRLMobile.Uwp.View
         private async void CalculateButton_Click(object sender, RoutedEventArgs e)
         {
             if (ViewModel != null && ViewModel.CalculateButtonCommand != null)
+            {
+                ViewModel.CustomMapPinVisibility = Visibility.Collapsed;
+                ViewModel.CustomMapPinIsVisible = false;
                 await ViewModel.CalculateButtonCommand.ExecuteAsync(myMap);
+            }
 
             await RefreshMapIcons(_cts.Token);
         }
@@ -248,21 +252,21 @@ namespace DRLMobile.Uwp.View
                 }
 
                 if (ViewModel != null && ViewModel.PointOfInterestSource != null && ViewModel.PointOfInterestSource.Count > 0)
-                {
+                {                  
                     var startItem = ViewModel.PointOfInterestSource.FirstOrDefault();
                     var endItem = ViewModel.PointOfInterestSource.LastOrDefault();
 
-                    string startImgUri = startItem != null ? startItem.ImageSourceUri : null;
-                    string endImgUri = endItem != null ? endItem.ImageSourceUri : null;
-                    const string intermediateUri = "ms-appx:///Assets/Maps/MapPin-Red.png";
+                    //string startImgUri = startItem != null ? startItem.ImageSourceUri : null;
+                    //string endImgUri = endItem != null ? endItem.ImageSourceUri : null;
+                    //const string intermediateUri = "ms-appx:///Assets/Maps/MapPin-Red.png";
 
-                    if (!string.IsNullOrEmpty(startImgUri) && !string.IsNullOrEmpty(endImgUri))
-                    {
-                        var startIconTask = GetCachedIconAsync(startImgUri, token);
-                        var endIconTask = GetCachedIconAsync(endImgUri, token);
-                        var intermediateIconTask = GetCachedIconAsync(intermediateUri, token);
+                    //if (!string.IsNullOrEmpty(startImgUri) && !string.IsNullOrEmpty(endImgUri))
+                    //{
+                        //var startIconTask = GetCachedIconAsync(startImgUri, token);
+                        //var endIconTask = GetCachedIconAsync(endImgUri, token);
+                        //var intermediateIconTask = GetCachedIconAsync(intermediateUri, token);
 
-                        await Task.WhenAll(startIconTask, endIconTask, intermediateIconTask);
+                        //await Task.WhenAll(startIconTask, endIconTask, intermediateIconTask);
 
                         var line = new OnTerra.MapsControl.UWP.MapPolyline
                         {
@@ -271,9 +275,9 @@ namespace DRLMobile.Uwp.View
                             StrokeDashed = false,
                             StartMarkerLabel = "Start",
                             EndMarkerLabel = "End",
-                            StartMarkerImage = await startIconTask,
-                            EndMarkerImage = await endIconTask,
-                            IntermediateMarkerImage = await intermediateIconTask,
+                            //StartMarkerImage = await startIconTask,
+                            //EndMarkerImage = await endIconTask,
+                            //IntermediateMarkerImage = await intermediateIconTask,
                             Path = new OnTerra.MapsControl.UWP.Geopath(
                                 ViewModel.PointOfInterestSource.Select(x =>
                                  new OnTerra.MapsControl.UWP.BasicGeoposition
@@ -296,7 +300,7 @@ namespace DRLMobile.Uwp.View
                              }));
                             await myMap.TrySetViewBoundsAsync(geoboundingBox, null, OnTerra.MapsControl.UWP.MapAnimationKind.Default);
                         }
-                    }
+                    //}
                 }
             }
             catch (OperationCanceledException)
