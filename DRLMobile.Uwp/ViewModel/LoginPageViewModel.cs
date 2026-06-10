@@ -147,13 +147,13 @@ namespace DRLMobile.Uwp.ViewModel
                     await AuthenticUser(((App)Application.Current).LoginUserNameProperty, ((App)Application.Current).LoginUserPinProperty);
 
                     var filePath = await BackgroundDownloadService.DownloadFile(LoginUserDetails.dbfilename.Trim(), HelperMethods.GetNameFromURL(LoginUserDetails.dbfilename.Trim()));
-                    
+
                     dbFilePath = filePath;
 
                     var isFileExist = File.Exists(filePath);
 
                     var isDataExistInFile = new FileInfo(filePath).Length != 0;
-                    
+
                     if (!string.IsNullOrWhiteSpace(filePath) && isFileExist && isDataExistInFile)
                     {
                         var zipFile = await StorageFile.GetFileFromPathAsync(filePath);
@@ -206,6 +206,8 @@ namespace DRLMobile.Uwp.ViewModel
 
                     if (IsDbFileDownloadSuccessful)
                     {
+                        await AppReference.QueryService.UpdateUserMaster(((App)Application.Current).LoginUserPinProperty, ((App)Application.Current).LoginUserNameProperty);
+
                         ProgressText = "Data Sync in Progress";
                         LoadingVisibilityHandler(true);
                         IsInProgress = false;
@@ -350,10 +352,7 @@ namespace DRLMobile.Uwp.ViewModel
                     NoConnectionPopupAsync();
                 }
                 else
-                {
-                    LoadingVisibilityHandler(true);
-                    ProgressText = "Authenticating User Credentials";
-
+                {                  
                     if (!IsInternetConnected())
                     {
                         ContentDialog syncSuccessStatusDialog = new ContentDialog
@@ -367,6 +366,8 @@ namespace DRLMobile.Uwp.ViewModel
                         return;
                     }
 
+                    LoadingVisibilityHandler(true);
+                    ProgressText = "Authenticating User Credentials";
 
                     bool isPinParsable = int.TryParse(Pin, out int enteredPin);
 
@@ -381,6 +382,8 @@ namespace DRLMobile.Uwp.ViewModel
 
                     if (IsLoginSuccessful)
                     {
+                        await AppReference.QueryService.UpdateUserMaster(Pin, UserName);
+
                         await CheckForExistingUserLoginDetails();
 
                         if (IsDataDownloadSuccessful)

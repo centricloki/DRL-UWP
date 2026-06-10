@@ -57,8 +57,8 @@ namespace DRLMobile.Uwp.View
         {
             if (myMap != null)
             {
+                myMap.Style = OnTerra.MapsControl.UWP.MapStyle.CanvasLight;
                 await myMap.InitializeAsync();
-                await myMap.SetMapStyleAsync(OnTerra.MapsControl.UWP.MapStyle.CanvasLight);
             }
         }
         private void MapPage_Unloaded(object sender, RoutedEventArgs e)
@@ -406,7 +406,7 @@ namespace DRLMobile.Uwp.View
                 OptionsAllCheckBox.Unchecked -= OptionsAllCheckBox_Unchecked;
 
                 await myMap.ClearAllAsync();
-                await myMap.SetMapStyleAsync(OnTerra.MapsControl.UWP.MapStyle.CanvasLight);
+                
                 if (ViewModel.PointOfIntrestSource != null && ViewModel.PointOfIntrestSource.Count > 0)
                 {
                     // ---- parallelism limiter ----

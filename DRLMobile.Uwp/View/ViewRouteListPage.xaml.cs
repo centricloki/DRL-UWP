@@ -121,8 +121,8 @@ namespace DRLMobile.Uwp.View
         {
             if (myMap != null)
             {
+                myMap.Style = OnTerra.MapsControl.UWP.MapStyle.CanvasLight;
                 await myMap.InitializeAsync();
-                await myMap.SetMapStyleAsync(OnTerra.MapsControl.UWP.MapStyle.CanvasLight);
             }
         }
 
@@ -248,7 +248,6 @@ namespace DRLMobile.Uwp.View
                 if (myMap != null)
                 {
                     await myMap.ClearAllAsync();
-                    await myMap.SetMapStyleAsync(OnTerra.MapsControl.UWP.MapStyle.CanvasLight);
                 }
 
                 if (ViewModel != null && ViewModel.PointOfInterestSource != null && ViewModel.PointOfInterestSource.Count > 0)

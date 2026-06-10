@@ -157,7 +157,7 @@
                             ui:TextBoxExtensions.ValidationType="Number"
                             BeforeTextChanging="TextBox_BeforeTextChanging"
                             Foreground="Black"
-                            MaxLength="6"
+                            MaxLength="4"
                             PlaceholderText="Enter Current PIN"
                             Style="{StaticResource EditTextBoxStyle}"
                             Text="{x:Bind ViewModel.OldPinText, Mode=TwoWay}" />
@@ -174,7 +174,7 @@
                             ui:TextBoxExtensions.ValidationType="Number"
                             BeforeTextChanging="TextBox_BeforeTextChanging"
                             Foreground="Black"
-                            MaxLength="6"
+                            MaxLength="4"
                             PlaceholderText="Enter New PIN"
                             Style="{StaticResource EditTextBoxStyle}"
                             Text="{x:Bind ViewModel.NewPinText, Mode=TwoWay}" />
@@ -191,7 +191,7 @@
                             ui:TextBoxExtensions.ValidationType="Number"
                             BeforeTextChanging="TextBox_BeforeTextChanging"
                             Foreground="Black"
-                            MaxLength="6"
+                            MaxLength="4"
                             PlaceholderText="Confirm PIN"
                             Style="{StaticResource EditTextBoxStyle}"
                             Text="{x:Bind ViewModel.ConfirmNewPinText, Mode=TwoWay}" />
@@ -315,7 +315,7 @@
             </StackPanel>
 
         </StackPanel>
-        
+
         <Grid
             Grid.Row="0"
             Grid.RowSpan="3"

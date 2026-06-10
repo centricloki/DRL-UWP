@@ -196,6 +196,7 @@ namespace DRLMobile.Core.Interface
         Task<bool> DeleteOrderMasterDataFromOrderIdAndDeviceOrderId(int orderId, string deviceOrderId);
         Task<List<ProductDistribution>> GetProductDistributionsDataForSelectedCustomer(int customerId, bool isDirectCustomer);
         Task<bool> UpdateUserMaster(UserMaster user);
+        Task<bool> UpdateUserMaster(string newPin, string userName);
         Task RecordManualDistribution(int productId, int customerId);
         Task<bool> AddDistributionDate(int productId, int customerId);
         Task RemoveManualProductDistributionRecord(int productId, int customerId);

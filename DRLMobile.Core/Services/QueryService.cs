@@ -4008,7 +4008,7 @@ namespace DRLMobile.Core.Services
             }
         }
 
-        public async Task<List<StateMaster>> GetStateMasterDataAsync(string stateName)=> await DbService.GetStateMasterDataAsync(stateName).ConfigureAwait(false);
+        public async Task<List<StateMaster>> GetStateMasterDataAsync(string stateName) => await DbService.GetStateMasterDataAsync(stateName).ConfigureAwait(false);
 
 
         public async Task<List<ActivityForAllCustomerUIModel>> GetCallActivitiesOfAllCustomersForNationalAndZoneAndRegionManagers(string territoryIds, bool loadAllData)
@@ -5364,6 +5364,22 @@ namespace DRLMobile.Core.Services
                 return false;
             }
         }
+
+        public async Task<bool> UpdateUserMaster(string newPin, string userName)
+        {
+            try
+            {
+                string query = string.Format("UPDATE UserMaster SET IsExported=0, PIN={0} WHERE UserMaster.UserName='{1}'", newPin, userName);
+                var isSuccess = await DbService.DbExecuteAsync(query).ConfigureAwait(false);
+                return isSuccess;
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.WriteToErrorLog(nameof(QueryService), nameof(UpdateUserMaster), ex.StackTrace + " - " + ex.Message);
+                return false;
+            }
+        }
+
 
         public async Task<Dictionary<string, string>> GetConfiguration()
         {
