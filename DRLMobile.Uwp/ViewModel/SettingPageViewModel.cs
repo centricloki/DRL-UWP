@@ -410,7 +410,7 @@ namespace DRLMobile.Uwp.ViewModel
             // 3. PIN doesn't start with 0 or 00
             if (pin.StartsWith("0"))
             {
-                errorMessage = "PIN cannot start with 0 or 00.";
+                errorMessage = "PIN cannot start with 0.";
                 return false;
             }
 
