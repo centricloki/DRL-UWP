@@ -45,7 +45,7 @@ namespace DRLMobile.Uwp.ViewModel
         #region Properties
 
         private readonly App AppReference = (App)Application.Current;
-
+        public bool isPinPopupExplicitClose = false;
         public bool IsUpdateAvailable
         {
             get { return AppReference.IsApplicationUpdateAvailable.Value; }
@@ -267,34 +267,27 @@ namespace DRLMobile.Uwp.ViewModel
                     return;
                 }
 
-                //// 2. Validate Old PIN format
-                //if (!ValidatePinFormat(OldPinText, out string oldPinError))
-                //{
-                //    ErrorForOldPinText = oldPinError;
-                //    return;
-                //}
-
-                // 3. Validate New PIN format
+                // 2. Validate New PIN format
                 if (!ValidatePinFormat(NewPinText, out string newPinError))
                 {
                     ErrorForNewPinText = newPinError;
                     return;
                 }
 
-                // 4. Validate Confirm New PIN format
-                if (!ValidatePinFormat(ConfirmNewPinText, out string confirmPinError))
+                //3 Ensure Correct new Pin is entered
+                if (!NewPinText.Equals(ConfirmNewPinText))
                 {
-                    ErrorForConfirmNewPinText = confirmPinError;
+                    ErrorForConfirmNewPinText = "New PIN and the Confirm PIN did not match";
                     return;
                 }
 
-                // 5. Check if New PIN matches Confirm New PIN (Your existing logic)
+                // 4. Check if New PIN matches Confirm New PIN (Your existing logic)
                 if (!IsValidPinChangeRequest())
                 {
                     return;
                 }
 
-                // 6. Ensure New PIN is different from Old PIN
+                // 5. Ensure New PIN is different from Old PIN
                 if (NewPinText.Equals(OldPinText))
                 {
                     ErrorForNewPinText = "New PIN must be different from the old PIN.";
@@ -303,13 +296,15 @@ namespace DRLMobile.Uwp.ViewModel
                 //7 Ensure Correct Old Pin is entered
                 if (!AppReference.LoginUserPinProperty.Equals(OldPinText))
                 {
-                    ErrorForOldPinText = "Current PIN and the entered PIN did not matched";
+                    ErrorForOldPinText = "Current PIN and the entered PIN did not match";
                     return;
                 }
 
                 var userId = Convert.ToInt32(AppReference.LoginUserIdProperty);
                 var oldPin = Convert.ToInt32(AppReference.LoginUserPinProperty);
+                isPinPopupExplicitClose = true;
                 flyout.Hide();
+                isPinPopupExplicitClose = false;
                 var newPin = Convert.ToInt32(NewPinText);
                 var response = await InvokeWebService.ChangePinService(userId, newPin, AppReference.LoginUserNameProperty, oldPin);
 

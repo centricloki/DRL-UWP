@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="DRLMobile.Uwp.View.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -107,13 +107,13 @@
     </Page.Resources>
 
     <Grid x:Name="outerPanel" Background="{StaticResource LoginBackgroundColor}">
-
         <FlyoutBase.AttachedFlyout>
             <Flyout
                 x:Name="ChangePinFlyout"
                 LightDismissOverlayMode="Auto"
                 Placement="Full"
-                ShowMode="Auto">
+                Closing="ChangePinFlyout_Closing"
+                >
                 <Flyout.FlyoutPresenterStyle>
                     <Style TargetType="FlyoutPresenter">
                         <Setter Property="Background" Value="Transparent" />
@@ -142,6 +142,18 @@
                             FontSize="{StaticResource LargeFontSize}"
                             Foreground="White"
                             Text="Change Pin" />
+                        <Button
+                            x:Name="CloseFlyoutButton"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Margin="0,0,10,0"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            Click="CloseFlyoutButtonClicked"
+                            Content="&#xE10A;"
+                            FontFamily="Segoe MDL2 Assets"
+                            Foreground="White"
+                            FontSize="20" />
                     </Grid>
 
                     <StackPanel
