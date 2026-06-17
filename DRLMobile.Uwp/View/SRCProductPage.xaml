@@ -719,8 +719,8 @@
             StrokeThickness="1"  />
             </Grid>
             <!--  gridProducts.Grid.Row=1  Detail with No Sale Category Product List  -->
-            <ListView
-          x:Name="listNoSaleWithCustomerProducts"
+          <customControls:CustomAlternateRowColorListView
+        x:Name="listNoSaleWithCustomerProducts"
           Grid.Row="1"
            ContainerContentChanging="OnContainerContentChanging"
           x:Load="{x:Bind SrcProductPageViewModel.IsSelectedCustomerGrid, Mode=OneWay}"
@@ -802,7 +802,7 @@
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-            </ListView>
+            </customControls:CustomAlternateRowColorListView>
 
             <!--Sale Category-->
             <!--  gridProducts.Grid.Row=0  Header  -->
@@ -949,8 +949,8 @@
             StrokeThickness="1" />
             </Grid>
             <!--  gridProducts.Grid.Row=1  Detail with Sale Category Product List  -->
-            <ListView
-          x:Name="listSaleProducts"
+          <customControls:CustomAlternateRowColorListView
+        x:Name="listSaleProducts"
           Grid.Row="1"
           ContainerContentChanging="OnContainerContentChanging"
           x:Load="{x:Bind SrcProductPageViewModel.IsProductWithSaleCategory, Mode=OneWay}"
@@ -1012,7 +1012,7 @@
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-            </ListView>
+            </customControls:CustomAlternateRowColorListView>
         </Grid>
 
         <StackPanel
