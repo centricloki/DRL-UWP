@@ -116,15 +116,14 @@
                 >
                 <Flyout.FlyoutPresenterStyle>
                     <Style TargetType="FlyoutPresenter">
-                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Background" Value="LightGray" />
+                        <Setter Property="BorderBrush" Value="Black" />
+                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="CornerRadius" Value="10" />
+                        <Setter Property="Padding" Value="0" />
                     </Style>
                 </Flyout.FlyoutPresenterStyle>
-                <Grid
-                    Margin="20"
-                    Background="LightGray"
-                    BorderBrush="Black"
-                    BorderThickness="1"
-                    CornerRadius="10">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
@@ -160,8 +159,6 @@
                         Grid.Row="1"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
-
-
                         <TextBlock Margin="20,10,0,0" Text="Enter Current PIN" />
                         <TextBox
                             ui:TextBoxExtensions.Regex="^[0-9]*$"
