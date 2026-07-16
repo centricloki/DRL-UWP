@@ -1,4 +1,4 @@
-﻿using DRLMobile.Core.Interface;
+using DRLMobile.Core.Interface;
 using DRLMobile.Core.Models.DataModels;
 using DRLMobile.Core.Models.UIModels;
 
@@ -106,6 +106,7 @@ namespace DRLMobile.Uwp.Helpers
             _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Out of business ", IsSelected = true, BackgroundColor = new SolidColorBrush(Colors.Black), AccountClassificationIds = new List<int>() { 38 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-Black.png" });
             _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Smoke Shop - Chain HQ ", IsSelected = true, BackgroundColor = new SolidColorBrush(Colors.Brown), AccountClassificationIds = new List<int>() { 44 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-Brown.png" });
             _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Smoke Shop - Chain Location ", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R255_G212_B121"], AccountClassificationIds = new List<int>() { 45 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-LightYellow.png" });
+            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Cultivator", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R255_G215_B0"], AccountClassificationIds = new List<int>() { 49 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-DeepGold.png" });
 
             return _tradeTypeFilter;
         }
