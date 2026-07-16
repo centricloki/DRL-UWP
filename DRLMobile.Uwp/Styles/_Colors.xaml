@@ -27,4 +27,5 @@
     <SolidColorBrush x:Key="R6_G177_B177">#06B1B1</SolidColorBrush>
     <SolidColorBrush x:Key="R255_G212_B121">#FFD479</SolidColorBrush>
     <SolidColorBrush x:Key="R255_G215_B0">#FFD700</SolidColorBrush>
+    <SolidColorBrush x:Key="R218_G112_B214">#DA70D6</SolidColorBrush>
 </ResourceDictionary>
