@@ -556,9 +556,7 @@ namespace DRLMobile.Uwp.ViewModel
                             activity.ChallengesAndFeedback = null;
                             activity.NextCyclePlan = null;
                             activity.NextWeekPlan = null;
-
                         }
-
 
                             await InfoLogger.GetInstance.WriteToLogAsync(SourceName: $"{nameof(AddActivityPageViewModel)}:{nameof(SaveCommandHandler)}"
                                 , CustomeMessage: "Clicked SaveButton To AddCallActivity");

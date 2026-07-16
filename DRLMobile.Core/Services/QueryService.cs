@@ -26,6 +26,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Windows.Devices.Sensors;
+
 namespace DRLMobile.Core.Services
 {
     public class QueryService : IQueryService
@@ -2871,16 +2873,6 @@ namespace DRLMobile.Core.Services
                         IsOrderConfirmed = 1,
                         RepublicSalesRepository = retailsTransactionData.RepublicSalesRepName,
 
-                        //CustomerShippingCityID = string.IsNullOrEmpty(retailsTransactionData.CustomerData.ShippingAddressCityID) ?
-                        //retailsTransactionData.CityName : retailsTransactionData.CustomerData.ShippingAddressCityID,
-
-                        //CustomerShippingStateID = (retailsTransactionData.CustomerData.ShippingAddressStateID == 0) ?
-                        //HelperMethods.GetKeyFromIdNameDictionary(retailsTransactionData.States, retailsTransactionData.SelectedPhysicalState)
-                        //: retailsTransactionData.CustomerData.ShippingAddressStateID,
-
-                        //CustomerShippingZipCode = string.IsNullOrEmpty(retailsTransactionData.CustomerData.ShippingAddressZipCode) ?
-                        //retailsTransactionData.Zip : retailsTransactionData.CustomerData.ShippingAddressZipCode
-
                         CustomerShippingCityID = string.IsNullOrEmpty(retailsTransactionData.CityName) ?
                         retailsTransactionData.CustomerData.ShippingAddressCityID : retailsTransactionData.CityName,
 
@@ -2932,7 +2924,17 @@ namespace DRLMobile.Core.Services
 
                     await DbService.InsertOrUpdateCallActivityInRetailTranscationDataAsync(activityData).ConfigureAwait(false);
 
-                    if (!string.IsNullOrWhiteSpace(retailsTransactionData.CustomerData.CustomerNumber)
+                    /*** JIRA Ticket https://republicbrands.atlassian.net/browse/HS2-383
+                     * Update Last call date on Customer List
+                     * Chain Stores:Retail Sales Call,Distributor Sales Call,Chain Sales Call
+                     */
+                    if (retailsTransactionData.ActivityType.Equals("Distributor Sales Call")
+                        || retailsTransactionData.ActivityType.Equals("Retail Sales Call")
+                        || retailsTransactionData.ActivityType.Equals("Chain Sales Call"))
+                    {
+                        retailsTransactionData.CustomerData.LastCallActivityDate = activityData.CallDate;
+                    }
+                    else if (!string.IsNullOrWhiteSpace(retailsTransactionData.CustomerData.CustomerNumber)
                         && retailsTransactionData.CustomerData.CustomerNumber.ToLower().StartsWith("x"))
                     {
                         /*** JIRA Ticket https://republicbrands.atlassian.net/browse/HS2-57
@@ -2948,7 +2950,7 @@ namespace DRLMobile.Core.Services
                                 break;
                         }
                     }
-                    else if (!retailsTransactionData.IsDirectCustomer && retailsTransactionData.CustomerData?.IsParent != 1)
+                    else if (!retailsTransactionData.IsDirectCustomer)
                     {
                         /*** JIRA Ticket https://republicbrands.atlassian.net/browse/HS2-57
                          * Update Last call date on Customer List

@@ -44,5 +44,6 @@
         public int isexported { get; set; }
         public int isdeleted { get; set; }
         public string OrderDeliveryWeekDays { get; set; }
+        public string LastCallActivityDate { get; set; }        
     }
 }

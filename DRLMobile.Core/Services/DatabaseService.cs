@@ -7308,22 +7308,15 @@ namespace DRLMobile.Core.Services
                     .ConfigureAwait(false);
                 if (customerMaster != null)
                 {
+                    /*** 
+                     * JIRA Ticket https://republicbrands.atlassian.net/browse/HS2-383
+                        * Update Last call date on Customer List
+                        * Chain Stores:Retail Sales Call,Distributor Sales Call,Chain Sales Call
+                    ***/
 
-                    /**** JIRA Ticket https://republicbrands.atlassian.net/browse/HS2-57
-                     * Indirect Stores:Retail Sales Call
-                     * For Chain HQ:Chain HQ Sales Call
-                     * For Distributor account types:Distributor Sales Call
-                     */
-                    if (string.IsNullOrWhiteSpace(customerMaster.CustomerNumber)
-                        || (!string.IsNullOrWhiteSpace(customerMaster.CustomerNumber)
-                        && !customerMaster.CustomerNumber.ToLower().StartsWith("x")))
+                    if (activityType.Equals("Distributor Sales Call") || activityType.Equals("Retail Sales Call") || activityType.Equals("Chain Sales Call"))
                     {
-                        if (customerMaster?.IsParent == 1 && activityType.Equals("Chain Sales Call"))
-                            customerMaster.LastCallActivityDate = lastCallDateTime;
-                        else if ((customerMaster?.IsParent != 1 && customerMaster.AccountType.Equals(2)) && activityType.Equals("Retail Sales Call"))
-                            customerMaster.LastCallActivityDate = lastCallDateTime;
-                        else if ((customerMaster?.IsParent != 1 && customerMaster.AccountType.Equals(1)) && activityType.Equals("Distributor Sales Call"))
-                            customerMaster.LastCallActivityDate = lastCallDateTime;
+                        customerMaster.LastCallActivityDate = lastCallDateTime;
                     }
                     customerMaster.IsExported = 0;
                     customerMaster.UpdatedDate = DateTimeHelper.ConvertToDbInsertDateTimeFormat(DateTime.Now);
