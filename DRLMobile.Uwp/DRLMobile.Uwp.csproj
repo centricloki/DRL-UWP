@@ -429,8 +429,10 @@
     <Content Include="Assets\Maps\MapPin-6.png" />
     <Content Include="Assets\Maps\MapPin-Black.png" />
     <Content Include="Assets\Maps\MapPin-Blue.png" />
+    <Content Include="Assets\Maps\MapPin-BrightOrchid.png" />
     <Content Include="Assets\Maps\MapPin-Brown.png" />
     <Content Include="Assets\Maps\MapPin-Cyan.png" />
+    <Content Include="Assets\Maps\MapPin-DeepGold.png" />
     <Content Include="Assets\Maps\MapPin-Florecent.png" />
     <Content Include="Assets\Maps\MapPin-Gray.png" />
     <Content Include="Assets\Maps\MapPin-Green.png" />
@@ -800,7 +802,7 @@
       <Version>2.5.1</Version>
     </PackageReference>
     <PackageReference Include="OnTerra.MapsControl.UWP">
-      <Version>1.0.44</Version>
+      <Version>1.0.52</Version>
     </PackageReference>
     <PackageReference Include="SharpDX.Direct2D1">
       <Version>4.2.0</Version>
