@@ -314,14 +314,7 @@ namespace DRLMobile.Uwp.View
                         StartMarkerLabel = "Start",
                         EndMarkerLabel = "End",
                         ShowStopMarkers = true,
-                        //Path = new OnTerra.MapsControl.UWP.Geopath(
-                        //        ViewModel.PointOfInterestSource.Select(x =>
-                        //         new OnTerra.MapsControl.UWP.BasicGeoposition
-                        //         {
-                        //             Latitude = x.OnTerraLocation.Position.Latitude,
-                        //             Longitude = x.OnTerraLocation.Position.Longitude,
-                        //             Tag = x?.CustomerData?.CustomerID.ToString()
-                        //         })),
+                        FollowRoads = true,
                         Path = new OnTerra.MapsControl.UWP.Geopath(points),
                         Stops = stops
                     };
