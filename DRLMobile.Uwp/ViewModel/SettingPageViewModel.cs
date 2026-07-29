@@ -45,7 +45,7 @@ namespace DRLMobile.Uwp.ViewModel
         #region Properties
 
         private readonly App AppReference = (App)Application.Current;
-
+        public bool isPinPopupExplicitClose = false;
         public bool IsUpdateAvailable
         {
             get { return AppReference.IsApplicationUpdateAvailable.Value; }
@@ -254,58 +254,84 @@ namespace DRLMobile.Uwp.ViewModel
         {
             try
             {
-                NavigationService.LoadingOnShellPage(true);
 
+
+                // Clear previous error messages
+                ErrorForOldPinText = string.Empty;
+                ErrorForNewPinText = string.Empty;
+                ErrorForConfirmNewPinText = string.Empty;
+
+                // Check for empty fields (Your existing logic)
+                if (CheckForEmptyPinFields())
+                {
+                    return;
+                }
+
+                // Ensure Correct Old Pin is entered
+                if (!AppReference.LoginUserPinProperty.Equals(OldPinText))
+                {
+                    ErrorForOldPinText = "Current PIN and the entered PIN did not match";
+                    return;
+                }
+
+                // Ensure New PIN is different from Old PIN
+                if (NewPinText.Equals(OldPinText))
+                {
+                    ErrorForNewPinText = "New PIN must be different from the Current PIN.";
+                    return;
+                }
+
+                // Validate New PIN format
+                if (!ValidatePinFormat(NewPinText, out string newPinError))
+                {
+                    ErrorForNewPinText = newPinError;
+                    return;
+                }
+
+                // Ensure Correct new Pin is entered
+                if (!NewPinText.Equals(ConfirmNewPinText))
+                {
+                    ErrorForConfirmNewPinText = "New PIN and the Confirm PIN did not match";
+                    return;
+                }
+
+                isPinPopupExplicitClose = true;
+                flyout.Hide();
+                isPinPopupExplicitClose = false;
+
+                await NavigationService.LoadingOnShellPageAsync(true);
                 var userId = Convert.ToInt32(AppReference.LoginUserIdProperty);
                 var oldPin = Convert.ToInt32(AppReference.LoginUserPinProperty);
+                var newPin = Convert.ToInt32(NewPinText);
+                var response = await InvokeWebService.ChangePinService(userId, newPin, AppReference.LoginUserNameProperty, oldPin);
 
-                var isEmpty = CheckForEmptyPinFields();
-                if (!isEmpty)
+                if (!string.IsNullOrEmpty(response))
                 {
-                    if (!AppReference.LoginUserPinProperty.Equals(OldPinText))
+                    var responseModel = JsonConvert.DeserializeObject<SyncDataModel>(response, new JsonSerializerSettings { Error = DeserilizationErrorHandler, NullValueHandling = NullValueHandling.Ignore });
+
+                    if (responseModel.responsestatus == "200")
                     {
-                        ErrorForOldPinText = "Current PIN and the entered PIN did not matched";
+                        //update user master
+                        var userData = await AppReference.QueryService.GetUserData(AppReference.LoginUserNameProperty, AppReference.LoginUserPinProperty);
+                        userData.IsExported = 0;
+                        userData.PIN = newPin;
+                        await AppReference.QueryService.UpdateUserMaster(userData);
+                        _ = AlertHelper.Instance.ShowConfirmationAlert("Success", " PIN Updated Successfully!", "OK");
+                        AppReference.LoginUserPinProperty = NewPinText;
+
+                    }
+                    else if (responseModel.responsestatus == "401")
+                    {
+                        _ = AlertHelper.Instance.ShowConfirmationAlert("Error", "Current pin is not valid!", "OK");
                     }
                     else
                     {
-                        bool isValidRequest = IsValidPinChangeRequest();
-                        if (isValidRequest)
-                        {
-                            flyout.Hide();
-                            var newPin = Convert.ToInt32(NewPinText);
-                            var response = await InvokeWebService.ChangePinService(userId, newPin, AppReference.LoginUserNameProperty, oldPin);
-
-                            if (!string.IsNullOrEmpty(response))
-                            {
-                                var responseModel = JsonConvert.DeserializeObject<SyncDataModel>(response, new JsonSerializerSettings { Error = DeserilizationErrorHandler, NullValueHandling = NullValueHandling.Ignore });
-
-                                if (responseModel.responsestatus == "200")
-                                {
-                                    //update user master
-                                    var userData = await AppReference.QueryService.GetUserData(AppReference.LoginUserNameProperty, AppReference.LoginUserPinProperty);
-                                    userData.IsExported = 0;
-                                    userData.PIN = newPin;
-                                    await AppReference.QueryService.UpdateUserMaster(userData);
-                                    _ = AlertHelper.Instance.ShowConfirmationAlert("Success", " PIN Updated Successfully!", "OK");
-                                    AppReference.LoginUserPinProperty = NewPinText;
-
-                                }
-                                else if (responseModel.responsestatus == "401")
-                                {
-                                    _ = AlertHelper.Instance.ShowConfirmationAlert("Error", "Current pin is not valid!", "OK");
-                                }
-                                else
-                                {
-                                    _ = AlertHelper.Instance.ShowConfirmationAlert("Error", "Error while updating PIN!", "OK");
-                                }
-                            }
-                            else
-                            {
-                                _ = AlertHelper.Instance.ShowConfirmationAlert("Failure", "Server not responding", "OK");
-                            }
-
-                        }
+                        _ = AlertHelper.Instance.ShowConfirmationAlert("Error", "Error while updating PIN!", "OK");
                     }
+                }
+                else
+                {
+                    _ = AlertHelper.Instance.ShowConfirmationAlert("Failure", "Server not responding", "OK");
                 }
             }
             catch (Exception ex)
@@ -314,7 +340,7 @@ namespace DRLMobile.Uwp.ViewModel
             }
             finally
             {
-                NavigationService.LoadingOnShellPage(false);
+                await NavigationService.LoadingOnShellPageAsync(false);
             }
         }
 
@@ -323,17 +349,77 @@ namespace DRLMobile.Uwp.ViewModel
             e.ErrorContext.Handled = true;
         }
 
-        private bool IsValidPinChangeRequest()
+
+        private bool IsSequential(string pin)
         {
-            bool isValid = true;
-            if (!NewPinText.Equals(ConfirmNewPinText))
+            // 1234, 2345... or 4321, 5432...
+            if (pin.Length < 2) return false;
+
+            bool ascending = true;
+            bool descending = true;
+
+            for (int i = 1; i < pin.Length; i++)
             {
-                isValid = false;
-                ErrorForNewPinText = "PIN did not matched";
-                ErrorForConfirmNewPinText = "PIN did not matched";
+                int prev = pin[i - 1] - '0';
+                int curr = pin[i] - '0';
+
+                if (curr - prev != 1) ascending = false;
+                if (prev - curr != 1) descending = false;
+
+                // early exit
+                if (!ascending && !descending) return false;
+            }
+            return ascending || descending;
+        }
+
+        /// <summary>
+        /// Validates the format of the PIN based on business rules.
+        /// </summary>
+        private bool ValidatePinFormat(string pin, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(pin))
+            {
+                errorMessage = "PIN cannot be empty.";
+                return false;
             }
 
-            return isValid;
+            // 1. PIN contains only numeric characters (0-9)
+            if (!pin.All(char.IsDigit))
+            {
+                errorMessage = "PIN must contain only numeric characters (0-9).";
+                return false;
+            }
+
+            // 2. PIN has appropriate length (4-6 digits)
+            if (pin.Length != 4)
+            {
+                errorMessage = "PIN must be 4 digits long.";
+                return false;
+            }
+
+            // 3. PIN doesn't start with 0 or 00
+            if (pin.StartsWith("0"))
+            {
+                errorMessage = "PIN cannot start with 0.";
+                return false;
+            }
+
+            // 4) all same
+            if (pin.Distinct().Count() == 1)
+            {
+                errorMessage = "PIN cannot have all digits the same.";
+                return false;
+            }
+            // 5) sequential
+            if (IsSequential(pin))
+            {
+                errorMessage = "PIN cannot have sequential digits.";
+                return false;
+            }
+
+            return true;
         }
 
         private bool CheckForEmptyPinFields()
@@ -342,17 +428,17 @@ namespace DRLMobile.Uwp.ViewModel
             if (string.IsNullOrWhiteSpace(OldPinText))
             {
                 isEmpty = true;
-                ErrorForOldPinText = "Please enter old PIN";
+                ErrorForOldPinText = "Please enter Current PIN";
             }
             if (string.IsNullOrWhiteSpace(NewPinText))
             {
                 isEmpty = true;
-                ErrorForNewPinText = "Please enter new PIN";
+                ErrorForNewPinText = "Please enter New PIN";
             }
             if (string.IsNullOrWhiteSpace(ConfirmNewPinText))
             {
                 isEmpty = true;
-                ErrorForConfirmNewPinText = "Please enter confirm PIN";
+                ErrorForConfirmNewPinText = "Please enter Confirm PIN";
             }
             return isEmpty;
         }

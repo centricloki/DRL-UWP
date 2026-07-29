@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm.Native;
+
 using DRLMobile.Core.Helpers;
 using DRLMobile.Core.Models;
 using DRLMobile.Core.Models.DataModels;
@@ -7,8 +8,10 @@ using DRLMobile.ExceptionHandler;
 using DRLMobile.Uwp.Helpers;
 using DRLMobile.Uwp.Services;
 using DRLMobile.Uwp.View;
+
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,6 +19,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.StartScreen;
@@ -364,14 +368,53 @@ namespace DRLMobile.Uwp.ViewModel
                     if (arg is ActivityForAllCustomerUIModel)
                     {
                         var activity = arg as ActivityForAllCustomerUIModel;
-
-                        var isDeleted = await AppReference.QueryService.DeleteActivity(activity.CallActivityDeviceID);
-
-                        if (isDeleted)
+                        if (activity != null)
                         {
-                            await AlertHelper.Instance.ShowConfirmationAlert("Success", "Activity deleted successfully", "OK");
+                            /*** JIRA Ticket https://republicbrands.atlassian.net/browse/HS2-383
+                            * Update Last call date on Customer List
+                            * Chain Stores:Retail Sales Call,Distributor Sales Call,Chain Sales Call
+                            */
+                            var customerMaster = await AppReference.QueryService.GetCustomerMasterByDeviceIdAsync(activity.CustomerID);
+                            string lastCallActivityDate = null;
+                            if (customerMaster != null)
+                            {
+                                List<string> calldateActivityTypes = new List<string> { "Distributor Sales Call", "Retail Sales Call", "Chain Sales Call" };
 
-                            AllCustomerActivitiesItemSource.Remove(activity);
+                                //Reset Last Call Activity Date on Customer List
+                                if (calldateActivityTypes.Contains(activity.ActivityType))
+                                {
+                                    if (!string.IsNullOrWhiteSpace(customerMaster.CustomerNumber) && customerMaster.CustomerNumber.ToLower().StartsWith("x"))
+                                    {
+                                        calldateActivityTypes.Add("Car Stock Order");
+                                    }
+                                    if (customerMaster.AccountType != 1)
+                                    {
+                                        calldateActivityTypes.Add("Cash Sale");
+                                        calldateActivityTypes.Add("Cash Sales Initiative");
+                                    }
+                                    lastCallActivityDate = DbDataForAllCustomer
+                                        .Where(x => calldateActivityTypes.Contains(x.ActivityType)
+                                        && x.CustomerID == activity.CustomerID
+                                        && x.CallActivityID != activity.CallActivityID)
+                                        .OrderByDescending(x => x.LastcallDate)
+                                        .Take(1)
+                                        .Select(x => x.CallDate)
+                                        .FirstOrDefault();
+                                    await AppReference.QueryService.UpdateDateFromActivityCustomerMaster(customerMaster.DeviceCustomerID
+                                   , activity.ActivityType
+                                   , lastCallActivityDate);
+                                }
+                            }
+
+                            var isDeleted = await AppReference.QueryService.DeleteActivity(activity.CallActivityDeviceID);
+
+                            if (isDeleted)
+                            {
+                                await AlertHelper.Instance.ShowConfirmationAlert("Success", "Activity deleted successfully", "OK");
+
+                                AllCustomerActivitiesItemSource.Remove(activity);
+                            }
+
                         }
                     }
                 }

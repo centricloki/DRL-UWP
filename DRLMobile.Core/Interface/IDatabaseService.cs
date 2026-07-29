@@ -17,9 +17,9 @@ namespace DRLMobile.Core.Interface
         Task<List<CustomerPageModel>> GetCustomerMasterDataForCustomerPage(string query);
 
         Task<Dictionary<int, string>> GetStateDictionaryAsync();
+        Task<List<StateMaster>> GetStateMasterDataAsync(string stateName);
 
         Task<List<StateMaster>> GetAllStateMasterDataForNationalAndZoneAndRegionManagers();
-        Task<List<StateMaster>> GetStateMasterDataAsync(string stateName);
 
         Task<Dictionary<int, string>> GetCityDictionaryAsync();
 
@@ -114,6 +114,7 @@ namespace DRLMobile.Core.Interface
         Task<List<UserMaster>> GetUserMasterData();
 
         Task<UserMaster> GetUserFromUserNameAndPin(string userName, string pin);
+        Task<UserMaster> GetUserFromUserName(string userName);
 
         Task<List<OrderDetailUIModel>> GetCartDetailsData(string currentOrderId);
 
@@ -359,6 +360,8 @@ namespace DRLMobile.Core.Interface
         Task<BDMaster> GetBDMasterByIdAsync(int id);
         Task<int> GetRoleIdAsync(string roleName);
         Task<string> GetUserFullNameAsync(string defTerritoryId);
+        Task<CustomerMaster> GetCustomerMasterByDeviceIdAsync(string deviceId);
+
         #endregion
 
     }

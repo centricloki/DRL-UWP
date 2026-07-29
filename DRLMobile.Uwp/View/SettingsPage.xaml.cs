@@ -1,9 +1,11 @@
 ﻿using DRLMobile.Uwp.ViewModel;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -44,6 +46,7 @@ namespace DRLMobile.Uwp.View
             ViewModel.ErrorForConfirmNewPinText = string.Empty;
             ViewModel.ErrorForNewPinText = string.Empty;
             ViewModel.ErrorForOldPinText = string.Empty;
+            ViewModel.isPinPopupExplicitClose = false;
             ChangePinFlyout.ShowAt(outerPanel);
         }
 
@@ -53,15 +56,29 @@ namespace DRLMobile.Uwp.View
             ViewModel.ChangePinSaveButtonCommand.Execute(ChangePinFlyout);
         }
 
+        private void ChangePinFlyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
+        {
+            if (!ViewModel.isPinPopupExplicitClose)
+            {
+                args.Cancel = true;
+            }
+        }
+
+        private void CloseFlyoutButtonClicked(object sender, RoutedEventArgs e)
+        {
+            ViewModel.isPinPopupExplicitClose = true;
+            ChangePinFlyout.Hide();
+            ViewModel.isPinPopupExplicitClose = false;
+        }
+
         private void TextBox_BeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
         {
-            if(!string.IsNullOrWhiteSpace(args.NewText))
+            if (!string.IsNullOrWhiteSpace(args.NewText))
             {
                 var isDigit = int.TryParse(args.NewText, out int returnVal);
                 if (!isDigit)
                     args.Cancel = true;
             }
         }
-
     }
 }

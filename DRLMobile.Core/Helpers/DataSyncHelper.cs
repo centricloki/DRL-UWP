@@ -128,7 +128,8 @@ namespace DRLMobile.Core.Helpers
                     territoryid = string.IsNullOrWhiteSpace(customerItem.TerritoryID) ? 0 : Convert.ToInt32(customerItem.TerritoryID),
                     isexported = customerItem.IsExported,
                     OrderDeliveryWeekDays = customerItem.OrderDeliveryWeekDays,
-                    isdeleted = customerItem.isDeleted
+                    isdeleted = customerItem.isDeleted,
+                    LastCallActivityDate = customerItem.LastCallActivityDate
                 };
                 customer.mailingaddresszipcode = ZipCodeConversion(customerItem.MailingAddressZipID);
                 customer.physicaladdresszipcode = ZipCodeConversion(customerItem.PhysicalAddressZipCode);

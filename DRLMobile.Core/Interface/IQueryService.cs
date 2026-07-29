@@ -130,7 +130,6 @@ namespace DRLMobile.Core.Interface
         Task<List<PopOrderCartUiModel>> GetPopOrderRemainingListData(string CurrentDeviceOrderId);
         Task<List<ActivityForAllCustomerUIModel>> GetCallActivitiesOfAllCustomersForLoggedInUser(string territoryIds, bool loadAllData);
         Task<List<ActivityForAllCustomerUIModel>> GetCallActivitiesOfAllCustomersForNationalAndZoneAndRegionManagers(string territoryIds, bool loadAllData);
-        Task<List<StateMaster>> GetStateMasterDataAsync(string stateName);
         Task<List<ActivityForAllCustomerUIModel>> GetCallActivitiesOfAllCustomers(bool loadAllData);
         Task<List<ActivityForIndividualCustomerUIModel>> GetCallActivitiesOfSelectedCustomerForLoggedInUser(string deviceCustomerId);
         Task<List<ActivityForIndividualCustomerUIModel>> GetCallActivitiesOfSelectedArea(string deviceCustomerId, int selectedArea, int roleId);
@@ -196,6 +195,7 @@ namespace DRLMobile.Core.Interface
         Task<bool> DeleteOrderMasterDataFromOrderIdAndDeviceOrderId(int orderId, string deviceOrderId);
         Task<List<ProductDistribution>> GetProductDistributionsDataForSelectedCustomer(int customerId, bool isDirectCustomer);
         Task<bool> UpdateUserMaster(UserMaster user);
+        Task<bool> UpdateUserMaster(string newPin, string userName);
         Task RecordManualDistribution(int productId, int customerId);
         Task<bool> AddDistributionDate(int productId, int customerId);
         Task RemoveManualProductDistributionRecord(int productId, int customerId);
@@ -211,5 +211,6 @@ namespace DRLMobile.Core.Interface
         Task<string> GetUserFullNameAsync(string defTerritoryId);
 
         Task<string> GetTerritoriesBeforeSyncOfUserAsync(string userName, string pin);
+        Task<CustomerMaster> GetCustomerMasterByDeviceIdAsync(string deviceId);
     }
 }

@@ -2,36 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace DRLMobile.Core.Helpers
 {
-    // ============================================
-    // RESPONSE MODELS
-    // ============================================
-
+    // Response classes to deserialize the JSON
     public class GraphHopperErrorResponse
     {
-        [JsonPropertyName("message")]
         public string Message { get; set; }
-
-        [JsonPropertyName("hints")]
         public List<Hint> Hints { get; set; }
-
-        [JsonPropertyName("status")]
         public string Status { get; set; }
     }
 
     public class Hint
     {
-        [JsonPropertyName("message")]
         public string Message { get; set; }
-
-        [JsonPropertyName("details")]
         public string Details { get; set; }
     }
 
+    // Service to handle the response parsing
     public class GraphHopperErrorHandler
     {
         public static ParsedErrorInfo ParseErrorResponse(string jsonResponse)

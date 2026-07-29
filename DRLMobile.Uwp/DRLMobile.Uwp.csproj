@@ -12,7 +12,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -38,7 +38,7 @@
     <AppInstallerUri>https://honeyrel.drl-ent.com/IPadApp/9.2.2</AppInstallerUri>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
-    <AppxPackageDir>C:\AppCodeStore\DRL\DRL-UWP\DRLMobile.Uwp\AppPackages\stag\</AppxPackageDir>
+    <AppxPackageDir>C:\AppCodeStore\DRL\DRL-UWP\DRLMobile.Uwp\AppPackages\uat\</AppxPackageDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -429,8 +429,10 @@
     <Content Include="Assets\Maps\MapPin-6.png" />
     <Content Include="Assets\Maps\MapPin-Black.png" />
     <Content Include="Assets\Maps\MapPin-Blue.png" />
+    <Content Include="Assets\Maps\MapPin-BrightOrchid.png" />
     <Content Include="Assets\Maps\MapPin-Brown.png" />
     <Content Include="Assets\Maps\MapPin-Cyan.png" />
+    <Content Include="Assets\Maps\MapPin-DeepGold.png" />
     <Content Include="Assets\Maps\MapPin-Florecent.png" />
     <Content Include="Assets\Maps\MapPin-Gray.png" />
     <Content Include="Assets\Maps\MapPin-Green.png" />
@@ -798,9 +800,6 @@
     </PackageReference>
     <PackageReference Include="MsgKit">
       <Version>2.5.1</Version>
-    </PackageReference>
-    <PackageReference Include="OnTerra.MapsControl.UWP">
-      <Version>1.0.43</Version>
     </PackageReference>
     <PackageReference Include="SharpDX.Direct2D1">
       <Version>4.2.0</Version>

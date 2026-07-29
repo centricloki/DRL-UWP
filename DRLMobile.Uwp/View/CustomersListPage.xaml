@@ -496,7 +496,7 @@
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-                </customControls:CustomAlternateRowColorListView>
+            </customControls:CustomAlternateRowColorListView>
         </Grid>
         <!--  outerPanel.Grid.Row="2"  -->
         <Grid Grid.Row="2" Background="White">

@@ -2871,16 +2871,6 @@ namespace DRLMobile.Core.Services
                         IsOrderConfirmed = 1,
                         RepublicSalesRepository = retailsTransactionData.RepublicSalesRepName,
 
-                        //CustomerShippingCityID = string.IsNullOrEmpty(retailsTransactionData.CustomerData.ShippingAddressCityID) ?
-                        //retailsTransactionData.CityName : retailsTransactionData.CustomerData.ShippingAddressCityID,
-
-                        //CustomerShippingStateID = (retailsTransactionData.CustomerData.ShippingAddressStateID == 0) ?
-                        //HelperMethods.GetKeyFromIdNameDictionary(retailsTransactionData.States, retailsTransactionData.SelectedPhysicalState)
-                        //: retailsTransactionData.CustomerData.ShippingAddressStateID,
-
-                        //CustomerShippingZipCode = string.IsNullOrEmpty(retailsTransactionData.CustomerData.ShippingAddressZipCode) ?
-                        //retailsTransactionData.Zip : retailsTransactionData.CustomerData.ShippingAddressZipCode
-
                         CustomerShippingCityID = string.IsNullOrEmpty(retailsTransactionData.CityName) ?
                         retailsTransactionData.CustomerData.ShippingAddressCityID : retailsTransactionData.CityName,
 
@@ -2932,7 +2922,17 @@ namespace DRLMobile.Core.Services
 
                     await DbService.InsertOrUpdateCallActivityInRetailTranscationDataAsync(activityData).ConfigureAwait(false);
 
-                    if (!string.IsNullOrWhiteSpace(retailsTransactionData.CustomerData.CustomerNumber)
+                    /*** JIRA Ticket https://republicbrands.atlassian.net/browse/HS2-383
+                     * Update Last call date on Customer List
+                     * Chain Stores:Retail Sales Call,Distributor Sales Call,Chain Sales Call
+                     */
+                    if (retailsTransactionData.ActivityType.Equals("Distributor Sales Call")
+                        || retailsTransactionData.ActivityType.Equals("Retail Sales Call")
+                        || retailsTransactionData.ActivityType.Equals("Chain Sales Call"))
+                    {
+                        retailsTransactionData.CustomerData.LastCallActivityDate = activityData.CallDate;
+                    }
+                    else if (!string.IsNullOrWhiteSpace(retailsTransactionData.CustomerData.CustomerNumber)
                         && retailsTransactionData.CustomerData.CustomerNumber.ToLower().StartsWith("x"))
                     {
                         /*** JIRA Ticket https://republicbrands.atlassian.net/browse/HS2-57
@@ -2948,7 +2948,7 @@ namespace DRLMobile.Core.Services
                                 break;
                         }
                     }
-                    else if (!retailsTransactionData.IsDirectCustomer && retailsTransactionData.CustomerData?.IsParent != 1)
+                    else if (!retailsTransactionData.IsDirectCustomer)
                     {
                         /*** JIRA Ticket https://republicbrands.atlassian.net/browse/HS2-57
                          * Update Last call date on Customer List
@@ -3642,7 +3642,8 @@ namespace DRLMobile.Core.Services
         {
             try
             {
-                var result = await DbService.GetUserFromUserNameAndPin(userName, pin).ConfigureAwait(false);
+                var result = await DbService.GetUserFromUserName(userName);
+                //var result = await DbService.GetUserFromUserNameAndPin(userName, pin).ConfigureAwait(false);
                 return result;
             }
             catch (Exception ex)
@@ -4007,9 +4008,7 @@ namespace DRLMobile.Core.Services
                 return null;
             }
         }
-
-        public async Task<List<StateMaster>> GetStateMasterDataAsync(string stateName)=> await DbService.GetStateMasterDataAsync(stateName).ConfigureAwait(false);
-
+        public async Task<List<StateMaster>> GetStateMasterDataAsync(string stateName) => await DbService.GetStateMasterDataAsync(stateName).ConfigureAwait(false);
 
         public async Task<List<ActivityForAllCustomerUIModel>> GetCallActivitiesOfAllCustomersForNationalAndZoneAndRegionManagers(string territoryIds, bool loadAllData)
         {
@@ -5365,6 +5364,22 @@ namespace DRLMobile.Core.Services
             }
         }
 
+        public async Task<bool> UpdateUserMaster(string newPin, string userName)
+        {
+            try
+            {
+                string query = string.Format("UPDATE UserMaster SET IsExported=0, PIN={0} WHERE UserMaster.UserName='{1}'", newPin, userName);
+                var isSuccess = await DbService.DbExecuteAsync(query).ConfigureAwait(false);
+                return isSuccess;
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.WriteToErrorLog(nameof(QueryService), nameof(UpdateUserMaster), ex.StackTrace + " - " + ex.Message);
+                return false;
+            }
+        }
+
+
         public async Task<Dictionary<string, string>> GetConfiguration()
         {
             Dictionary<string, string> result = null;
@@ -5460,5 +5475,7 @@ namespace DRLMobile.Core.Services
             }
             return loggedInUserOldTerritories;
         }
+
+        public async Task<CustomerMaster> GetCustomerMasterByDeviceIdAsync(string deviceId) => await DbService.GetCustomerMasterByDeviceIdAsync(deviceId);
     }
 }

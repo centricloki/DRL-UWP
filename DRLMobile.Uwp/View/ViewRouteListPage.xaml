@@ -6,7 +6,7 @@
     xmlns:converter="using:DRLMobile.Uwp.Converters"
     xmlns:customControls="using:DRLMobile.Uwp.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:map="using:OnTerra.MapsControl.UWP" 
+    xmlns:map="using:Windows.UI.Xaml.Controls.Maps"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     NavigationCacheMode="Required"
@@ -483,7 +483,7 @@
         <!--#endregion-->
 
         <!--#region MapControl-->
-        <!--<map:MapControl
+        <map:MapControl
             x:Name="myMap"
             Grid.Row="5"
             MapElementClick="myMap_MapElementClick"
@@ -491,14 +491,7 @@
             TransitFeaturesVisible="False"
             ZoomLevel="19">
             <map:MapItemsControl x:Name="MapItems" ItemsSource="{x:Bind ViewModel.PointOfIntrestSource, Mode=OneWay}" />
-        </map:MapControl>-->
-        <map:MapControl
-            x:Name="myMap"
-            Grid.Row="5"   
-            MapElementClick="myMap_MapElementClick"
-            MapServiceToken="{StaticResource OnTerraMapServiceKey}">
         </map:MapControl>
-
         <Grid
             Grid.Row="5"
             Grid.RowSpan="2"

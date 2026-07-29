@@ -2,9 +2,7 @@
 using DRLMobile.Core.Models.DataModels;
 using DRLMobile.Core.Models.UIModels;
 using DRLMobile.Uwp.Helpers.MapHelpers;
-
 using System;
-
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.UI.Xaml.Media;
@@ -14,7 +12,6 @@ namespace DRLMobile.Uwp.Helpers
     public class PointOfInterest : BaseModel
     {
         public Geopoint Location { get; set; }
-        public OnTerra.MapsControl.UWP.Geopoint OnTerraLocation { get; set; }
 
         public Point NormalizedAnchorPoint { get; set; }
 
@@ -55,6 +52,5 @@ namespace DRLMobile.Uwp.Helpers
             get { return _pinText; }
             set { SetProperty(ref _pinText, value); }
         }
-        public override string ToString() => (CustomerData != null ? CustomerData.CustomerID.ToString() : null) ?? base.ToString();
     }
 }

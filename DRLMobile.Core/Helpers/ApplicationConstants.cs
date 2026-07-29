@@ -22,10 +22,10 @@
         public const int WEBSERVICE_TIMEOUT = 300000;
 
         //This is a Stag Url
-        public const string UATBaseUrl = "https://service.drl-ent.com:14990/DRLServiceAPI.svc/";
+        //public const string UATBaseUrl = "https://service.drl-ent.com:14990/DRLServiceAPI.svc/";
 
         //This is a UAT Url
-        //public const string UATBaseUrl = "https://service.drl-ent.com:14989/DRLServiceAPI.svc/";
+        public const string UATBaseUrl = "https://service.drl-ent.com:14989/DRLServiceAPI.svc/";
 
         //This is a PROD url
         //public const string UATBaseUrl = "https://honeyapi.drl-ent.com/DRLServiceAPI.svc/";
@@ -105,12 +105,12 @@
         //public const string customerDocZipUrl = "https://honeyapi.drl-ent.com/Content/CustomerZip/";
 
         // UAT 
-        //public const string customerDocZipUrl = "https://service.drl-ent.com:14989/Content/CustomerZip/";
-        //public const string SrzZipDownloadUrl = "https://service.drl-ent.com:14989/Content/SRCZip.zip";
+        public const string customerDocZipUrl = "https://service.drl-ent.com:14989/Content/CustomerZip/";
+        public const string SrzZipDownloadUrl = "https://service.drl-ent.com:14989/Content/SRCZip.zip";
 
         //Stag
-        public const string customerDocZipUrl = "https://service.drl-ent.com:14990/Content/CustomerZip/";
-        public const string SrzZipDownloadUrl = "https://service.drl-ent.com:14990/Content/SRCZip.zip";
+        //public const string customerDocZipUrl = "https://service.drl-ent.com:14990/Content/CustomerZip/";
+        //public const string SrzZipDownloadUrl = "https://service.drl-ent.com:14990/Content/SRCZip.zip";
 
         #endregion
 

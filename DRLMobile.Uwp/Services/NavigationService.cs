@@ -1,8 +1,11 @@
-﻿using System;
+﻿using DRLMobile.Uwp.View;
+
+using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
-using DRLMobile.Uwp.View;
-
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -120,16 +123,19 @@ namespace DRLMobile.Uwp.Services
                 return false;
         }
 
-        public static void LoadingOnShellPage(bool isLoading)
+        public async static Task LoadingOnShellPageAsync(bool isLoading)
         {
             if ((Window.Current.Content as Frame).Content is ShellPage)
             {
-                var shell = (Window.Current.Content as Frame).Content as ShellPage;
-                var frame = shell.FindName("MainFrame");
-                if (frame is Frame)
+                await Window.Current.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    shell.ViewModel.IsLoading = isLoading;
-                }
+                    var shell = (Window.Current.Content as Frame).Content as ShellPage;
+                    var frame = shell.FindName("MainFrame");
+                    if (frame is Frame)
+                    {
+                        shell.ViewModel.IsLoading = isLoading;
+                    }
+                });
             }
         }
 
