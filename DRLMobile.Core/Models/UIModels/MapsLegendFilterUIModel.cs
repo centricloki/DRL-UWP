@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Windows.UI.Xaml.Media;
@@ -22,8 +22,8 @@ namespace DRLMobile.Core.Models.UIModels
             set { SetProperty(ref _isSelected, value); }
         }
 
-        private SolidColorBrush _backgroundColor;
-        public SolidColorBrush BackgroundColor
+        private Brush _backgroundColor;
+        public Brush BackgroundColor
         {
             get { return _backgroundColor; }
             set { SetProperty(ref _backgroundColor, value); }

@@ -1,4 +1,5 @@
-﻿using DevExpress.Mvvm.Native;
+using DevExpress.Mvvm.Native;
+
 using Microsoft.Toolkit.Mvvm.Input;
 
 using DRLMobile.Core.Enums;
@@ -7,6 +8,7 @@ using DRLMobile.Core.Models;
 using DRLMobile.Core.Models.DataModels;
 using DRLMobile.Core.Models.UIModels;
 using DRLMobile.ExceptionHandler;
+using DRLMobile.Core.Services;
 using DRLMobile.Uwp.Helpers;
 
 using System;
@@ -956,9 +958,9 @@ namespace DRLMobile.Uwp.ViewModel
             }
         }
 
-        public async Task OnMapLegendItemClickCommandHandler( MapsLegendFilterUIModel selectedItem, CancellationToken token)
+        public async Task OnMapLegendItemClickCommandHandler(MapsLegendFilterUIModel selectedItem, CancellationToken token)
         {
-            token.ThrowIfCancellationRequested();   
+            token.ThrowIfCancellationRequested();
 
             if (CustomMapPinVisibility == Visibility.Visible)
             { CustomMapPinVisibility = Visibility.Collapsed; }
@@ -1313,14 +1315,51 @@ namespace DRLMobile.Uwp.ViewModel
                     LegendsLabelText = "Trade Type";
                     PlotByCurrentFilter = MapFilter.TradeType;
                     PlotByFilterSource = StaticDataSourceHelper.GetPlotByTypeFiltersDataSource();
-
-                    var classifications = await AppReference.QueryService.GetClassificationDict();
-
-                    //AccountClassificationsList = classifications?.Values.ToList();
-                    MapsStaticDataSourceHelper.ClassificationsList = classifications?.Values.ToList();
-                    SetLegendsSource();
                 }
-                //
+                // ── DB-driven MapClassification path (Map view only) ─────────────
+                // Reads the MapClassification SQLite table via MapClassificationService.
+                // Drives legend visibility (IsActive), display order (DisplayOrder)
+                // and colour (HexColorCode — null → deterministic gradient generator).
+                // This is completely independent of GetClassificationDict() used by
+                // other ViewModels (CustomerList, CustomerPage, etc.).
+                try
+                {
+                    var mapClassifications = await AppReference.QueryService
+                        .GetActiveMapClassificationsAsync();
+
+                    MapsStaticDataSourceHelper.MapClassificationList = mapClassifications;
+
+                    // Pre-warm: resolve colours and generate dynamic pin PNGs.
+                    if (mapClassifications?.Count > 0)
+                    {
+                        _ = Task.Run(async () =>
+                        {
+                            try
+                            {
+                                await ClassificationColorService.PrewarmAsync(mapClassifications);
+                            }
+                            catch (Exception prewarmEx)
+                            {
+                                ErrorLogger.WriteToErrorLog(
+                                    nameof(MapPageViewModel),
+                                    "ClassificationColorService.PrewarmAsync(MapClassificationViewModel)",
+                                    prewarmEx.StackTrace);
+                            }
+                        });
+                    }
+                }
+                catch (Exception mapClsEx)
+                {
+                    // Non-fatal — fall back to ClassificationsList path in MapsStaticDataSourceHelper.
+                    ErrorLogger.WriteToErrorLog(
+                        nameof(MapPageViewModel),
+                        "GetActiveMapClassificationsAsync",
+                        mapClsEx.StackTrace);
+                }
+
+
+                SetLegendsSource();
+
                 if (DbStateDict == null || DbStateDict.Count == 0)
                 { DbStateDict = await AppReference.QueryService.GetStateDictionaryWhichHasCustomersAssociated(); }
 
@@ -2054,9 +2093,9 @@ namespace DRLMobile.Uwp.ViewModel
         #endregion
 
         #region Public Methods
-        
-        public async void SetLoader(bool isOpen)=> await coreDispatcher.RunAsync(CoreDispatcherPriority.Normal, () => IsLoading = isOpen);
-        
+
+        public async void SetLoader(bool isOpen) => await coreDispatcher.RunAsync(CoreDispatcherPriority.Normal, () => IsLoading = isOpen);
+
         internal void SetTheStateFlyoutList()
         {
             StateDictionary = DbStateDict.ToDictionary(x => x.Key, y => y.Value);

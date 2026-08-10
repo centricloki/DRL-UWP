@@ -1,4 +1,4 @@
-﻿using DRLMobile.Core.Models.UIModels;
+using DRLMobile.Core.Models.UIModels;
 
 using System.Collections.Generic;
 
@@ -54,5 +54,6 @@ namespace DRLMobile.Core.Models.DataModels
         public List<UserActivityType> UserActivityTypeEntity { get; set; }
         public List<CustomerActivityType> CustomerActivityTypeEntity { get; set; }
         public List<CustomerDocumentType> DocumentTypeEntity { get; set; }
+        public List<MapClassification> mapclassificationdata { get; set; }
     }
 }

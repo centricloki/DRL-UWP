@@ -1,4 +1,4 @@
-﻿using DRLMobile.Core.Helpers;
+using DRLMobile.Core.Helpers;
 using DRLMobile.Core.Interface;
 using DRLMobile.Core.Models.DataModels;
 using DRLMobile.Core.Models.UIModels;
@@ -91,6 +91,29 @@ namespace DRLMobile.Core.Services
                 await db.CloseAsync().ConfigureAwait(false);
             }
             return classificationDictionary;
+        }
+
+        /// <summary>
+        /// Returns all rows from the <c>MapClassification</c> SQLite table.
+        /// Used exclusively by the Map view to drive legend order, visibility and colours.
+        /// </summary>
+        public async Task<List<MapClassification>> GetMapClassificationsAsync()
+        {
+            List<MapClassification> result = null;
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH, false);
+            try
+            {
+                result = await db.Table<MapClassification>().ToListAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.WriteToErrorLog(nameof(DatabaseService), nameof(GetMapClassificationsAsync), ex.Message);
+            }
+            finally
+            {
+                await db.CloseAsync().ConfigureAwait(false);
+            }
+            return result ?? new List<MapClassification>();
         }
 
         //public async Task<List<CustomerMaster>> GetCustomerDataAsync()
@@ -1913,6 +1936,31 @@ namespace DRLMobile.Core.Services
             {
                 success = 0;
                 ErrorLogger.WriteToErrorLog(nameof(DatabaseService), "InsertOrUpdatetClassificationDataAsync", ex);
+            }
+            finally
+            {
+                await db.CloseAsync(); db = null;
+            }
+
+            return success != 0;
+        }
+
+        public async Task<bool> InsertOrUpdatetMapClassificationDataAsync(List<MapClassification> mapClassifications)
+        {
+            int success = 0;
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH, false);
+            try
+            {
+                await db.CreateTableAsync<MapClassification>();
+                foreach (var mapClassificationItem in mapClassifications)
+                {
+                    success = await db.InsertOrReplaceAsync(mapClassificationItem);
+                }
+            }
+            catch (Exception ex)
+            {
+                success = 0;
+                ErrorLogger.WriteToErrorLog(nameof(DatabaseService), nameof(InsertOrUpdatetMapClassificationDataAsync), ex);
             }
             finally
             {

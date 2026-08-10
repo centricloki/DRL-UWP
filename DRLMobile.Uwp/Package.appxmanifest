@@ -12,7 +12,7 @@
 	<Identity
 	  Name="DRLEnterprises.HoneyforTest"
 	  Publisher="CN=Drl Enterprises Inc, OU=IT, O=Drl Enterprises Inc, L=Glenview, S=Illinois, C=US"
-	  Version="1.9.80.0" />
+	  Version="1.9.87.0" />
 
 	<mp:PhoneIdentity PhoneProductId="86569255-dab6-4bfd-a1d7-98d2c9058ad2" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

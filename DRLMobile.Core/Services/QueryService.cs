@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 
 using DRLMobile.Core.AutoMapperProfiler;
 using DRLMobile.Core.Enums;
@@ -1811,6 +1811,11 @@ namespace DRLMobile.Core.Services
                         await DbService.InsertOrUpdatetClassificationDataAsync(downloadedData.accountclassification).ConfigureAwait(false);
                     }
 
+                    if (downloadedData.mapclassificationdata != null && downloadedData.mapclassificationdata.Any())
+                    {
+                        await DbService.InsertOrUpdatetMapClassificationDataAsync(downloadedData.mapclassificationdata).ConfigureAwait(false);
+                    }
+
                     if (downloadedData.customerdata != null && downloadedData.customerdata.Any())
                     {
                         await DbService.BulkInsertOrUpdateCustomerMasterDataAsync(downloadedData.customerdata).ConfigureAwait(false);
@@ -3170,6 +3175,16 @@ namespace DRLMobile.Core.Services
         {
             var classification = await DbService.GetClassificationDictionaryAsync();
             return classification;
+        }
+
+        /// <summary>
+        /// Map-only: reads the <c>MapClassification</c> SQLite table via
+        /// <see cref="MapClassificationService"/> and returns only active rows sorted
+        /// by <c>DisplayOrder</c>.  Does not affect any other ViewModel or service.
+        /// </summary>
+        public async Task<List<MapClassificationViewModel>> GetActiveMapClassificationsAsync()
+        {
+            return await MapClassificationService.GetActiveMapClassificationsAsync(DbService);
         }
 
         public async Task<List<TravelUiModel>> GetTravelDataForUser(string year)

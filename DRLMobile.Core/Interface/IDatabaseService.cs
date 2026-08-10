@@ -1,4 +1,4 @@
-﻿using DRLMobile.Core.Models.DataModels;
+using DRLMobile.Core.Models.DataModels;
 using DRLMobile.Core.Models.UIModels;
 
 using System;
@@ -24,6 +24,12 @@ namespace DRLMobile.Core.Interface
         Task<Dictionary<int, string>> GetCityDictionaryAsync();
 
         Task<Dictionary<int, Classification>> GetClassificationDictionaryAsync();
+
+        /// <summary>
+        /// Returns all rows from the <c>MapClassification</c> SQLite table.
+        /// Used exclusively by the Map view to drive legend order, visibility and colours.
+        /// </summary>
+        Task<List<MapClassification>> GetMapClassificationsAsync();
 
         Task<List<ProductMaster>> GetProductsListDataAsync();
         Task<List<ProductMaster>> GetSRCProductsAsync();
@@ -323,6 +329,8 @@ namespace DRLMobile.Core.Interface
         Task<bool> InsertOrUpdatetRegionMasterDataAsync(List<RegionMaster> regionMasterList);
         Task<bool> InsertOrUpdateRoleMasterDataAsync(List<RoleMaster> roleMasterList);
         Task<bool> InsertOrUpdatetRouteStationDataAsync(RouteStations routeStation);
+        Task<bool> InsertOrUpdatetMapClassificationDataAsync(List<MapClassification> mapClassifications);
+
         Task<bool> InsertOrUpdateSalesDocumentDataAsync(List<SalesDocument> salesDocuments);
         Task<ScheduledRoutes> InsertOrUpdatetScheduledRouteDataAsync(ScheduledRoutes scheduledRoutes);
         Task<List<ScheduledRoutes>> InsertOrUpdatetDownloadedScheduledRoutesDataAsync(List<ScheduledRoutes> scheduledRoutes);

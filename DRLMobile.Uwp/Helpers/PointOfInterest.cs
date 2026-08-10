@@ -1,4 +1,4 @@
-﻿using DRLMobile.Core.Models;
+using DRLMobile.Core.Models;
 using DRLMobile.Core.Models.DataModels;
 using DRLMobile.Core.Models.UIModels;
 using DRLMobile.Uwp.Helpers.MapHelpers;
@@ -15,7 +15,7 @@ namespace DRLMobile.Uwp.Helpers
 
         public Point NormalizedAnchorPoint { get; set; }
 
-        public SolidColorBrush PinColor { get; set; }
+        public Brush PinColor { get; set; }
 
         private string _ImageSourceUri;
         public string ImageSourceUri

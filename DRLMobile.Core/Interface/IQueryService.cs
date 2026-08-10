@@ -1,7 +1,8 @@
-﻿using DRLMobile.Core.Enums;
+using DRLMobile.Core.Enums;
 using DRLMobile.Core.Models.DataModels;
 using DRLMobile.Core.Models.FedExAddressValidationModels;
 using DRLMobile.Core.Models.UIModels;
+using DRLMobile.Core.Services;
 
 using System;
 using System.Collections.Generic;
@@ -102,6 +103,12 @@ namespace DRLMobile.Core.Interface
         Task<string> GetUserCustomerDeviceId(string userCustomername);
         Task<Dictionary<int, string>> GetStateDict();
         Task<Dictionary<int, Classification>> GetClassificationDict();
+
+        /// <summary>
+        /// Map-only: reads the <c>MapClassification</c> table and returns only active rows,
+        /// sorted by <c>DisplayOrder</c>. Does not affect any other ViewModel or service.
+        /// </summary>
+        Task<List<MapClassificationViewModel>> GetActiveMapClassificationsAsync();
         Task<List<TravelUiModel>> GetTravelDataForUser(string year);
         Task<List<VripUiModel>> GetVripDataForUser(string year);
         Task<List<string>> GetTravelProgramYearFromVripTravelData();
