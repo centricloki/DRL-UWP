@@ -31,6 +31,11 @@ namespace DRLMobile.Core.Interface
         /// </summary>
         Task<List<MapClassification>> GetMapClassificationsAsync();
 
+        /// <summary>
+        /// Updates the HexColorCode for a specific classification in the MapClassification table.
+        /// </summary>
+        Task<bool> UpdateMapClassificationColorAsync(int accountClassificationId, string hexColorCode);
+
         Task<List<ProductMaster>> GetProductsListDataAsync();
         Task<List<ProductMaster>> GetSRCProductsAsync();
 

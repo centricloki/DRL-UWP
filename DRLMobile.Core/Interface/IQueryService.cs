@@ -13,6 +13,11 @@ namespace DRLMobile.Core.Interface
 {
     public interface IQueryService
     {
+        /// <summary>
+        /// Gets the database service instance.
+        /// </summary>
+        IDatabaseService DatabaseService { get; }
+
         Task<bool> AddLoggedInUserAsZeroCustomer(string userName, string pin);
         Task<List<CustomerPageUIModel>> GetChainLocationCustomers(int headQuarter);
         Task<List<CustomerPageUIModel>> GetHeadQuarterCustomers(int headQuarter);

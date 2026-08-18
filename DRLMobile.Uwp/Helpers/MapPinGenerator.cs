@@ -43,20 +43,20 @@ namespace DRLMobile.Uwp.Helpers
 
         // ── Canvas ────────────────────────────────────────────────────────────────
         // Exactly matches the existing 25 × 40 px assets.
-        private const float CanvasWidth  = 25f;
+        private const float CanvasWidth = 25f;
         private const float CanvasHeight = 40f;
 
         // ── Circle head ───────────────────────────────────────────────────────────
         // Centre at (12, 11), radius 10.5 → diameter 21 px, sitting 1 px from top.
         private const float CircleCX = 12f;
         private const float CircleCY = 11f;
-        private const float CircleR  = 10.5f;
+        private const float CircleR = 10.5f;
 
         // ── Stem ──────────────────────────────────────────────────────────────────
         // 3 px wide, x=11–13, rows 22–38 (1 px gap between circle bottom and stem).
-        private const float StemLeft   = 11f;
-        private const float StemWidth  = 3f;
-        private const float StemTop    = CircleCY + CircleR + 0.5f; // just below circle
+        private const float StemLeft = 11f;
+        private const float StemWidth = 3f;
+        private const float StemTop = CircleCY + CircleR + 0.5f; // just below circle
         private const float StemBottom = 38f;
 
         // Dark charcoal — identical to the stem/outline colour in the existing PNGs.
@@ -149,6 +149,28 @@ namespace DRLMobile.Uwp.Helpers
                         color: StemColor);
 
                     // ── 2. Circle head — supports smooth linear gradient blend or solid ──
+                    // LEGEND MATCHING: Using averaged color to match legend display
+                    if (isSplit)
+                    {
+                        // Calculate averaged color to match legend
+                        byte r = (byte)((fillA.R + fillB.R) / 2);
+                        byte g = (byte)((fillA.G + fillB.G) / 2);
+                        byte b = (byte)((fillA.B + fillB.B) / 2);
+                        Color averagedColor = Color.FromArgb(255, r, g, b);
+
+                        ds.FillCircle(CircleCX, CircleCY, CircleR, averagedColor);
+                    }
+                    else
+                    {
+                        ds.FillCircle(CircleCX, CircleCY, CircleR, fillA);
+                    }
+
+                    /*
+                    // ── ORIGINAL GRADIENT IMPLEMENTATION (commented for legend matching) ─────────────
+                    // This section is commented out to maintain consistency with legend
+                    // Uncomment this section and comment out the averaged color code above
+                    // to revert to gradient behavior
+
                     if (isSplit)
                     {
                         var stops = new[]
@@ -169,6 +191,8 @@ namespace DRLMobile.Uwp.Helpers
                     {
                         ds.FillCircle(CircleCX, CircleCY, CircleR, fillA);
                     }
+                    // ── END ORIGINAL IMPLEMENTATION ──────────────────────────────────
+                    */
 
                     // ── 3. Dark outline ring — matches the subtle border visible
                     //        on all existing pins (antialiasing gives the clean edge) ──
@@ -191,7 +215,7 @@ namespace DRLMobile.Uwp.Helpers
 
         private static async Task<StorageFile> TryGetFileAsync(StorageFolder folder, string name)
         {
-            try   { return await folder.GetFileAsync(name); }
+            try { return await folder.GetFileAsync(name); }
             catch (FileNotFoundException) { return null; }
         }
     }

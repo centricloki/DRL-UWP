@@ -331,7 +331,7 @@ namespace DRLMobile.Uwp.ViewModel
                 AppRef.SqlLiteResetVersion = ApplicationConstants.APPLICATION_VERSION;
                 //return true;
 
-                return ApplicationConstants.APPLICATION_VERSION == "1.9.87";
+                return ApplicationConstants.APPLICATION_VERSION == "1.1.4";
             }
             return false;
         }

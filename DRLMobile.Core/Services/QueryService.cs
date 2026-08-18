@@ -41,6 +41,11 @@ namespace DRLMobile.Core.Services
         }
 
         /// <summary>
+        /// Gets the database service instance.
+        /// </summary>
+        public IDatabaseService DatabaseService => DbService;
+
+        /// <summary>
         /// Get UI model for associated chain location customer page
         /// </summary>
         /// <returns>List of UI model for associated chain location customer page</returns>

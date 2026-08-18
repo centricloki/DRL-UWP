@@ -1,8 +1,10 @@
+using DRLMobile.Core.Interface;
 using DRLMobile.Core.Services;
 using DRLMobile.ExceptionHandler;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Windows.UI;
@@ -31,23 +33,23 @@ namespace DRLMobile.Uwp.Helpers
             new Dictionary<int, string>();
 
         /// <summary>
-        /// A curated list of light, pastel, high-contrast colors used to generate
+        /// A curated list of dark, bold, high-contrast colors used to generate
         /// two-tone gradient pins when no explicit color code is defined in the database.
         /// </summary>
-        private static readonly string[] _lightColors = new[]
+        private static readonly string[] _darkColors = new[]
         {
-            "FFB3B3", // Light Pink/Red
-            "B3D1FF", // Light Sky Blue
-            "B3FFB3", // Light Lime Green
-            "FFFFB3", // Light Pastel Yellow
-            "FFD1B3", // Light Apricot/Peach
-            "FFB3FF", // Light Orchid/Lavender
-            "B3FFFF", // Light Cyan/Turquoise
-            "D1B3FF", // Light Lilac/Violet
-            "E6E6E6", // Light Silver/Gray
-            "FFE0B3", // Pale Orange
-            "C2F0C2", // Pale Mint Green
-            "F0D8A8"  // Pale Sand/Khaki
+            "8B0000", // Dark Red
+            "00008B", // Dark Blue
+            "006400", // Dark Green
+            "8B4513", // Saddle Brown
+            "4B0082", // Indigo
+            "FF8C00", // Dark Orange
+            "2F4F4F", // Dark Slate Gray
+            "800000", // Maroon
+            "000000", // Black
+            "808000", // Olive
+            "008080", // Teal
+            "800080"  // Purple
         };
 
         /// <summary>
@@ -58,10 +60,18 @@ namespace DRLMobile.Uwp.Helpers
         /// loading classifications from the database.
         /// </summary>
         /// <param name="mapClassifications">The list of active classifications fetched from the MapClassification table.</param>
+        /// <param name="dbService">Database service to use for persisting generated colors</param>
         /// <returns>A Task representing the asynchronous operation.</returns>
-        public static async Task PrewarmAsync(IList<MapClassificationViewModel> mapClassifications)
+        public static async Task PrewarmAsync(IList<MapClassificationViewModel> mapClassifications, IDatabaseService dbService = null)
         {
             if (mapClassifications == null || mapClassifications.Count == 0) return;
+
+            // 1. Identify all colors ALREADY used in the database to avoid duplicates.
+            var usedColors = new HashSet<string>(
+                mapClassifications
+                    .Where(c => !string.IsNullOrWhiteSpace(c.HexColorCode))
+                    .Select(c => c.HexColorCode.TrimStart('#').ToUpper())
+            );
 
             var pinTasks = new List<Task>();
 
@@ -75,10 +85,38 @@ namespace DRLMobile.Uwp.Helpers
                 {
                     hex = item.HexColorCode.TrimStart('#');
                 }
-                // Priority 2: Fallback to the deterministic gradient calculation
+                // Priority 2: Fallback to the deterministic gradient calculation (with uniqueness check)
                 else
                 {
-                    hex = ComputeMixedDistinctHex(id);
+                    string gradientHex = GetUniqueGradientHex(id, usedColors);
+                    
+                    // For consistency between legend and pin, convert gradient to averaged color
+                    if (gradientHex.Contains(","))
+                    {
+                        var parts = gradientHex.Split(',');
+                        Color colorA = HexToColor(parts[0]);
+                        Color colorB = HexToColor(parts[1]);
+                        
+                        // Calculate averaged color to match pin generation
+                        byte r = (byte)((colorA.R + colorB.R) / 2);
+                        byte g = (byte)((colorA.G + colorB.G) / 2);
+                        byte b = (byte)((colorA.B + colorB.B) / 2);
+                        Color averagedColor = Color.FromArgb(255, r, g, b);
+                        
+                        hex = $"{averagedColor.R:X2}{averagedColor.G:X2}{averagedColor.B:X2}";
+                        
+                        // Also update the item's HexColorCode so it gets persisted to database if dbService is provided
+                        item.HexColorCode = hex;
+                        // Update the database with the generated color
+                        await dbService.UpdateMapClassificationColorAsync(item.AccountClassificationId, item.HexColorCode.TrimStart('#'));
+                    }
+                    else
+                    {
+                        hex = gradientHex;
+                    }
+                    
+                    // Add the newly generated color to the used set so the next ID doesn't pick it
+                    usedColors.Add(gradientHex.Replace(",", ",").ToUpper()); 
                 }
 
                 _colorCache[id] = hex;
@@ -92,10 +130,34 @@ namespace DRLMobile.Uwp.Helpers
             }
 
             await Task.WhenAll(pinTasks);
+            
+            //// Persist any generated colors to the database for consistency across app restarts
+            //if (dbService != null)
+            //{
+            //    foreach (var item in mapClassifications.Where(x=>x.string.IsNullOrWhiteSpace(item.MapPinImageName))
+            //    {
+            //        if (!string.IsNullOrEmpty(item.HexColorCode))
+            //        {
+            //            // Check if this classification exists in the database with the same color
+            //            // If not in database or color differs, update it
+            //            var allMapClassifications = await dbService.GetMapClassificationsAsync();
+            //            var existingMapClassification = allMapClassifications?
+            //                .FirstOrDefault(mc => mc.AccountClassificationId == item.AccountClassificationId);
+
+            //            if (existingMapClassification == null || 
+            //                !string.Equals(existingMapClassification.HexColorCode?.TrimStart('#'), 
+            //                             item.HexColorCode?.TrimStart('#'), StringComparison.OrdinalIgnoreCase))
+            //            {
+            //                // Update the database with the generated color
+            //                await dbService.UpdateMapClassificationColorAsync(item.AccountClassificationId, item.HexColorCode);
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         /// <summary>
-        /// Returns the cached 6-digit hex color string (or comma-separated hex colors)
+        /// Returns the cached 6-digit hex color string (or single averaged hex color)
         /// for a given classification ID. If the cache is empty, it returns a 
         /// calculated fallback value on the fly.
         /// </summary>
@@ -108,33 +170,39 @@ namespace DRLMobile.Uwp.Helpers
 
             // Fallback in case PrewarmAsync has not finished executing yet
             string fallback = ComputeMixedDistinctHex(classificationId);
+            
+            // If fallback is a gradient (comma-separated), convert to averaged color
+            if (fallback.Contains(","))
+            {
+                var parts = fallback.Split(',');
+                Color colorA = HexToColor(parts[0]);
+                Color colorB = HexToColor(parts[1]);
+                
+                // Calculate averaged color to match pin generation
+                byte r = (byte)((colorA.R + colorB.R) / 2);
+                byte g = (byte)((colorA.G + colorB.G) / 2);
+                byte b = (byte)((colorA.B + colorB.B) / 2);
+                Color averagedColor = Color.FromArgb(255, r, g, b);
+                
+                fallback = $"{averagedColor.R:X2}{averagedColor.G:X2}{averagedColor.B:X2}";
+            }
+            
             _colorCache[classificationId] = fallback;
             return fallback;
         }
 
         /// <summary>
         /// Resolves and returns a <see cref="Brush"/> for a classification ID.
-        /// Returns a <see cref="LinearGradientBrush"/> for gradient colors (comma-separated),
-        /// or a <see cref="SolidColorBrush"/> for single solid colors.
+        /// Returns a <see cref="SolidColorBrush"/> with the resolved color.
         /// </summary>
         /// <param name="classificationId">The classification ID.</param>
-        /// <returns>A SolidColorBrush or LinearGradientBrush.</returns>
+        /// <returns>A SolidColorBrush.</returns>
         public static Brush GetBrush(int classificationId)
         {
             string hex = GetColorHex(classificationId);
 
-            // Blended colors are stored as "HexA,HexB" in the cache
-            if (hex.Contains(","))
-            {
-                var parts = hex.Split(',');
-                var brush = new LinearGradientBrush();
-                brush.StartPoint = new Windows.Foundation.Point(0, 0);
-                brush.EndPoint = new Windows.Foundation.Point(1, 0);
-                brush.GradientStops.Add(new GradientStop { Color = HexToColor(parts[0]), Offset = 0.0 });
-                brush.GradientStops.Add(new GradientStop { Color = HexToColor(parts[1]), Offset = 1.0 });
-                return brush;
-            }
-
+            // At this point, hex should be a single color (averaged if originally gradient)
+            // since we convert gradients to averaged colors in GetColorHex
             return new SolidColorBrush(HexToColor(hex));
         }
 
@@ -183,14 +251,49 @@ namespace DRLMobile.Uwp.Helpers
 
         /// <summary>
         /// Deterministically computes a unique, visually distinct two-tone color combination 
-        /// for a given ID. It guarantees identical colors for the same ID across all users and devices.
+        /// for a given ID. It guarantees identical colors for the same ID across all users and devices,
+        /// while ensuring the generated combination does not clash with existing database colors.
         /// </summary>
+        private static string GetUniqueGradientHex(int classificationId, HashSet<string> usedColors)
+        {
+            int len = _darkColors.Length;
+            int offset = 0;
+
+            while (true)
+            {
+                // Calculate indices based on ID and an offset to "shift" the selection if there's a clash
+                int idxA = (classificationId + offset) % len;
+                int idxB = ((classificationId / len) + idxA + 1 + offset) % len;
+
+                // Ensure we don't pick the same color twice for the gradient
+                if (idxA == idxB) idxB = (idxB + 1) % len;
+
+                string colorA = _darkColors[idxA];
+                string colorB = _darkColors[idxB];
+                string candidate = $"{colorA},{colorB}";
+
+                // Check if this combination (or its individual parts) conflicts with existing DB colors
+                // We check if the exact gradient string exists, or if either solid color is already heavily used
+                if (!usedColors.Contains(candidate.ToUpper()))
+                {
+                    return candidate;
+                }
+
+                // If clash found, increment offset to try the next available pair
+                offset++;
+                
+                // Safety break to prevent infinite loops if we run out of combinations
+                if (offset > len * len) return candidate; 
+            }
+        }
+
         private static string ComputeMixedDistinctHex(int classificationId)
         {
-            int len = _lightColors.Length;
+            // Kept for backward compatibility or other callers, though PrewarmAsync now uses GetUniqueGradientHex
+            int len = _darkColors.Length;
             int idxA = classificationId % len;
             int idxB = ((classificationId / len) + idxA + 1) % len;
-            return _lightColors[idxA] + "," + _lightColors[idxB];
-        }
+            return _darkColors[idxA] + "," + _darkColors[idxB];
+        }        
     }
 }

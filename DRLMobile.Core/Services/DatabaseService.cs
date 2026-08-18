@@ -1970,6 +1970,49 @@ namespace DRLMobile.Core.Services
             return success != 0;
         }
 
+        public async Task<bool> UpdateMapClassificationColorAsync(int accountClassificationId, string hexColorCode)
+        {
+            int success = 0;
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH, false);
+            try
+            {
+                await db.CreateTableAsync<MapClassification>();
+                var existingRecord = await db.Table<MapClassification>()
+                    .Where(m => m.AccountClassificationId == accountClassificationId)
+                    .FirstOrDefaultAsync();
+
+                if (existingRecord != null)
+                {
+                    existingRecord.HexColorCode = hexColorCode;
+                    success = await db.UpdateAsync(existingRecord);
+                }
+                else
+                {
+                    // If the record doesn't exist, create a new one
+                    var newRecord = new MapClassification
+                    {
+                        AccountClassificationId = accountClassificationId,
+                        HexColorCode = hexColorCode,
+                        IsActive = 1, // Default to active when created via update method
+                        DisplayOrder = -1, // Default to system unordered when created via update method
+                        UpdatedDate = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
+                    };
+                    success = await db.InsertAsync(newRecord);
+                }
+            }
+            catch (Exception ex)
+            {
+                success = 0;
+                ErrorLogger.WriteToErrorLog(nameof(DatabaseService), nameof(UpdateMapClassificationColorAsync), ex);
+            }
+            finally
+            {
+                await db.CloseAsync(); db = null;
+            }
+
+            return success != 0;
+        }
+
         //public async Task<bool> InsertOrUpdatetConfigurationDataAsync(List<Configuration> configurations)
         //{
         //    int success = 0;
