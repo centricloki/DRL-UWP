@@ -1,4 +1,4 @@
-using DevExpress.Mvvm.Native;
+﻿using DevExpress.Mvvm.Native;
 
 using DRLMobile.Core.Enums;
 using DRLMobile.Core.Models.UIModels;
@@ -406,7 +406,7 @@ namespace DRLMobile.Uwp.View
                 OptionsAllCheckBox.Unchecked -= OptionsAllCheckBox_Unchecked;
 
                 await myMap.ClearAllAsync();
-                
+
                 if (ViewModel.PointOfIntrestSource != null && ViewModel.PointOfIntrestSource.Count > 0)
                 {
                     // ---- parallelism limiter ----
@@ -573,7 +573,7 @@ namespace DRLMobile.Uwp.View
             }
         }
 
-        private void myMap_MapElementClick_1(object sender, OnTerra.MapsControl.UWP.MapElementClickEventArgs args)
+        private void myMap_MapElementClick(object sender, OnTerra.MapsControl.UWP.MapElementClickEventArgs args)
         {
             try
             {
@@ -593,7 +593,7 @@ namespace DRLMobile.Uwp.View
             }
             catch (Exception ex)
             {
-                ErrorLogger.WriteToErrorLog(nameof(MapPage), "myMap_MapElementClick_1", ex.Message);
+                ErrorLogger.WriteToErrorLog(nameof(MapPage), "myMap_MapElementClick", ex.Message);
             }
         }
 

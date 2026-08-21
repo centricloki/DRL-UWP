@@ -129,7 +129,7 @@ namespace DRLMobile.Core.Helpers
                     isexported = customerItem.IsExported,
                     OrderDeliveryWeekDays = customerItem.OrderDeliveryWeekDays,
                     isdeleted = customerItem.isDeleted,
-                    LastCallActivityDate=customerItem.LastCallActivityDate
+                    LastCallActivityDate = customerItem.LastCallActivityDate
                 };
                 customer.mailingaddresszipcode = ZipCodeConversion(customerItem.MailingAddressZipID);
                 customer.physicaladdresszipcode = ZipCodeConversion(customerItem.PhysicalAddressZipCode);

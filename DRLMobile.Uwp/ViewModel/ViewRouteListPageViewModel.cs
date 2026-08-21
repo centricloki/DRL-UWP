@@ -838,7 +838,7 @@ namespace DRLMobile.Uwp.ViewModel
                 var bestMatch = result.Locations[0];
                 if ((!isZipCode && !bestMatch.Input.Contains(bestMatch.Town))) return null;
                 var validState = await IsValidUsStateAsync(bestMatch.Region);
-                if(!validState) return null;
+                if (!validState) return null;
                 return new OnTerra.MapsControl.UWP.Geopoint(new OnTerra.MapsControl.UWP.BasicGeoposition
                 {
                     Latitude = bestMatch.Latitude,

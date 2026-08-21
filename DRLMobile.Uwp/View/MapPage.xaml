@@ -1320,24 +1320,8 @@
         <!--#endregion-->
 
         <!--#region Map Section-->
-        <!--  ZoomLevelChanged="myMap_ZoomLevelChanged"  -->
-        <!--<map:MapControl
-            x:Name="myMap"
-            Grid.Row="2"
-            BusinessLandmarksVisible="False"
-            ZoomLevel="14"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            CacheMode="BitmapCache"
-            LandmarksVisible="True"
-            MapElementClick="myMap_MapElementClick"
-            MapServiceToken="{StaticResource OnTerraMapServiceKey}"
-            TransitFeaturesVisible="False"
-            Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InvertBoolToVisibilityConverter}}"
-            />-->
         <maps:MapControl x:Name="myMap" 
-        Grid.Row="2"
-        MapElementClick="myMap_MapElementClick_1"
+        Grid.Row="2" MapElementClick="myMap_MapElementClick"        
         MapServiceToken="{StaticResource OnTerraMapServiceKey}"/>
         <Grid
             x:Name="CustomPinVisibiltyGrid"

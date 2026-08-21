@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 
 using DRLMobile.Core.AutoMapperProfiler;
 using DRLMobile.Core.Enums;
@@ -41,6 +41,11 @@ namespace DRLMobile.Core.Services
             DbService = new DatabaseService();
             this._profileMatcher = ProfileMatcher.GetInstance;
         }
+
+        /// <summary>
+        /// Gets the database service instance.
+        /// </summary>
+        public IDatabaseService DatabaseService => DbService;
 
         /// <summary>
         /// Get UI model for associated chain location customer page
@@ -1813,6 +1818,11 @@ namespace DRLMobile.Core.Services
                         await DbService.InsertOrUpdatetClassificationDataAsync(downloadedData.accountclassification).ConfigureAwait(false);
                     }
 
+                    if (downloadedData.mapclassificationdata != null && downloadedData.mapclassificationdata.Any())
+                    {
+                        await DbService.InsertOrUpdatetMapClassificationDataAsync(downloadedData.mapclassificationdata).ConfigureAwait(false);
+                    }
+
                     if (downloadedData.customerdata != null && downloadedData.customerdata.Any())
                     {
                         await DbService.BulkInsertOrUpdateCustomerMasterDataAsync(downloadedData.customerdata).ConfigureAwait(false);
@@ -3174,6 +3184,16 @@ namespace DRLMobile.Core.Services
             return classification;
         }
 
+        /// <summary>
+        /// Map-only: reads the <c>MapClassification</c> SQLite table via
+        /// <see cref="MapClassificationService"/> and returns only active rows sorted
+        /// by <c>DisplayOrder</c>.  Does not affect any other ViewModel or service.
+        /// </summary>
+        public async Task<List<MapClassificationViewModel>> GetActiveMapClassificationsAsync()
+        {
+            return await MapClassificationService.GetActiveMapClassificationsAsync(DbService);
+        }
+
         public async Task<List<TravelUiModel>> GetTravelDataForUser(string year)
         {
             List<TravelUiModel> travelUiList;
@@ -3644,7 +3664,8 @@ namespace DRLMobile.Core.Services
         {
             try
             {
-                var result = await DbService.GetUserFromUserNameAndPin(userName, pin).ConfigureAwait(false);
+                var result = await DbService.GetUserFromUserName(userName);
+                //var result = await DbService.GetUserFromUserNameAndPin(userName, pin).ConfigureAwait(false);
                 return result;
             }
             catch (Exception ex)
@@ -4009,9 +4030,7 @@ namespace DRLMobile.Core.Services
                 return null;
             }
         }
-
         public async Task<List<StateMaster>> GetStateMasterDataAsync(string stateName) => await DbService.GetStateMasterDataAsync(stateName).ConfigureAwait(false);
-
 
         public async Task<List<ActivityForAllCustomerUIModel>> GetCallActivitiesOfAllCustomersForNationalAndZoneAndRegionManagers(string territoryIds, bool loadAllData)
         {
@@ -5478,5 +5497,7 @@ namespace DRLMobile.Core.Services
             }
             return loggedInUserOldTerritories;
         }
+
+        public async Task<CustomerMaster> GetCustomerMasterByDeviceIdAsync(string deviceId) => await DbService.GetCustomerMasterByDeviceIdAsync(deviceId);
     }
 }

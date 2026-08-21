@@ -1344,7 +1344,6 @@
     </Style>
 
 
-    <x:String x:Key="MapServiceKey">KNludmfgoIpLxmlyYt8A~afBZUQi2LAjNoaXb2AhbCg~Agt1veuO01KVf_KFBD9YHx5Z891-dNPO3oVhaih-SrDdqQli1-ivbCdiUhlCUg4C</x:String>
     <x:String x:Key="OnTerraMapServiceKey">a8aa1734b16e4cecbe1b1d865e6009e4</x:String>
     <Style x:Key="RouteCustomerCheckBoxUnchecked" TargetType="Grid">
         <Setter Property="Background" Value="White" />

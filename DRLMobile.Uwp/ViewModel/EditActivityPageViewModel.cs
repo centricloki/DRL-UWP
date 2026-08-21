@@ -841,6 +841,42 @@ namespace DRLMobile.Uwp.ViewModel
                     currentActivity.NextWeekPlan = null;
                 }
 
+                var previousStateOfActivity = await AppReference.QueryService.GetIndidualActivityById(currentActivity?.CallActivityDeviceID);
+
+                /*** JIRA Ticket https://republicbrands.atlassian.net/browse/HS2-383
+                * Update Last call date on Customer List
+                * Chain Stores:Retail Sales Call,Distributor Sales Call,Chain Sales Call
+                */
+                if (previousStateOfActivity != null)
+                {
+                    var customerMaster = await AppReference.QueryService.GetCustomerMasterByDeviceIdAsync(previousStateOfActivity.CustomerID);
+                    string lastCallActivityDate = null;
+                    List<string> calldateActivityTypes = new List<string> { "Distributor Sales Call", "Retail Sales Call", "Chain Sales Call" };
+                    if (calldateActivityTypes.Contains(previousStateOfActivity.ActivityType))
+                    {
+                        if (!string.IsNullOrWhiteSpace(customerMaster.CustomerNumber) && customerMaster.CustomerNumber.ToLower().StartsWith("x"))
+                        {
+                            calldateActivityTypes.Add("Car Stock Order");
+                        }
+                        if (customerMaster.AccountType != 1)
+                        {
+                            calldateActivityTypes.Add("Cash Sale");
+                            calldateActivityTypes.Add("Cash Sales Initiative");
+                        }
+                        var customerActivities = await AppReference.QueryService.GetCallActivitiesOfSelectedCustomerForLoggedInUser(previousStateOfActivity.CustomerID);
+                        lastCallActivityDate = customerActivities
+                            .Where(x => calldateActivityTypes.Contains(x.ActivityType)
+                            && x.CustomerID == previousStateOfActivity.CustomerID
+                            && x.CallActivityID != previousStateOfActivity.CallActivityID)
+                            .OrderByDescending(x => x._callActivityDate)
+                            .Take(1)
+                            .Select(x => x.CallDate)
+                            .FirstOrDefault();
+                        await AppReference.QueryService.UpdateDateFromActivityCustomerMaster(customerMaster.DeviceCustomerID
+                       , previousStateOfActivity.ActivityType
+                       , lastCallActivityDate);
+                    }
+                }
 
                 var editedActivity = await AppReference.QueryService.AddCallActivityToDb(currentActivity);
 
@@ -982,7 +1018,7 @@ namespace DRLMobile.Uwp.ViewModel
                     UIModel.CallDate = callDate;
                     UIModel.SelectedActivityType = activityByAllCustomerModel?.ActivityType;
                     UIModel.Hours = currentActivity?.Hours;
-                    UIModel.Notes = currentActivity?.Comments;                    
+                    UIModel.Notes = currentActivity?.Comments;
                     //UIModel.Team = territories?.FirstOrDefault()?.TerritoryName;
                     UIModel.Team = currentActivity.TerritoryName;
                     UIModel.AccountNo = activityByAllCustomerModel?.CustomerNumber;
@@ -1160,7 +1196,7 @@ namespace DRLMobile.Uwp.ViewModel
                     }
 
                     territories = new List<TerritoryMaster>();
-                    if(user!= null)
+                    if (user != null)
                     {
                         territories = await AppReference.QueryService.GetTerritoryFromIds(user.TerritoryID);
                         UIModel.CreatedBy = user?.FirstName + " " + user.LastName;
@@ -1172,7 +1208,7 @@ namespace DRLMobile.Uwp.ViewModel
                     UIModel.CallDate = callDate;
                     UIModel.SelectedActivityType = activityByIndividualCustomerModel?.ActivityType;
                     UIModel.Hours = currentActivity?.Hours;
-                    UIModel.Notes = currentActivity?.Comments;                   
+                    UIModel.Notes = currentActivity?.Comments;
                     UIModel.Team = currentActivity.TerritoryName;
                     UIModel.AccountNo = activityByIndividualCustomerModel?.CustomerNumber;
                     UIModel.AccountName = activityByIndividualCustomerModel?.CustomerName;

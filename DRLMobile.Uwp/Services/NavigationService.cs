@@ -128,14 +128,14 @@ namespace DRLMobile.Uwp.Services
             if ((Window.Current.Content as Frame).Content is ShellPage)
             {
                 await Window.Current.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                   {
-                       var shell = (Window.Current.Content as Frame).Content as ShellPage;
-                       var frame = shell.FindName("MainFrame");
-                       if (frame is Frame)
-                       {
-                           shell.ViewModel.IsLoading = isLoading;
-                       }
-                   });
+                {
+                    var shell = (Window.Current.Content as Frame).Content as ShellPage;
+                    var frame = shell.FindName("MainFrame");
+                    if (frame is Frame)
+                    {
+                        shell.ViewModel.IsLoading = isLoading;
+                    }
+                });
             }
         }
 

@@ -719,7 +719,7 @@
             StrokeThickness="1"  />
             </Grid>
             <!--  gridProducts.Grid.Row=1  Detail with No Sale Category Product List  -->
-          <customControls:CustomAlternateRowColorListView
+            <customControls:CustomAlternateRowColorListView
         x:Name="listNoSaleWithCustomerProducts"
           Grid.Row="1"
            ContainerContentChanging="OnContainerContentChanging"
@@ -949,7 +949,7 @@
             StrokeThickness="1" />
             </Grid>
             <!--  gridProducts.Grid.Row=1  Detail with Sale Category Product List  -->
-          <customControls:CustomAlternateRowColorListView
+            <customControls:CustomAlternateRowColorListView
         x:Name="listSaleProducts"
           Grid.Row="1"
           ContainerContentChanging="OnContainerContentChanging"

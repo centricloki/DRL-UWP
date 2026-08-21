@@ -1,6 +1,7 @@
 using DRLMobile.Core.Interface;
 using DRLMobile.Core.Models.DataModels;
 using DRLMobile.Core.Models.UIModels;
+using DRLMobile.Core.Services;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,7 +15,17 @@ namespace DRLMobile.Uwp.Helpers
 {
     public class MapsStaticDataSourceHelper : IMapsStaticDataSourceHelper
     {
-        public static List<Classification> ClassificationsList { get; set; } = new List<Classification>();
+        /// <summary>
+        /// Gets or sets the list of active classifications loaded dynamically from the SQLite 
+        /// <c>MapClassification</c> table. This datasource drives all trade type legend items, 
+        /// colors, display orders, and pin configurations.
+        /// </summary>
+        public static List<MapClassificationViewModel> MapClassificationList { get; set; }
+
+
+        // ──────────────────────────────────────────────────────────────────────────
+        // Plot-by filter source (static — not classification-driven)
+        // ──────────────────────────────────────────────────────────────────────────
 
         public ObservableCollection<PlotByTypeFilterUIModel> GetPlotByTypeFiltersDataSource()
         {
@@ -27,6 +38,11 @@ namespace DRLMobile.Uwp.Helpers
             return _plotByFilter;
         }
 
+        // ──────────────────────────────────────────────────────────────────────────
+        // Call-date legends  (fixed: Green / Yellow-ish / Orange / Red / Black)
+        // These represent time buckets, not classification types — unchanged.
+        // ──────────────────────────────────────────────────────────────────────────
+
         public ObservableCollection<MapsLegendFilterUIModel> MapLegendsFiltersDataSourceForCallDate()
         {
             ObservableCollection<MapsLegendFilterUIModel> _callDateFilter = new ObservableCollection<MapsLegendFilterUIModel>();
@@ -38,6 +54,10 @@ namespace DRLMobile.Uwp.Helpers
             return _callDateFilter;
         }
 
+        // ──────────────────────────────────────────────────────────────────────────
+        // Cash-sales legends (fixed: 4 amount tiers — unchanged)
+        // ──────────────────────────────────────────────────────────────────────────
+
         public ObservableCollection<MapsLegendFilterUIModel> MapLegendsFiltersDataSourceForCashSales()
         {
             ObservableCollection<MapsLegendFilterUIModel> _cashSalesFilter = new ObservableCollection<MapsLegendFilterUIModel>();
@@ -48,6 +68,10 @@ namespace DRLMobile.Uwp.Helpers
             return _cashSalesFilter;
         }
 
+        // ──────────────────────────────────────────────────────────────────────────
+        // Item-no legends (fixed: Sold / Not Sold — unchanged)
+        // ──────────────────────────────────────────────────────────────────────────
+
         public ObservableCollection<MapsLegendFilterUIModel> MapLegendsFiltersDataSourceForItemNo()
         {
             ObservableCollection<MapsLegendFilterUIModel> _itemNoFilter = new ObservableCollection<MapsLegendFilterUIModel>();
@@ -56,10 +80,13 @@ namespace DRLMobile.Uwp.Helpers
             return _itemNoFilter;
         }
 
+        // ──────────────────────────────────────────────────────────────────────────
+        // Rank legends (fixed: A / B / C / Other — unchanged)
+        // ──────────────────────────────────────────────────────────────────────────
+
         public ObservableCollection<MapsLegendFilterUIModel> MapLegendsFiltersDataSourceForRank()
         {
             ObservableCollection<MapsLegendFilterUIModel> _rankTypeFilter = new ObservableCollection<MapsLegendFilterUIModel>();
-
             _rankTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Rank A", IsSelected = true, BackgroundColor = new SolidColorBrush(Colors.Green), Rank = "A", MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-Green.png" });
             _rankTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Rank B", IsSelected = true, BackgroundColor = new SolidColorBrush(Colors.Blue), Rank = "B", MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-Blue.png" });
             _rankTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Rank C", IsSelected = true, BackgroundColor = new SolidColorBrush(Colors.Brown), Rank = "C", MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-Brown.png" });
@@ -67,49 +94,105 @@ namespace DRLMobile.Uwp.Helpers
             return _rankTypeFilter;
         }
 
+        /// <summary>
+        /// Gets the Trade Type map legend datasource.
+        /// 
+        /// This is fully database-driven: it reads from <see cref="MapClassificationList"/> 
+        /// (populated from the SQLite table). If the list is not yet loaded, it returns 
+        /// an empty collection until the database query completes.
+        /// </summary>
+        /// <returns>A collection of legend items formatted for the map UI.</returns>
         public ObservableCollection<MapsLegendFilterUIModel> MapLegendsFiltersDataSourceForTradeType()
         {
-            ObservableCollection<MapsLegendFilterUIModel> _tradeTypeFilter = new ObservableCollection<MapsLegendFilterUIModel>();
-
-            List<int> customerTypeDirect = new List<int>();
-
-            if (ClassificationsList != null && ClassificationsList.Count > 0)
+            if (MapClassificationList == null || MapClassificationList.Count == 0)
             {
-                customerTypeDirect = ClassificationsList.Where(x => x.CustomerType == 1).Select(a => a.AccountClassificationId).ToList();
+                return new ObservableCollection<MapsLegendFilterUIModel>();
+            }
 
-                customerTypeDirect.Add(20);
-            }
-            else
+            return BuildDbDrivenTradeTypeFilter();
+        }
+
+        // ──────────────────────────────────────────────────────────────────────────
+        // Private: DB-driven legend builder (Map view only).
+        // Uses MapClassificationList populated from the MapClassification SQLite table.
+        // Order  → DisplayOrder (ascending; −1 is excluded at the service layer).
+        // Colour → ClassificationColorService.GetBrush (which resolves HexColorCode
+        //          from the database, falling back to dynamic gradient if null).
+        // ──────────────────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Builds the map legend UI models dynamically from the database configuration.
+        /// Classifications with CustomerType == 1 are grouped into a single "Wholesale" legend item.
+        /// </summary>
+        private ObservableCollection<MapsLegendFilterUIModel> BuildDbDrivenTradeTypeFilter()
+        {
+            var result = new ObservableCollection<MapsLegendFilterUIModel>();
+
+            // Wholesale group: all CustomerType == 1 entries are merged into one legend row.
+            List<int> wholesaleIds = null;
+            var wholesaleItems = MapClassificationList
+                .Where(x => x.CustomerType == 1)
+                .ToList();
+            int wholesaleDisplayOrder = -1;
+            if (wholesaleItems != null && wholesaleItems.Count > 0)
             {
-                customerTypeDirect = new List<int> { 1, 2, 8, 20 };
+                wholesaleDisplayOrder = wholesaleItems.First().DisplayOrder;
+                wholesaleIds = wholesaleItems
+                   .Select(x => x.AccountClassificationId)
+                   .ToList();
+                if (wholesaleIds != null && wholesaleIds.Count > 0)
+                {
+                    foreach (var item in MapClassificationList.Where(x => x.CustomerType != 1 &&
+                    x.DisplayOrder == wholesaleDisplayOrder))
+                    {
+                        wholesaleIds.Add(item.AccountClassificationId);
+                    }
+                }
             }
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Manufacturer", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R218_G112_B214"], AccountClassificationIds = new List<int>() { 48 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-BrightOrchid.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Cultivator", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R255_G215_B0"], AccountClassificationIds = new List<int>() { 49 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-DeepGold.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "MSAi  List A", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R255_G126_B121"], AccountClassificationIds = new List<int>() { 47 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-1.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "DM Location", IsSelected = true, BackgroundColor = new SolidColorBrush(Microsoft.Toolkit.Uwp.Helpers.ColorHelper.ToColor("#aaff00")), AccountClassificationIds = new List<int>() { 46 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-LimeGreen.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Wholesale", IsSelected = true, BackgroundColor = new SolidColorBrush(Colors.Green), AccountClassificationIds = customerTypeDirect, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-Green.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "C-Store Chain HQ", IsSelected = true, BackgroundColor = new SolidColorBrush(Colors.Orange), AccountClassificationIds = new List<int>() { 22 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-Yellow.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "C-Store Chain Location", IsSelected = true, BackgroundColor = new SolidColorBrush(Colors.Purple), AccountClassificationIds = new List<int>() { 23 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-Voilet.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "C-Store Independent", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R204_G102_B0"], AccountClassificationIds = new List<int>() { 24 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-LightBrown.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Tobacco Outlet – Chain HQ", IsSelected = true, BackgroundColor = new SolidColorBrush(Colors.Blue), AccountClassificationIds = new List<int>() { 25 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-Blue.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Tobacco Outlet – Chain Location", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R255_G64_B255"], AccountClassificationIds = new List<int>() { 26 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-5.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Tobacco Outlet - Independent", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R146_G22_B37"], AccountClassificationIds = new List<int>() { 27 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-6.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Smoke Shop", IsSelected = true, BackgroundColor = new SolidColorBrush(Colors.Red), AccountClassificationIds = new List<int>() { 28 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-Red.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Dispensary Store", IsSelected = true, BackgroundColor = new SolidColorBrush(Colors.Yellow), AccountClassificationIds = new List<int>() { 29 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-Florecent.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "S-D-M Chain HQ", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R0_G253_B255"], AccountClassificationIds = new List<int>() { 30 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-Cyan.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "S-D-M Chain Location", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R255_G126_B121"], AccountClassificationIds = new List<int>() { 31 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-1.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "S-D-M – Independent", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R255_G102_B178"], AccountClassificationIds = new List<int>() { 32 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-Pink.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Liquor Store – Chain HQ", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R146_G146_B146"], AccountClassificationIds = new List<int>() { 33 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-Gray.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Liquor Store – Chain Location", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R130_G125_B21"], AccountClassificationIds = new List<int>() { 34 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-2.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Liquor Store – Independent", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R122_G129_B255"], AccountClassificationIds = new List<int>() { 35 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-4.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Sub Jobber Wholesale", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R6_G177_B177"], AccountClassificationIds = new List<int>() { 36 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-3.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Tribal Accounts ", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R255_G212_B121"], AccountClassificationIds = new List<int>() { 37 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-LightYellow.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Out of business ", IsSelected = true, BackgroundColor = new SolidColorBrush(Colors.Black), AccountClassificationIds = new List<int>() { 38 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-Black.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Smoke Shop - Chain HQ ", IsSelected = true, BackgroundColor = new SolidColorBrush(Colors.Brown), AccountClassificationIds = new List<int>() { 44 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-Brown.png" });
-            _tradeTypeFilter.Add(new MapsLegendFilterUIModel() { Title = "Smoke Shop - Chain Location ", IsSelected = true, BackgroundColor = (SolidColorBrush)Application.Current.Resources["R255_G212_B121"], AccountClassificationIds = new List<int>() { 45 }, MapIconImagePath = "ms-appx:///Assets/Maps/MapPin-LightYellow.png" });
             
+            bool wholesaleAdded = false;
 
-            return _tradeTypeFilter;
+            // Iterate in display order; Wholesale is inserted at the position of the first
+            // Wholesale member encountered in the sorted list.
+            foreach (var item in MapClassificationList)
+            {
+                if (item.CustomerType == 1)
+                {
+                    if (!wholesaleAdded)
+                    {
+                        // Represent the entire Wholesale group with a single entry.
+                        int repId = item.AccountClassificationId;
+                        result.Add(new MapsLegendFilterUIModel
+                        {
+                            Title = "Wholesale",
+                            IsSelected = true,
+                            BackgroundColor = (SolidColorBrush)ClassificationColorService.GetBrush(repId),
+                            AccountClassificationIds = wholesaleIds,
+                            MapIconImagePath = ClassificationColorService.GetMapPinPath(
+                                                           repId, item.MapPinImageName)
+                        });
+                        wholesaleAdded = true;
+                    }
+                    // Skip subsequent wholesale members — they're already in the group.
+                    continue;
+                }
+                if (item.DisplayOrder != wholesaleDisplayOrder)
+                {
+                    // Individual (non-Wholesale) entry.
+                    result.Add(new MapsLegendFilterUIModel
+                    {
+                        Title = item.Name,
+                        IsSelected = true,
+                        BackgroundColor = (SolidColorBrush)ClassificationColorService.GetBrush(item.AccountClassificationId),
+                        AccountClassificationIds = new List<int> { item.AccountClassificationId },
+                        MapIconImagePath = ClassificationColorService.GetMapPinPath(
+                                                      item.AccountClassificationId, item.MapPinImageName)
+                    });
+                }
+            }
+
+            return result;
         }
     }
 }
+

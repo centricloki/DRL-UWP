@@ -145,12 +145,14 @@ namespace DRLMobile.Uwp.ViewModel
                     BackgroundDownloadService = new BackgroundDownloadService();
 
                     await AuthenticUser(((App)Application.Current).LoginUserNameProperty, ((App)Application.Current).LoginUserPinProperty);
+                    if (!IsLoginSuccessful)
+                        throw new Exception("Incorrect Username Or PIN");
 
                     var filePath = await BackgroundDownloadService.DownloadFile(LoginUserDetails.dbfilename.Trim(), HelperMethods.GetNameFromURL(LoginUserDetails.dbfilename.Trim()));
 
                     dbFilePath = filePath;
 
-                    var isFileExist = File.Exists(filePath);
+                        var isFileExist = File.Exists(filePath);
 
                     var isDataExistInFile = new FileInfo(filePath).Length != 0;
 
@@ -158,52 +160,51 @@ namespace DRLMobile.Uwp.ViewModel
                     {
                         var zipFile = await StorageFile.GetFileFromPathAsync(filePath);
 
-                        try
-                        {
-                            var tempFolder = Path.Combine(ApplicationData.Current.LocalFolder.Path, "tempFolder");
+                            try
+                            {
+                                var tempFolder = Path.Combine(ApplicationData.Current.LocalFolder.Path, "tempFolder");
 
-                            ZipFile.ExtractToDirectory(filePath, tempFolder, true);
+                                ZipFile.ExtractToDirectory(filePath, tempFolder, true);
 
-                            var _iStorageFolder = await StorageFolder.GetFolderFromPathAsync(tempFolder);
+                                var _iStorageFolder = await StorageFolder.GetFolderFromPathAsync(tempFolder);
 
-                            var _iStorageFile = await _iStorageFolder?.GetFileAsync(ApplicationConstants.DATABASE_NAME);
+                                var _iStorageFile = await _iStorageFolder?.GetFileAsync(ApplicationConstants.DATABASE_NAME);
 
-                            //await Task.Delay(50);
+                                //await Task.Delay(50);
 
-                            await _iStorageFile?.CopyAsync(ApplicationData.Current.LocalFolder, ApplicationConstants.DATABASE_NAME, NameCollisionOption.ReplaceExisting);
+                                await _iStorageFile?.CopyAsync(ApplicationData.Current.LocalFolder, ApplicationConstants.DATABASE_NAME, NameCollisionOption.ReplaceExisting);
 
-                            IsDbFileDownloadSuccessful = true;
+                                IsDbFileDownloadSuccessful = true;
 
-                            //await Task.Delay(50);
+                                //await Task.Delay(50);
 
-                            await _iStorageFolder?.DeleteAsync();
+                                await _iStorageFolder?.DeleteAsync();
 
-                            await zipFile.DeleteAsync();
+                                await zipFile.DeleteAsync();
+                            }
+                            catch (Exception ex)
+                            {
+                                IsDbFileDownloadSuccessful = false;
+                                IsInProgress = false;
+                                ErrorLogger.WriteToErrorLog(nameof(LoginPageViewModel), "OnNavigatedToCommandHandler", ex.StackTrace + " - " + ex.Message);
+
+                                await zipFile.DeleteAsync();
+
+                                File.Delete(filePath);
+
+                                await ResetUserFail();
+                            }
                         }
-                        catch (Exception ex)
+                        else
                         {
+                            if (File.Exists(filePath))
+                            {
+                                File.Delete(filePath);
+                            }
+
                             IsDbFileDownloadSuccessful = false;
                             IsInProgress = false;
-                            ErrorLogger.WriteToErrorLog(nameof(LoginPageViewModel), "OnNavigatedToCommandHandler", ex.StackTrace + " - " + ex.Message);
-
-                            await zipFile.DeleteAsync();
-
-                            File.Delete(filePath);
-
-                            await ResetUserFail();
                         }
-                    }
-                    else
-                    {
-                        if (File.Exists(filePath))
-                        {
-                            File.Delete(filePath);
-                        }
-
-                        IsDbFileDownloadSuccessful = false;
-                        IsInProgress = false;
-                    }
-
                     if (IsDbFileDownloadSuccessful)
                     {
                         await AppReference.QueryService.UpdateUserMaster(((App)Application.Current).LoginUserPinProperty, ((App)Application.Current).LoginUserNameProperty);
@@ -233,12 +234,18 @@ namespace DRLMobile.Uwp.ViewModel
                             {
                                 await AppReference.QueryService.DownloadDataOnPartialSync(deserialized, ((App)Application.Current).LoginUserIdProperty);
 
-                                ((App)Application.Current).LastSyncDateTimeProperty = deserialized.lastsyncutcdate;
+                                AppReference.LastSyncDateTimeProperty = deserialized.lastsyncutcdate;
+
+                                var userModel = await AppReference.QueryService.GetUserData(AppReference.LoginUserNameProperty, AppReference.LoginUserPinProperty);
+                                if (userModel != null)
+                                    AppReference.LoginUserPinProperty = userModel.PIN.ToString();
+
+
+                                UserName = AppReference.LoginUserNameProperty;
+                                Pin = AppReference.LoginUserPinProperty;
 
                                 if (!string.IsNullOrWhiteSpace(LoginUserDetails.lastsyncutcdate))
                                 {
-                                    UserName = ((App)Application.Current).LoginUserNameProperty;
-                                    Pin = ((App)Application.Current).LoginUserPinProperty;
                                     //On Reset Honey App Get Product additional document based on last successful date 
                                     string userLastSyncDateTime = await AppReference.QueryService.GetConfigurationValueAsync(Constants.Constants.LastSuccessfulSyncDateTime);
                                     if (string.IsNullOrWhiteSpace(userLastSyncDateTime))
@@ -259,9 +266,6 @@ namespace DRLMobile.Uwp.ViewModel
                                 }
                             }
                         }
-
-                        //await Task.Delay(100);
-
                         await InsertLoggedInUserAsZeroCustomer(((App)Application.Current).LoginUserNameProperty, ((App)Application.Current).LoginUserPinProperty);
 
                         ((App)Application.Current).IsUserAlreadyLogin = true;
@@ -275,8 +279,6 @@ namespace DRLMobile.Uwp.ViewModel
                         ((App)Application.Current).PreviousSelectedCustomerId = string.Empty;
                         ((App)Application.Current).CurrentDeviceOrderId = string.Empty;
                         ((App)Application.Current).AreaUserSelectedId = 0;
-
-                        await Task.Delay(50);
 
                         ProgressText = "";
 
@@ -792,6 +794,7 @@ namespace DRLMobile.Uwp.ViewModel
             {
                 IsLoginSuccessful = true;
                 AppReference.LoggedInUserRoleId = LoginUserDetails.roleid;
+                AppReference.LoginUserPinProperty = u_pin;
             }
             else
             {

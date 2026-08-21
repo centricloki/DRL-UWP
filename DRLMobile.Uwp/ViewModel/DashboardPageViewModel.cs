@@ -331,7 +331,7 @@ namespace DRLMobile.Uwp.ViewModel
                 AppRef.SqlLiteResetVersion = ApplicationConstants.APPLICATION_VERSION;
                 //return true;
 
-                return ApplicationConstants.APPLICATION_VERSION == "1.9.80";
+                return ApplicationConstants.APPLICATION_VERSION == "1.1.4";
             }
             return false;
         }
@@ -460,6 +460,10 @@ namespace DRLMobile.Uwp.ViewModel
                     var frame = Window.Current.Content as Frame;
                     (frame.Content as ShellPage).ViewModel.LastSyncDateTime = DateTimeHelper.ConvertStringToSyncDateTimeFormat(DataSyncHelper.LatestSyncDateTime);
                     AppRef.LastSyncDateTimeProperty = DataSyncHelper.LatestSyncDateTime;
+
+                    var userModel = await AppRef.QueryService.GetUserData(AppRef.LoginUserNameProperty, AppRef.LoginUserPinProperty);
+                    if (userModel != null)
+                        AppRef.LoginUserPinProperty = userModel.PIN.ToString();
                 }
 
                 if (string.IsNullOrWhiteSpace(isSyncSuccess))

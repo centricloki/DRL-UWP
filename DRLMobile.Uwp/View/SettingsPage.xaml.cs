@@ -1,9 +1,11 @@
 using DRLMobile.Uwp.ViewModel;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -71,7 +73,7 @@ namespace DRLMobile.Uwp.View
 
         private void TextBox_BeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
         {
-            if(!string.IsNullOrWhiteSpace(args.NewText))
+            if (!string.IsNullOrWhiteSpace(args.NewText))
             {
                 var isDigit = int.TryParse(args.NewText, out int returnVal);
                 if (!isDigit)
