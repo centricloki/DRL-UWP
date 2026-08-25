@@ -224,5 +224,6 @@ namespace DRLMobile.Core.Interface
 
         Task<string> GetTerritoriesBeforeSyncOfUserAsync(string userName, string pin);
         Task<CustomerMaster> GetCustomerMasterByDeviceIdAsync(string deviceId);
+        Task<List<StateMaster>> GetStateMasterDataAsync(string stateName);
     }
 }

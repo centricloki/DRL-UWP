@@ -26,8 +26,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Windows.Devices.Sensors;
-
 namespace DRLMobile.Core.Services
 {
     public class QueryService : IQueryService
@@ -41,6 +39,11 @@ namespace DRLMobile.Core.Services
             DbService = new DatabaseService();
             this._profileMatcher = ProfileMatcher.GetInstance;
         }
+
+        /// <summary>
+        /// Gets the database service instance.
+        /// </summary>
+        public IDatabaseService DatabaseService => DbService;
 
         /// <summary>
         /// Get UI model for associated chain location customer page
@@ -3188,6 +3191,7 @@ namespace DRLMobile.Core.Services
         {
             return await MapClassificationService.GetActiveMapClassificationsAsync(DbService);
         }
+
         public async Task<List<TravelUiModel>> GetTravelDataForUser(string year)
         {
             List<TravelUiModel> travelUiList;
@@ -3658,7 +3662,8 @@ namespace DRLMobile.Core.Services
         {
             try
             {
-                var result = await DbService.GetUserFromUserNameAndPin(userName, pin).ConfigureAwait(false);
+                var result = await DbService.GetUserFromUserName(userName);
+                //var result = await DbService.GetUserFromUserNameAndPin(userName, pin).ConfigureAwait(false);
                 return result;
             }
             catch (Exception ex)
@@ -4023,9 +4028,7 @@ namespace DRLMobile.Core.Services
                 return null;
             }
         }
-
         public async Task<List<StateMaster>> GetStateMasterDataAsync(string stateName) => await DbService.GetStateMasterDataAsync(stateName).ConfigureAwait(false);
-
 
         public async Task<List<ActivityForAllCustomerUIModel>> GetCallActivitiesOfAllCustomersForNationalAndZoneAndRegionManagers(string territoryIds, bool loadAllData)
         {
@@ -5492,5 +5495,7 @@ namespace DRLMobile.Core.Services
             }
             return loggedInUserOldTerritories;
         }
+
+        public async Task<CustomerMaster> GetCustomerMasterByDeviceIdAsync(string deviceId) => await DbService.GetCustomerMasterByDeviceIdAsync(deviceId);
     }
 }

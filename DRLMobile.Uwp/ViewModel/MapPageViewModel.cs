@@ -1339,7 +1339,7 @@ namespace DRLMobile.Uwp.ViewModel
                             {
                                 try
                                 {
-                                    await ClassificationColorService.PrewarmAsync(mapClassifications);
+                                    await ClassificationColorService.PrewarmAsync(mapClassifications, AppReference.QueryService.DatabaseService);
                                 }
                                 catch (Exception prewarmEx)
                                 {
