@@ -18,7 +18,7 @@ namespace DRLMobile.Uwp.Helpers
 
         public Point NormalizedAnchorPoint { get; set; }
 
-        public SolidColorBrush PinColor { get; set; }
+        public Brush PinColor { get; set; }
 
         private string _ImageSourceUri;
         public string ImageSourceUri

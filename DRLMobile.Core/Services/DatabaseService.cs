@@ -93,6 +93,29 @@ namespace DRLMobile.Core.Services
             return classificationDictionary;
         }
 
+        /// <summary>
+        /// Returns all rows from the <c>MapClassification</c> SQLite table.
+        /// Used exclusively by the Map view to drive legend order, visibility and colours.
+        /// </summary>
+        public async Task<List<MapClassification>> GetMapClassificationsAsync()
+        {
+            List<MapClassification> result = null;
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH, false);
+            try
+            {
+                result = await db.Table<MapClassification>().ToListAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.WriteToErrorLog(nameof(DatabaseService), nameof(GetMapClassificationsAsync), ex.Message);
+            }
+            finally
+            {
+                await db.CloseAsync().ConfigureAwait(false);
+            }
+            return result ?? new List<MapClassification>();
+        }
+
         //public async Task<List<CustomerMaster>> GetCustomerDataAsync()
         //{
         //    try
@@ -208,6 +231,7 @@ namespace DRLMobile.Core.Services
             }
             return stateMasterData;
         }
+
 
         public async Task<Dictionary<int, string>> GetStateDictionaryAsync()
         {
@@ -1116,12 +1140,12 @@ namespace DRLMobile.Core.Services
                 await db.CreateTableAsync<UserActivityType>().ConfigureAwait(false);
 
                 await db.RunInTransactionAsync((SQLiteConnection sQLiteConnection) =>
-                  {
-                      foreach (UserActivityType item in userActivityTypeCollection)
-                      {
-                          sQLiteConnection.InsertOrReplace(item);
-                      }
-                  }).ConfigureAwait(false);
+                {
+                    foreach (UserActivityType item in userActivityTypeCollection)
+                    {
+                        sQLiteConnection.InsertOrReplace(item);
+                    }
+                }).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -1912,6 +1936,31 @@ namespace DRLMobile.Core.Services
             {
                 success = 0;
                 ErrorLogger.WriteToErrorLog(nameof(DatabaseService), "InsertOrUpdatetClassificationDataAsync", ex);
+            }
+            finally
+            {
+                await db.CloseAsync(); db = null;
+            }
+
+            return success != 0;
+        }
+
+        public async Task<bool> InsertOrUpdatetMapClassificationDataAsync(List<MapClassification> mapClassifications)
+        {
+            int success = 0;
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH, false);
+            try
+            {
+                await db.CreateTableAsync<MapClassification>();
+                foreach (var mapClassificationItem in mapClassifications)
+                {
+                    success = await db.InsertOrReplaceAsync(mapClassificationItem);
+                }
+            }
+            catch (Exception ex)
+            {
+                success = 0;
+                ErrorLogger.WriteToErrorLog(nameof(DatabaseService), nameof(InsertOrUpdatetMapClassificationDataAsync), ex);
             }
             finally
             {
@@ -4966,6 +5015,21 @@ namespace DRLMobile.Core.Services
             return userMaster;
         }
 
+        public async Task<UserMaster> GetUserFromUserName(string userName)
+        {
+            UserMaster userMaster = null;
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH, false);
+            try
+            {
+                userMaster = await db.Table<UserMaster>().FirstOrDefaultAsync(x => x.UserName.ToLower().Equals(userName.ToLower()));
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler.LogAndThrowSpecifiedException(GetType().Name, "GetUserFromUserName", ex);
+            }
+            return userMaster;
+        }
+
         //public async Task<ICollection<TerritoryMaster>> GetTerritoryMasterDataAsync()
         //{
         //    SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH);
@@ -7318,6 +7382,39 @@ namespace DRLMobile.Core.Services
                     {
                         customerMaster.LastCallActivityDate = lastCallDateTime;
                     }
+                    else if (!string.IsNullOrWhiteSpace(customerMaster.CustomerNumber)
+                       && customerMaster.CustomerNumber.ToLower().StartsWith("x"))
+                    {
+                        /*** JIRA Ticket https://republicbrands.atlassian.net/browse/HS2-57
+                         * Update Last call date on Customer List
+                         * Car Stock Order
+                         */
+                        switch (activityType)
+                        {
+                            case "Car Stock Order":
+                                customerMaster.LastCallActivityDate = lastCallDateTime;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else if (customerMaster.AccountType != 1)
+                    {
+                        /*** JIRA Ticket https://republicbrands.atlassian.net/browse/HS2-57
+                         * Update Last call date on Customer List
+                         * Indirect Stores:Cash Sale,Cash Sales Initiative
+                         */
+                        switch (activityType)
+                        {
+                            case "Cash Sale":
+                            case "Cash Sales Initiative":
+                                customerMaster.LastCallActivityDate = lastCallDateTime;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
                     customerMaster.IsExported = 0;
                     customerMaster.UpdatedDate = DateTimeHelper.ConvertToDbInsertDateTimeFormat(DateTime.Now);
                     await db.UpdateAsync(customerMaster).ConfigureAwait(false);
@@ -7332,6 +7429,7 @@ namespace DRLMobile.Core.Services
                 await db.CloseAsync().ConfigureAwait(false); db = null;
             }
         }
+
 
         //public async Task<string> GetOrderGrandTotalFromOrderDeviceId(string orderDeviceId)
         //{
@@ -9168,6 +9266,21 @@ namespace DRLMobile.Core.Services
             catch (Exception ex)
             {
                 ErrorLogger.WriteToErrorLog(nameof(DatabaseService), "GetUserFullNameAsync", ex.Message);
+            }
+            return null;
+        }
+
+        public async Task<CustomerMaster> GetCustomerMasterByDeviceIdAsync(string deviceId)
+        {
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH, false);
+            try
+            {
+                string queryString = $"SELECT * FROM CustomerMaster WHERE DeviceCustomerID = '{deviceId}'";
+                return await db.FindWithQueryAsync<CustomerMaster>(queryString).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.WriteToErrorLog(nameof(DatabaseService), "GetCustomerMasterByDeviceIdAsync", ex.Message);
             }
             return null;
         }

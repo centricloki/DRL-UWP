@@ -218,6 +218,8 @@
     <Compile Include="EmailAndPrintOrder\PdfCreator.cs" />
     <Compile Include="Enums\PhotoSize.cs" />
     <Compile Include="Enums\Scaling.cs" />
+    <Compile Include="Helpers\MapPinGenerator.cs" />
+    <Compile Include="Helpers\ClassificationColorService.cs" />
     <Compile Include="Helpers\DynamicWidthBehavior.cs" />
     <Compile Include="Helpers\XAMLHelper.cs" />
     <Compile Include="Helpers\AlertHelper.cs" />
@@ -802,7 +804,7 @@
       <Version>2.5.1</Version>
     </PackageReference>
     <PackageReference Include="OnTerra.MapsControl.UWP">
-      <Version>1.0.52</Version>
+      <Version>1.0.58</Version>
     </PackageReference>
     <PackageReference Include="SharpDX.Direct2D1">
       <Version>4.2.0</Version>

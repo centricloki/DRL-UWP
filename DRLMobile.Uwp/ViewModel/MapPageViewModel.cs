@@ -1317,8 +1317,49 @@ namespace DRLMobile.Uwp.ViewModel
 
                     var classifications = await AppReference.QueryService.GetClassificationDict();
 
-                    //AccountClassificationsList = classifications?.Values.ToList();
-                    MapsStaticDataSourceHelper.ClassificationsList = classifications?.Values.ToList();
+                    //MapsStaticDataSourceHelper.ClassificationsList = classifications?.Values.ToList();
+
+                    // ── DB-driven MapClassification path (Map view only) ─────────────
+                    // Reads the MapClassification SQLite table via MapClassificationService.
+                    // Drives legend visibility (IsActive), display order (DisplayOrder)
+                    // and colour (HexColorCode — null → deterministic gradient generator).
+                    // This is completely independent of GetClassificationDict() used by
+                    // other ViewModels (CustomerList, CustomerPage, etc.).
+                    try
+                    {
+                        var mapClassifications = await AppReference.QueryService
+                            .GetActiveMapClassificationsAsync();
+
+                        MapsStaticDataSourceHelper.MapClassificationList = mapClassifications;
+
+                        // Pre-warm: resolve colours and generate dynamic pin PNGs.
+                        if (mapClassifications?.Count > 0)
+                        {
+                            _ = Task.Run(async () =>
+                            {
+                                try
+                                {
+                                    await ClassificationColorService.PrewarmAsync(mapClassifications);
+                                }
+                                catch (Exception prewarmEx)
+                                {
+                                    ErrorLogger.WriteToErrorLog(
+                                        nameof(MapPageViewModel),
+                                        "ClassificationColorService.PrewarmAsync(MapClassificationViewModel)",
+                                        prewarmEx.StackTrace);
+                                }
+                            });
+                        }
+                    }
+                    catch (Exception mapClsEx)
+                    {
+                        // Non-fatal — fall back to ClassificationsList path in MapsStaticDataSourceHelper.
+                        ErrorLogger.WriteToErrorLog(
+                            nameof(MapPageViewModel),
+                            "GetActiveMapClassificationsAsync",
+                            mapClsEx.StackTrace);
+                    }
+
                     SetLegendsSource();
                 }
                 //

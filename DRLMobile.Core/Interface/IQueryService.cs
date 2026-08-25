@@ -2,6 +2,7 @@
 using DRLMobile.Core.Models.DataModels;
 using DRLMobile.Core.Models.FedExAddressValidationModels;
 using DRLMobile.Core.Models.UIModels;
+using DRLMobile.Core.Services;
 
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,11 @@ namespace DRLMobile.Core.Interface
 {
     public interface IQueryService
     {
+        /// <summary>
+        /// Gets the database service instance.
+        /// </summary>
+        IDatabaseService DatabaseService { get; }
+
         Task<bool> AddLoggedInUserAsZeroCustomer(string userName, string pin);
         Task<List<CustomerPageUIModel>> GetChainLocationCustomers(int headQuarter);
         Task<List<CustomerPageUIModel>> GetHeadQuarterCustomers(int headQuarter);
@@ -102,6 +108,12 @@ namespace DRLMobile.Core.Interface
         Task<string> GetUserCustomerDeviceId(string userCustomername);
         Task<Dictionary<int, string>> GetStateDict();
         Task<Dictionary<int, Classification>> GetClassificationDict();
+
+        /// <summary>
+        /// Map-only: reads the <c>MapClassification</c> table and returns only active rows,
+        /// sorted by <c>DisplayOrder</c>. Does not affect any other ViewModel or service.
+        /// </summary>
+        Task<List<MapClassificationViewModel>> GetActiveMapClassificationsAsync();
         Task<List<TravelUiModel>> GetTravelDataForUser(string year);
         Task<List<VripUiModel>> GetVripDataForUser(string year);
         Task<List<string>> GetTravelProgramYearFromVripTravelData();
@@ -130,7 +142,6 @@ namespace DRLMobile.Core.Interface
         Task<List<PopOrderCartUiModel>> GetPopOrderRemainingListData(string CurrentDeviceOrderId);
         Task<List<ActivityForAllCustomerUIModel>> GetCallActivitiesOfAllCustomersForLoggedInUser(string territoryIds, bool loadAllData);
         Task<List<ActivityForAllCustomerUIModel>> GetCallActivitiesOfAllCustomersForNationalAndZoneAndRegionManagers(string territoryIds, bool loadAllData);
-        Task<List<StateMaster>> GetStateMasterDataAsync(string stateName);
         Task<List<ActivityForAllCustomerUIModel>> GetCallActivitiesOfAllCustomers(bool loadAllData);
         Task<List<ActivityForIndividualCustomerUIModel>> GetCallActivitiesOfSelectedCustomerForLoggedInUser(string deviceCustomerId);
         Task<List<ActivityForIndividualCustomerUIModel>> GetCallActivitiesOfSelectedArea(string deviceCustomerId, int selectedArea, int roleId);
@@ -206,11 +217,12 @@ namespace DRLMobile.Core.Interface
         Task<string> GetConfigurationValueAsync(string keyName);
         Task<FedExValidatedAddressResponse> CallFedExAddressValidationAPIAsync(string requestBody);
         Task<ICollection<TerritoryMaster>> GetBDTerritoriesAsync(int bdId);
-        Task<ICollection<TerritoryMaster>> GetBDApproverTerritoriesAsync(int bdId,int regionId);
+        Task<ICollection<TerritoryMaster>> GetBDApproverTerritoriesAsync(int bdId, int regionId);
         Task<ICollection<TerritoryMaster>> GetAVPTerritoriesAsync(int avpId);
         Task<int> GetRoleIdAsync(string roleName);
         Task<string> GetUserFullNameAsync(string defTerritoryId);
 
         Task<string> GetTerritoriesBeforeSyncOfUserAsync(string userName, string pin);
+        Task<CustomerMaster> GetCustomerMasterByDeviceIdAsync(string deviceId);
     }
 }
