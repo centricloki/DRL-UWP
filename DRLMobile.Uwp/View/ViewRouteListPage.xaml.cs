@@ -70,7 +70,7 @@ namespace DRLMobile.Uwp.View
             {
                 if (ViewModel != null)
                     ViewModel.LoadingVisibilityHandler(true);
-                await InitializeMap();
+               
 
                 if (_navigationEventParam != null)
                 {
@@ -96,6 +96,7 @@ namespace DRLMobile.Uwp.View
                         ViewModel.CustomMapPinVisibility = Visibility.Collapsed;
                         ViewModel.CustomMapPinIsVisible = false;
                     }
+                    await InitializeMap();
 
                     if (myMap != null && myMap.Routes != null)
                         myMap.Routes.Clear();

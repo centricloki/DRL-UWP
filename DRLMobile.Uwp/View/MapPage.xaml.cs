@@ -82,7 +82,6 @@ namespace DRLMobile.Uwp.View
             }
         }
 
-
         private async Task MapPageLoadedAsync()
         {
             ShellPage shellPage = ((Window.Current.Content as Frame).Content as ShellPage);
@@ -92,9 +91,9 @@ namespace DRLMobile.Uwp.View
             }
             ViewModel.SetLoader(true);
             try
-            {
-                await InitializeMap();
+            {                
                 await ViewModel.OnNavigatedToCommandHandler();
+                await InitializeMap();
                 await RefreshMapIcons();
             }
             catch (Exception ex)
