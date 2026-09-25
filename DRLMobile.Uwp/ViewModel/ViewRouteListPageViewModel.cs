@@ -1,4 +1,4 @@
-﻿using DevExpress.Xpo.DB;
+using DevExpress.Xpo.DB;
 
 using DRLMobile.Core.Models;
 using DRLMobile.Core.Models.DataModels;
@@ -1089,7 +1089,7 @@ namespace DRLMobile.Uwp.ViewModel
 
             if (webServiceResponse != null)
             {
-                if (webServiceResponse.Any(x => x.type == "InvalidRoute" || x.type == "RouteError"))
+                if (webServiceResponse.Any(x => x.type == "VehicleLocationError" || x.type == "InvalidRoute" || x.type == "RouteError"))
                 {
                     await ShowInvalidRouteAlertAsync(webServiceResponse, selectedCustomerList);
                     return false;
@@ -1124,6 +1124,42 @@ namespace DRLMobile.Uwp.ViewModel
             List<RouteRespActivity> webServiceResponse,
             ObservableCollection<ViewRouteDetailsUIModel> selectedCustomerList)
         {
+            // NEW: Handle vehicle start/end location unreachable errors
+            // (e.g. start is US zip code but end is device GPS from India)
+            var vehicleErrorEntry = webServiceResponse.FirstOrDefault(x => x.type == "VehicleLocationError");
+            if (vehicleErrorEntry != null)
+            {
+                var badLegs = vehicleErrorEntry.location_id
+                    .Replace("VehicleLocationError:", string.Empty)
+                    .Split(',')
+                    .Select(s => s.Trim().ToLower())
+                    .ToHashSet();
+
+                var sb = new StringBuilder();
+                sb.AppendLine("The following addresses are preventing route creation.");
+                sb.AppendLine("Please review or remove them and try again.");
+
+                if (badLegs.Contains("start"))
+                {
+                    var label = IsStartCurrentLocation
+                        ? "Start Location (Device GPS)"
+                        : $"Start Location ({StartLocation})";
+                    sb.AppendLine($"\u2022 {label} location is far away.");
+                }
+
+                if (badLegs.Contains("end"))
+                {
+                    var label = IsEndCurrentLocation
+                        ? "End Location (Device GPS)"
+                        : $"End Location ({EndLocation})";
+                    sb.AppendLine($"\u2022 {label} location is far away.");
+                }
+
+                await ShowAlertAsync("Alert", sb.ToString().TrimEnd());
+                return;
+            }
+
+            // EXISTING: Handle customer service stop errors (InvalidRoute / RouteError) — unchanged
             var problematicIds = webServiceResponse
                 .Where(x => x.type == "InvalidRoute" || x.type == "RouteError")
                 .SelectMany(x => x.location_id?.Split(',') ?? Array.Empty<string>())
@@ -1131,9 +1167,9 @@ namespace DRLMobile.Uwp.ViewModel
 
             var problematicCustomers = selectedCustomerList.Where(x => problematicIds.Contains(x.CustomerID.ToString())).ToList();
             var errorMessage = problematicCustomers.Count == selectedCustomerList.Count
-                ? "The following addresses are preventing route creation.\nPlease review or remove them and try again.\n• Start/End location is far away."
+                ? "The following addresses are preventing route creation.\nPlease review or remove them and try again.\n\u2022 Start/End location is far away."
                 : "The following addresses are preventing route creation.\nPlease review or remove them and try again." +
-                  string.Concat(problematicCustomers.Select(c => $"\n* {c.CustomerName} (Address: {c.CustomerAddress})"));
+                  string.Concat(problematicCustomers.Select(c => $"\n\u2022 {c.CustomerName} (Address: {c.CustomerAddress})"));
 
             await ShowAlertAsync("Alert", errorMessage);
         }

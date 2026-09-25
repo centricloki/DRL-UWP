@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -727,6 +727,14 @@ namespace DRLMobile.Core.Services
                         list.Add(new RouteRespActivity { type = "RouteError", location_id = webResponse });
                         return list;
                     }
+                    else if (webResponse.StartsWith("VehicleLocationError"))
+                    {
+                        // Vehicle start/end location cannot be connected to the road network.
+                        // Encode so the ViewModel can show a specific message.
+                        var list = new List<RouteRespActivity>(1);
+                        list.Add(new RouteRespActivity { type = "VehicleLocationError", location_id = webResponse });
+                        return list;
+                    }
                     else
                     {
                         var responseObejct = JsonConvert.DeserializeObject<RoutingOptimizationResponseModel>(webResponse);
@@ -903,8 +911,16 @@ namespace DRLMobile.Core.Services
                 }
                 else
                 {
-                    var problematicServiceIds = GetProblematicServiceIds(response.Content);
-                    if (problematicServiceIds.Count > 0) serverReponse = $"RouteError:{string.Join(",", problematicServiceIds)}";
+                    var (serviceIds, vehicleLocations) = GetProblematicLocationInfo(response.Content);
+                    if (vehicleLocations.Count > 0)
+                    {
+                        // Vehicle start/end location error — encode as a separate sentinel
+                        serverReponse = $"VehicleLocationError:{string.Join(",", vehicleLocations)}";
+                    }
+                    else if (serviceIds.Count > 0)
+                    {
+                        serverReponse = $"RouteError:{string.Join(",", serviceIds)}";
+                    }
                     else
                     {
                         webServiceResponse.ServerResponse = response.Content ?? "Response content not available";
@@ -928,32 +944,27 @@ namespace DRLMobile.Core.Services
             return serverReponse;
         }
 
-        private static List<string> GetProblematicServiceIds(string apiResponse)
+        private static (List<string> serviceIds, List<string> vehicleLocations) GetProblematicLocationInfo(string apiResponse)
         {
             try
             {
                 var errorInfo = GraphHopperErrorHandler.ParseErrorResponse(apiResponse);
 
-                if (errorInfo.HasConnectionNotFoundErrors)
-                {
-                    // You can now use these service IDs to customize your error handling
-                    foreach (var serviceId in errorInfo.ConnectionNotFoundServices)
-                    {
-                        // Log or handle each problematic service ID
-                        System.Diagnostics.Debug.WriteLine($"Service ID {serviceId} has connection issues");
-                    }
+                // Log vehicle location issues (NEW scenario)
+                foreach (var loc in errorInfo.ProblematicVehicleLocations)
+                    System.Diagnostics.Debug.WriteLine($"Vehicle {loc} location has connection issues");
 
-                    // Return the problematic service IDs
-                    return errorInfo.ConnectionNotFoundServices;
-                }
+                // Log customer service stop issues (EXISTING scenario, unchanged)
+                foreach (var serviceId in errorInfo.ConnectionNotFoundServices)
+                    System.Diagnostics.Debug.WriteLine($"Service ID {serviceId} has connection issues");
 
-                return new List<string>(); // No errors found
+                // Always return both lists — caller decides priority
+                return (errorInfo.ConnectionNotFoundServices, errorInfo.ProblematicVehicleLocations);
             }
             catch (JsonException ex)
             {
-                // Handle JSON parsing error
                 System.Diagnostics.Debug.WriteLine($"JSON parsing error: {ex.Message}");
-                return new List<string>();
+                return (new List<string>(), new List<string>());
             }
         }
 

@@ -70,7 +70,7 @@ namespace DRLMobile.Uwp.View
             {
                 if (ViewModel != null)
                     ViewModel.LoadingVisibilityHandler(true);
-               
+
 
                 if (_navigationEventParam != null)
                 {
@@ -275,35 +275,35 @@ namespace DRLMobile.Uwp.View
                         });
                     }
 
-            //        List<OnTerra.MapsControl.UWP.BasicGeoposition> points = new List<OnTerra.MapsControl.UWP.BasicGeoposition>
-            //{
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 27.9506, Longitude = -82.4572 }, // 1: Tampa, FL
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 28.5383, Longitude = -81.3792 }, // 2: Orlando, FL
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 26.7153, Longitude = -80.0534 }, // 3: West Palm Beach, FL
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 25.7617, Longitude = -80.1918 }, // 4: Miami, FL
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 29.2108, Longitude = -81.0228 }, // 5: Daytona Beach, FL
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 30.3322, Longitude = -81.6557 }, // 6: Jacksonville, FL
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 32.0809, Longitude = -81.0912 }, // 7: Savannah, GA
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 32.7765, Longitude = -79.9311 }, // 8: Charleston, SC
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 33.6891, Longitude = -78.8867 }, // 9: Myrtle Beach, SC
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 35.7796, Longitude = -78.6382 }, // 10: Raleigh, NC
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 35.2271, Longitude = -80.8431 }, // 11: Charlotte, NC
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 34.8526, Longitude = -82.3940 }, // 12: Greenville, SC
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 36.1627, Longitude = -86.7816 }, // 13: Nashville, TN
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 34.7304, Longitude = -86.5861 }, // 14: Huntsville, AL
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 33.5186, Longitude = -86.8104 }, // 15: Birmingham, AL
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 32.3668, Longitude = -86.3000 }, // 16: Montgomery, AL
-            //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 30.6954, Longitude = -88.0399 }  // 17: Mobile, AL
-            //};
-            //        var stops = new List<OnTerra.MapsControl.UWP.PolylineStopInfo>();
-            //        for (int i = 0; i < points.Count; i++)
-            //        {
-            //            stops.Add(new OnTerra.MapsControl.UWP.PolylineStopInfo
-            //            {
-            //                Index = i,
-            //                Title = $"C{(120001 + i).ToString()}"
-            //            });
-            //        }
+                    //        List<OnTerra.MapsControl.UWP.BasicGeoposition> points = new List<OnTerra.MapsControl.UWP.BasicGeoposition>
+                    //{
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 27.9506, Longitude = -82.4572 }, // 1: Tampa, FL
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 28.5383, Longitude = -81.3792 }, // 2: Orlando, FL
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 26.7153, Longitude = -80.0534 }, // 3: West Palm Beach, FL
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 25.7617, Longitude = -80.1918 }, // 4: Miami, FL
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 29.2108, Longitude = -81.0228 }, // 5: Daytona Beach, FL
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 30.3322, Longitude = -81.6557 }, // 6: Jacksonville, FL
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 32.0809, Longitude = -81.0912 }, // 7: Savannah, GA
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 32.7765, Longitude = -79.9311 }, // 8: Charleston, SC
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 33.6891, Longitude = -78.8867 }, // 9: Myrtle Beach, SC
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 35.7796, Longitude = -78.6382 }, // 10: Raleigh, NC
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 35.2271, Longitude = -80.8431 }, // 11: Charlotte, NC
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 34.8526, Longitude = -82.3940 }, // 12: Greenville, SC
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 36.1627, Longitude = -86.7816 }, // 13: Nashville, TN
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 34.7304, Longitude = -86.5861 }, // 14: Huntsville, AL
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 33.5186, Longitude = -86.8104 }, // 15: Birmingham, AL
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 32.3668, Longitude = -86.3000 }, // 16: Montgomery, AL
+                    //    new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = 30.6954, Longitude = -88.0399 }  // 17: Mobile, AL
+                    //};
+                    //        var stops = new List<OnTerra.MapsControl.UWP.PolylineStopInfo>();
+                    //        for (int i = 0; i < points.Count; i++)
+                    //        {
+                    //            stops.Add(new OnTerra.MapsControl.UWP.PolylineStopInfo
+                    //            {
+                    //                Index = i,
+                    //                Title = $"C{(120001 + i).ToString()}"
+                    //            });
+                    //        }
 
 
 
@@ -415,6 +415,7 @@ namespace DRLMobile.Uwp.View
             if (EndLocationSwitch.IsOn)
             {
                 EndTextBox.Text = string.Empty;
+                ViewModel.EndLocation = "";
                 EndTextBox.IsReadOnly = true;
                 if (ViewModel != null) ViewModel.IsEndCurrentLocation = true;
             }
@@ -430,6 +431,7 @@ namespace DRLMobile.Uwp.View
             if (StartLocationSwitch.IsOn)
             {
                 StartTextBox.Text = string.Empty;
+                ViewModel.StartLocation = "";
                 StartTextBox.IsReadOnly = true;
                 if (ViewModel != null) ViewModel.IsStartCurrentLocation = true;
             }
