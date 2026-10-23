@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
@@ -12,7 +12,7 @@
 	<Identity
 	  Name="DRLEnterprises.DRLMobileUwpV2"
 	  Publisher="CN=Drl Enterprises Inc, O=Drl Enterprises Inc, L=Glenview, S=Illinois, C=US"
-	  Version="2.0.0.0" />
+	  Version="3.0.0.0" />
   
   <mp:PhoneIdentity PhoneProductId="86569255-dab6-4bfd-a1d7-98d2c9058ad3" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 	
@@ -52,6 +52,13 @@
 					<uap:Rotation Preference="landscape"/>
 				</uap:InitialRotationPreference>
 			</uap:VisualElements>
+			<Extensions>
+				<Extension Category="windows.backgroundTasks" EntryPoint="DRLMobile.NotificationBackgroundTask.PushNotificationBackgroundTask">
+					<BackgroundTasks>
+						<Task Type="pushNotification"/>
+					</BackgroundTasks>
+				</Extension>
+			</Extensions>
 		</Application>
 	</Applications>
 
