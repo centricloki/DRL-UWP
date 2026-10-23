@@ -1,0 +1,27 @@
+<Page
+    x:Class="DRLMobile.UwpV2.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DRLMobile.UwpV2"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock 
+                Text="Welcome to DRLMobile UwpV2" 
+                FontSize="32" 
+                FontWeight="Bold"
+                HorizontalAlignment="Center"
+                Margin="0,0,0,20"/>
+            <TextBlock 
+                Text="This is a clone of TestSigningApp for DRLMobile V2 development." 
+                FontSize="16"
+                HorizontalAlignment="Center"
+                TextWrapping="Wrap"
+                MaxWidth="600"/>
+        </StackPanel>
+    </Grid>
+</Page>
