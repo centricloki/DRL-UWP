@@ -10,14 +10,14 @@
   IgnorableNamespaces="uap mp uap3 iot uap4">
 
 	<Identity
-	  Name="DRLEnterprises.DRLMobileUwpV2"
+	  Name="DRLEnterprises.HoneyforTest"
 	  Publisher="CN=Drl Enterprises Inc, O=Drl Enterprises Inc, L=Glenview, S=Illinois, C=US"
 	  Version="3.0.0.0" />
   
   <mp:PhoneIdentity PhoneProductId="86569255-dab6-4bfd-a1d7-98d2c9058ad3" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 	
     <Properties>
-		<DisplayName>DRLMobile UwpV2</DisplayName>
+		<DisplayName>Honey for Test</DisplayName>
 		<PublisherDisplayName>Drl Enterprises Inc</PublisherDisplayName>
 		<Logo>Assets\StoreLogo.png</Logo>
 	</Properties>
@@ -35,10 +35,10 @@
 		  Executable="$targetnametoken$.exe"
 		  EntryPoint="DRLMobile.UwpV2.App">
 			<uap:VisualElements
-			  DisplayName="DRLMobile UwpV2"
+			  DisplayName="Test Honey"
 			  Square150x150Logo="Assets\Square150x150Logo.png"
 			  Square44x44Logo="Assets\Square44x44Logo.png"
-			  Description="DRLMobile UwpV2 Application"
+			  Description="Test Honey"
 			  BackgroundColor="transparent">
 				<uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png">
 					<uap:ShowNameOnTiles>
