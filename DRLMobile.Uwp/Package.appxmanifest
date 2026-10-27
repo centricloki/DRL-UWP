@@ -9,10 +9,10 @@
   xmlns:uap4="http://schemas.microsoft.com/appx/manifest/uap/windows10/4"
   IgnorableNamespaces="uap mp uap3 iot uap4">
 
-	<Identity
+  <Identity
 	  Name="DRLEnterprises.HoneyforTest"
-	  Publisher="CN=Drl Enterprises Inc, OU=IT, O=Drl Enterprises Inc, L=Glenview, S=Illinois, C=US"
-	  Version="1.1.4.0" />
+	  Publisher="CN=Drl Enterprises Inc, O=Drl Enterprises Inc, L=Glenview, S=Illinois, C=US"
+	  Version="1.1.19.0" />
 
 	<mp:PhoneIdentity PhoneProductId="86569255-dab6-4bfd-a1d7-98d2c9058ad2" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
