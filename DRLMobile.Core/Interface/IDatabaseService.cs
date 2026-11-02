@@ -375,6 +375,9 @@ namespace DRLMobile.Core.Interface
         Task<string> GetUserFullNameAsync(string defTerritoryId);
         Task<CustomerMaster> GetCustomerMasterByDeviceIdAsync(string deviceId);
 
+        // Auto-login migration helper methods
+        Task<string> GetCustomerNameByCustomerIdAsync(int customerId);
+        Task<(string UserName, int PIN, int UserId, string DbFileName)> GetUserCredentialsByNameAsync(string firstName, string lastName);
         #endregion
 
     }

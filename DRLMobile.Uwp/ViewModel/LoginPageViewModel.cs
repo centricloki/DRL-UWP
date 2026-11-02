@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -112,7 +112,7 @@ namespace DRLMobile.Uwp.ViewModel
         #region Command
         private ICommand _loginButtonCommand;
         public ICommand LoginButtonCommand => _loginButtonCommand ?? (_loginButtonCommand = new AsyncRelayCommand(UserLoginValidations));
-
+        public IAsyncRelayCommand FirstLaunchAfterMigrationCommand => new AsyncRelayCommand(FirstLaunchAfterMigrationCommandAsync);
         public ICommand OnNavigatedToCommand { get; private set; }
         #endregion
 
@@ -129,6 +129,88 @@ namespace DRLMobile.Uwp.ViewModel
         #endregion
 
         #region Private Methods
+        private async Task FirstLaunchAfterMigrationCommandAsync()
+        {
+            // MIGRATION LOGIC: Auto-login using existing SQLite database (ONE TIME ONLY)
+            string dbPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, ApplicationConstants.DATABASE_NAME);
+
+            // Default is true. Once we auto-login, we set it to false forever.
+            // User logout sets it back to true to allow fresh login.
+            bool isFirstLaunch = AppReference.IsFirstLaunchAfterMigration ?? true;
+
+            // We ONLY auto-login if the DB exists AND it is the very first launch
+            if (File.Exists(dbPath) && isFirstLaunch)
+            {
+                try
+                {
+                    LoadingVisibilityHandler(true);
+
+                    // Step 1: Extract logged-in user info from CustomerMaster (CustomerId = 0)
+                    var customerName = await AppReference.QueryService.GetCustomerNameByCustomerIdAsync(0);
+
+                    if (!string.IsNullOrWhiteSpace(customerName))
+                    {
+                        // Step 2: Parse full name into First and Last Name
+                        string[] nameParts = customerName.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                        string firstName = nameParts.Length > 0 ? nameParts[0].Trim() : string.Empty;
+                        string lastName = nameParts.Length > 1 ? nameParts[1].Trim() : string.Empty;
+
+                        if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
+                        {
+                            // Step 3: Find matching user in UserMaster table
+                            var userCredentials = await AppReference.QueryService.GetUserCredentialsByNameAsync(firstName, lastName);
+
+                            if (!string.IsNullOrWhiteSpace(userCredentials.UserName))
+                            {
+                                // Step 4: Set UserName and Pin properties
+                                UserName = userCredentials.UserName;
+                                Pin = userCredentials.PIN.ToString();
+
+                                // Step 5: Fetch LastSyncDate from Configuration table (most recent entry)
+                                string lastSyncDate = await AppReference.QueryService.GetConfigurationValueAsync("LastSyncDate");
+
+                                // Step 6: Build LoginUIModel with migrated data
+                                LoginUserDetails = new LoginUIModel
+                                {
+                                    lastsyncutcdate = lastSyncDate ?? string.Empty,
+                                    userid = userCredentials.UserId,
+                                    dbfilename = userCredentials.DbFileName ?? string.Empty,
+                                    responsestatus = "200"
+                                };
+
+                                // Set app-level properties
+                                if (!string.IsNullOrWhiteSpace(lastSyncDate))
+                                {
+                                    ((App)Application.Current).LastSyncDateTimeProperty = lastSyncDate;
+                                }
+
+                                // Step 7: Save credentials to local settings
+                                await SaveUserCredentialsToLocalSettings();
+
+                                // Step 8: Check user 
+                                await UserLoginValidations();
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogger.WriteToErrorLog(nameof(LoginPageViewModel), "OnNavigatedToCommandHandler_Migration", ex);
+                    await ResetUserFail();
+                    ProgressText = "";
+                    IsInProgress = false;
+                    LoadingVisibilityHandler(false);
+                }
+                finally
+                {
+                    LoadingVisibilityHandler(false);
+                    ProgressText = string.Empty;
+                }
+            }
+        }
+
+
+
         private async Task OnNavigatedToCommandHandler(bool IsResetUser)
         {
             string dbFilePath = string.Empty;
@@ -148,63 +230,63 @@ namespace DRLMobile.Uwp.ViewModel
                     if (!IsLoginSuccessful)
                         throw new Exception("Incorrect Username Or PIN");
 
-                        var filePath = await BackgroundDownloadService.DownloadFile(LoginUserDetails.dbfilename.Trim(), HelperMethods.GetNameFromURL(LoginUserDetails.dbfilename.Trim()));
+                    var filePath = await BackgroundDownloadService.DownloadFile(LoginUserDetails.dbfilename.Trim(), HelperMethods.GetNameFromURL(LoginUserDetails.dbfilename.Trim()));
 
-                        dbFilePath = filePath;
+                    dbFilePath = filePath;
 
-                        var isFileExist = File.Exists(filePath);
+                    var isFileExist = File.Exists(filePath);
 
-                        var isDataExistInFile = new FileInfo(filePath).Length != 0;
+                    var isDataExistInFile = new FileInfo(filePath).Length != 0;
 
-                        if (!string.IsNullOrWhiteSpace(filePath) && isFileExist && isDataExistInFile)
+                    if (!string.IsNullOrWhiteSpace(filePath) && isFileExist && isDataExistInFile)
+                    {
+                        var zipFile = await StorageFile.GetFileFromPathAsync(filePath);
+
+                        try
                         {
-                            var zipFile = await StorageFile.GetFileFromPathAsync(filePath);
+                            var tempFolder = Path.Combine(ApplicationData.Current.LocalFolder.Path, "tempFolder");
 
-                            try
-                            {
-                                var tempFolder = Path.Combine(ApplicationData.Current.LocalFolder.Path, "tempFolder");
+                            ZipFile.ExtractToDirectory(filePath, tempFolder, true);
 
-                                ZipFile.ExtractToDirectory(filePath, tempFolder, true);
+                            var _iStorageFolder = await StorageFolder.GetFolderFromPathAsync(tempFolder);
 
-                                var _iStorageFolder = await StorageFolder.GetFolderFromPathAsync(tempFolder);
+                            var _iStorageFile = await _iStorageFolder?.GetFileAsync(ApplicationConstants.DATABASE_NAME);
 
-                                var _iStorageFile = await _iStorageFolder?.GetFileAsync(ApplicationConstants.DATABASE_NAME);
+                            //await Task.Delay(50);
 
-                                //await Task.Delay(50);
+                            await _iStorageFile?.CopyAsync(ApplicationData.Current.LocalFolder, ApplicationConstants.DATABASE_NAME, NameCollisionOption.ReplaceExisting);
 
-                                await _iStorageFile?.CopyAsync(ApplicationData.Current.LocalFolder, ApplicationConstants.DATABASE_NAME, NameCollisionOption.ReplaceExisting);
+                            IsDbFileDownloadSuccessful = true;
 
-                                IsDbFileDownloadSuccessful = true;
+                            //await Task.Delay(50);
 
-                                //await Task.Delay(50);
+                            await _iStorageFolder?.DeleteAsync();
 
-                                await _iStorageFolder?.DeleteAsync();
-
-                                await zipFile.DeleteAsync();
-                            }
-                            catch (Exception ex)
-                            {
-                                IsDbFileDownloadSuccessful = false;
-                                IsInProgress = false;
-                                ErrorLogger.WriteToErrorLog(nameof(LoginPageViewModel), "OnNavigatedToCommandHandler", ex.StackTrace + " - " + ex.Message);
-
-                                await zipFile.DeleteAsync();
-
-                                File.Delete(filePath);
-
-                                await ResetUserFail();
-                            }
+                            await zipFile.DeleteAsync();
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            if (File.Exists(filePath))
-                            {
-                                File.Delete(filePath);
-                            }
-
                             IsDbFileDownloadSuccessful = false;
                             IsInProgress = false;
+                            ErrorLogger.WriteToErrorLog(nameof(LoginPageViewModel), "OnNavigatedToCommandHandler", ex.StackTrace + " - " + ex.Message);
+
+                            await zipFile.DeleteAsync();
+
+                            File.Delete(filePath);
+
+                            await ResetUserFail();
                         }
+                    }
+                    else
+                    {
+                        if (File.Exists(filePath))
+                        {
+                            File.Delete(filePath);
+                        }
+
+                        IsDbFileDownloadSuccessful = false;
+                        IsInProgress = false;
+                    }
                     if (IsDbFileDownloadSuccessful)
                     {
                         await AppReference.QueryService.UpdateUserMaster(((App)Application.Current).LoginUserPinProperty, ((App)Application.Current).LoginUserNameProperty);
@@ -332,7 +414,7 @@ namespace DRLMobile.Uwp.ViewModel
             await errorDialog.ShowAsync();
         }
 
-        private async void NoConnectionPopupAsync()
+        private async Task NoConnectionPopupAsync()
         {
             ContentDialog emptyFieldDialog = new ContentDialog
             {
@@ -350,7 +432,7 @@ namespace DRLMobile.Uwp.ViewModel
             {
                 if (string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Pin))
                 {
-                    NoConnectionPopupAsync();
+                    await NoConnectionPopupAsync();
                 }
                 else
                 {
@@ -374,7 +456,12 @@ namespace DRLMobile.Uwp.ViewModel
 
                     if (isPinParsable)
                     {
+                        string beforeLoginSyncDate = null;
+                        if (!string.IsNullOrWhiteSpace(LoginUserDetails?.lastsyncutcdate))
+                            beforeLoginSyncDate = LoginUserDetails.lastsyncutcdate;
                         await AuthenticUser(UserName, Pin);
+                        if (!string.IsNullOrWhiteSpace(beforeLoginSyncDate))
+                            LoginUserDetails.lastsyncutcdate = beforeLoginSyncDate;
                     }
                     else
                     {
@@ -383,8 +470,6 @@ namespace DRLMobile.Uwp.ViewModel
 
                     if (IsLoginSuccessful)
                     {
-                        await AppReference.QueryService.UpdateUserMaster(Pin, UserName);
-
                         await CheckForExistingUserLoginDetails();
 
                         if (IsDataDownloadSuccessful)
@@ -400,6 +485,9 @@ namespace DRLMobile.Uwp.ViewModel
                             ((App)Application.Current).CurrentDeviceOrderId = string.Empty;
                             ((App)Application.Current).OrderPrintName = string.Empty;
                             ((App)Application.Current).AreaUserSelectedId = 0;
+                            // 🔑 CRITICAL: Set flag to FALSE so this NEVER happens again (even after app restart)
+                            // Logout will reset it to FALSE to allow fresh login
+                            AppReference.IsFirstLaunchAfterMigration = false;
 
                             if (((App)Application.Current).SqlLiteResetVersion != ApplicationConstants.APPLICATION_VERSION)
                             {
@@ -420,7 +508,9 @@ namespace DRLMobile.Uwp.ViewModel
                             ((App)Application.Current).PreviousSelectedCustomerId = string.Empty;
                             ((App)Application.Current).CurrentDeviceOrderId = string.Empty;
                             ((App)Application.Current).AreaUserSelectedId = 0;
-
+                            // 🔑 CRITICAL: Set flag to FALSE so this NEVER happens again (even after app restart)
+                            // Logout will reset it to FALSE to allow fresh login
+                            AppReference.IsFirstLaunchAfterMigration = false;
                             LoadingVisibilityHandler(false);
 
                             NavigateToDashboardPage();
@@ -511,6 +601,7 @@ namespace DRLMobile.Uwp.ViewModel
                 {
                     if (!((App)Application.Current).LoginUserNameProperty.Equals(UserName.ToLower()))
                     {
+                        await AppReference.QueryService.UpdateUserMaster(Pin, UserName);
                         await SaveUserCredentialsToLocalSettings();
                         await InsertLoggedInUserAsZeroCustomer(UserName.ToLower(), Pin);
                     }
@@ -521,6 +612,7 @@ namespace DRLMobile.Uwp.ViewModel
                     // If the user exists download data using partial sync
                     if (((App)Application.Current).LoginUserNameProperty.Equals(UserName.ToLower()))
                     {
+                        await AppReference.QueryService.UpdateUserMaster(Pin, UserName);
                         //download BrandImages from server
                         await FetchServerBrandImagesAsync();
 
@@ -601,7 +693,7 @@ namespace DRLMobile.Uwp.ViewModel
             {
                 LoadingVisibilityHandler(false);
 
-                if (ex is WebException) NoConnectionPopupAsync();
+                if (ex is WebException) await NoConnectionPopupAsync();
                 else
                     ErrorHandler.LogAndThrowSpecifiedException("LoginPageViewModel", "CheckForExistingUserLoginDetails", ex);
             }
@@ -772,7 +864,7 @@ namespace DRLMobile.Uwp.ViewModel
             }
             catch (Exception ex)
             {
-                if (ex is WebException) NoConnectionPopupAsync();
+                if (ex is WebException) await NoConnectionPopupAsync();
                 else
                 {
                     ErrorLogger.WriteToErrorLog(GetType().Name, "PartialDownloadSRC", ex);
@@ -827,6 +919,8 @@ namespace DRLMobile.Uwp.ViewModel
                         IsDataDownloadSuccessful = true;
                         ((App)Application.Current).IsDataSyncSuccessAfterLogin = IsDataDownloadSuccessful;
                     }
+                    LoginUserDetails.lastsyncutcdate = DataSyncHelper.LatestSyncDateTime;
+                    ((App)Application.Current).LastSyncDateTimeProperty = DataSyncHelper.LatestSyncDateTime;
                 }
                 else
                 {

@@ -228,7 +228,7 @@ namespace DRLMobile.Uwp.ViewModel
                         AppRef.IsUpgradeVersion = false;
                     }
                     //Check Push Notification
-                    //await CheckPushNotificationAsync();
+                    await CheckPushNotificationAsync();
 
                     var frame = Window.Current.Content as Frame;
 
@@ -331,7 +331,7 @@ namespace DRLMobile.Uwp.ViewModel
                 AppRef.SqlLiteResetVersion = ApplicationConstants.APPLICATION_VERSION;
                 //return true;
 
-                return ApplicationConstants.APPLICATION_VERSION == "1.1.4";
+                return ApplicationConstants.APPLICATION_VERSION == "1.9.94";
             }
             return false;
         }

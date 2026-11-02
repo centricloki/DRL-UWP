@@ -85,13 +85,11 @@ namespace DRLMobile.Core.Services
             try
             {
                 // Load both tables in parallel for efficiency.
-                var mapRowsTask = dbService.GetMapClassificationsAsync();
-                var classDictTask = dbService.GetClassificationDictionaryAsync();
+                var mapRowsTask = await dbService.GetMapClassificationsAsync();
+                var classDictTask =await dbService.GetClassificationDictionaryAsync();
 
-                await Task.WhenAll(mapRowsTask, classDictTask).ConfigureAwait(false);
-
-                var mapRows = mapRowsTask.Result ?? new List<MapClassification>();
-                var classDict = classDictTask.Result ?? new Dictionary<int, Classification>();
+                var mapRows = mapRowsTask ?? new List<MapClassification>();
+                var classDict = classDictTask ?? new Dictionary<int, Classification>();
 
                 return mapRows
                     .Where(r => r.IsActive == 1 && r.DisplayOrder > 0)

@@ -253,6 +253,11 @@ namespace DRLMobile.Uwp
             }
         }
 
+        public bool? IsFirstLaunchAfterMigration
+        {
+            get { return (bool?)_localSettings.Values["IsFirstLaunchAfterMigration"] ?? true; }
+            set { _localSettings.Values["IsFirstLaunchAfterMigration"] = value; }
+        }
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -325,6 +330,8 @@ namespace DRLMobile.Uwp
                     ApplicationConstants.APPLICATION_VERSION = HelperMethods.GetAppVersion();
                     ApplicationConstants.DATABASE_PATH = Path.Combine(ApplicationData.Current.LocalFolder.Path, ApplicationConstants.DATABASE_NAME);
                     ErrorLogger.ApplicationPath = ApplicationConstants.APP_PATH;
+                    // ✅ SET THE GLOBAL PATH ONCE AT STARTUP
+                    LocalStatePathResolver.CurrentLocalStatePath = ApplicationData.Current.LocalFolder.Path;
 
                     // for national users
                     if ((new int[] { 5, 6, 17 }).Any(x => x == ((App)Application.Current).LoggedInUserRoleId))
