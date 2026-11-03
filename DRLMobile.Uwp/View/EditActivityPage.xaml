@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="DRLMobile.Uwp.View.EditActivityPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -70,6 +70,7 @@
                 MinWidth="300"
                 >
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -1499,13 +1500,13 @@
                             Text="{x:Bind ViewModel.CombineTotal, Mode=OneWay}" />
                     </StackPanel>
                 </StackPanel>
-                <!--  Row 19: Save/Cancel Buttons  -->
+                <!--  Row 19: Save/Cancel/Distribution Buttons  -->
                 <StackPanel
                     Grid.Row="19"
                     Margin="30"
                     HorizontalAlignment="Center"
                     Orientation="Horizontal"
-                    Spacing="60">
+                    Spacing="20">
                     <Button
                         x:Name="ButtonSaveIcon"
                         Width="100"
@@ -1520,9 +1521,17 @@
                         Command="{x:Bind ViewModel.CancelCommand}"
                         Content="Cancel"
                         Visibility="{x:Bind ViewModel.IsSaveIconVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
-                </StackPanel>
-                <!--  Row 20: Bottom Spacer  -->
-                <Rectangle Grid.Row="20" Height="50" />
+                    <Button
+                        x:Name="DistributionButton"
+                        MinWidth="100"
+                        Padding="10,5"
+                        HorizontalAlignment="Center"
+                        Command="{x:Bind ViewModel.DistributorButtonCommand}"
+                        Content="Distribution"
+                        Visibility="{x:Bind ViewModel.IsDistributionButtonVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    </StackPanel>
+                <!--  Row 22: Bottom Spacer  -->
+                <Rectangle Grid.Row="22" Height="50" />
             </Grid>
         </ScrollViewer>
         <!--  Loading Overlay  -->

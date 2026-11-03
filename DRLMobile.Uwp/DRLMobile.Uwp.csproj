@@ -38,7 +38,7 @@
     <AppInstallerUri>https://honeyrel.drl-ent.com/IPadApp/9.2.2</AppInstallerUri>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
-    <AppxPackageDir>C:\AppCodeStore\DRL\DRL-UWP\DRLMobile.Uwp\AppPackages\uat\</AppxPackageDir>
+    <AppxPackageDir>C:\AppCodeStore\DRL\DRL-UWP\DRLMobile.Uwp\AppPackages\stag\</AppxPackageDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
