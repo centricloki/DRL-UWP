@@ -209,8 +209,6 @@ namespace DRLMobile.Uwp.ViewModel
             }
         }
 
-
-
         private async Task OnNavigatedToCommandHandler(bool IsResetUser)
         {
             string dbFilePath = string.Empty;

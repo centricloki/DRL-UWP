@@ -1426,6 +1426,11 @@ namespace DRLMobile.Uwp.ViewModel
                 // 1. Get the Customer ID from the current Activity context.
                 // Using the customer device ID from the current activity
                 string activityCustomerId = currentActivity?.CustomerID;
+                if (!int.TryParse(activityCustomerId, out int iResult))
+                {
+                    var customerMaster = await AppReference.QueryService.GetCustomerMasterByDeviceIdAsync(activityCustomerId);
+                    activityCustomerId = customerMaster.CustomerID.ToString();
+                }
 
                 if (string.IsNullOrWhiteSpace(activityCustomerId))
                 {
