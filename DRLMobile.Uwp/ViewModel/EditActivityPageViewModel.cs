@@ -1462,7 +1462,7 @@ namespace DRLMobile.Uwp.ViewModel
                     if (isDiff)
                     {
                         // Simplified message since we might not have AccountType check here
-                        string msg = "Empty Current cart and continue with Distributor Order?";
+                        string msg = "Empty Current cart and continue with the Retail Sale Order?";
 
                         var result = await AlertHelper.Instance.ShowConfirmationAlert("", msg, "YES", "NO");
                         if (result)
