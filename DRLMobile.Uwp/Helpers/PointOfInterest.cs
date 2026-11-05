@@ -1,4 +1,4 @@
-﻿using DRLMobile.Core.Models;
+using DRLMobile.Core.Models;
 using DRLMobile.Core.Models.DataModels;
 using DRLMobile.Core.Models.UIModels;
 using DRLMobile.Uwp.Helpers.MapHelpers;

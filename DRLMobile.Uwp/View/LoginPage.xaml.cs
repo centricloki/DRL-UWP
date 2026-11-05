@@ -20,7 +20,7 @@ namespace DRLMobile.Uwp.View
             DataContext = ViewModel;
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             (Application.Current as App).IsApplicationUpdateAvailable=false;
@@ -31,6 +31,7 @@ namespace DRLMobile.Uwp.View
             }
             else
             {
+                await ViewModel.FirstLaunchAfterMigrationCommand.ExecuteAsync(null);
                 if ((Application.Current as App).IsRememberMe)
                 {
                     RememberMeCheckBox.IsChecked = true;
@@ -38,10 +39,10 @@ namespace DRLMobile.Uwp.View
                     PinBox.Password = (Application.Current as App).PinText;
                 }
                 else
-                {
+                {                                    
                     RememberMeCheckBox.IsChecked = false;
                     UserNameTextBox.Text = string.Empty;
-                    PinBox.Password = string.Empty;
+                    PinBox.Password = string.Empty;                 
                 }
             }
 

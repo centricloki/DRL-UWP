@@ -1,4 +1,4 @@
-﻿using DRLMobile.Core.Models.UIModels;
+using DRLMobile.Core.Models.UIModels;
 
 using System.Collections.Generic;
 

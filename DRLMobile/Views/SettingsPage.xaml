@@ -1,13 +1,12 @@
-<Page
-    x:Class="DRLMobile.Uwp.View.SettingsPage"
+﻿<Page
+    x:Class="DRLMobile.Views.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="using:DRLMobile.Uwp.Converters"
-    xmlns:customControls="using:DRLMobile.Uwp.CustomControls"
+    xmlns:converters="using:DRLMobile.Converters"
+    xmlns:customControls="using:DRLMobile.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:DRLMobile.Uwp.View"
+    xmlns:local="using:DRLMobile.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
@@ -151,64 +150,25 @@
 
 
                         <TextBlock Margin="20,10,0,0" Text="Enter Current PIN" />
-                        <TextBox
-                            ui:TextBoxExtensions.Regex="^[0-9]*$"
-                            ui:TextBoxExtensions.ValidationMode="Forced"
-                            ui:TextBoxExtensions.ValidationType="Number"
-                            BeforeTextChanging="TextBox_BeforeTextChanging"
-                            Foreground="Black"
-                            MaxLength="6"
-                            PlaceholderText="Enter Current PIN"
-                            Style="{StaticResource EditTextBoxStyle}"
-                            Text="{x:Bind ViewModel.OldPinText, Mode=TwoWay}" />
-                        <TextBlock
-                            Margin="20,10,0,0"
-                            FontSize="12"
-                            Foreground="Red"
-                            Text="{x:Bind ViewModel.ErrorForOldPinText, Mode=TwoWay}"
-                            TextWrapping="Wrap" />
+                        <TextBox PlaceholderText="Enter Current PIN" Style="{StaticResource EditTextBoxStyle}" />
+
+
+
                         <TextBlock Margin="20,40,0,0" Text="Enter New PIN" />
-                        <TextBox
-                            ui:TextBoxExtensions.Regex="^[0-9]*$"
-                            ui:TextBoxExtensions.ValidationMode="Forced"
-                            ui:TextBoxExtensions.ValidationType="Number"
-                            BeforeTextChanging="TextBox_BeforeTextChanging"
-                            Foreground="Black"
-                            MaxLength="4"
-                            PlaceholderText="Enter New PIN"
-                            Style="{StaticResource EditTextBoxStyle}"
-                            Text="{x:Bind ViewModel.NewPinText, Mode=TwoWay}" />
-                        <TextBlock
-                            Margin="20,10,0,0"
-                            FontSize="12"
-                            Foreground="Red"
-                            Text="{x:Bind ViewModel.ErrorForNewPinText, Mode=TwoWay}"
-                            TextWrapping="Wrap" />
+                        <TextBox PlaceholderText="Enter New PIN" Style="{StaticResource EditTextBoxStyle}" />
+
+
                         <TextBlock Margin="20,40,0,0" Text="Confirm PIN" />
-                        <TextBox
-                            ui:TextBoxExtensions.Regex="^[0-9]*$"
-                            ui:TextBoxExtensions.ValidationMode="Forced"
-                            ui:TextBoxExtensions.ValidationType="Number"
-                            BeforeTextChanging="TextBox_BeforeTextChanging"
-                            Foreground="Black"
-                            MaxLength="4"
-                            PlaceholderText="Confirm PIN"
-                            Style="{StaticResource EditTextBoxStyle}"
-                            Text="{x:Bind ViewModel.ConfirmNewPinText, Mode=TwoWay}" />
-                        <TextBlock
-                            Margin="20,10,0,0"
-                            FontSize="12"
-                            Foreground="Red"
-                            Text="{x:Bind ViewModel.ErrorForConfirmNewPinText, Mode=TwoWay}"
-                            TextWrapping="Wrap" />
+                        <TextBox PlaceholderText="Confirm PIN" Style="{StaticResource EditTextBoxStyle}" />
+
                     </StackPanel>
+
 
                     <Button
                         Grid.Row="2"
                         Margin="20"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Click="SaveButtonClicked"
                         Content="Save"
                         Foreground="White"
                         Style="{StaticResource NoHoverButton}">
@@ -224,7 +184,7 @@
         </FlyoutBase.AttachedFlyout>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -240,8 +200,9 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Orientation="Vertical"
-            Spacing="50">
+            Spacing="100">
             <StackPanel
+                Grid.Row="1"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Orientation="Horizontal"
@@ -250,7 +211,7 @@
                     FontSize="{StaticResource MediumFontSize}"
                     HoverStateImageSource="{StaticResource ChangePinHover}"
                     NormalStateImageSource="{StaticResource ChangePinNormal}"
-                    Tapped="ChangePinButton_Tapped"
+                    Tapped="DashboardButton_Tapped"
                     TitleFontSize="{StaticResource SettingPageTextSize}"
                     TitleText="Change Pin" />
                 <customControls:DashboardButton
@@ -268,54 +229,22 @@
                     TitleText="Logout" />
             </StackPanel>
 
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" Spacing="20">
+            <StackPanel Orientation="Horizontal" Spacing="30">
+                <Button Content="Reset User File" Style="{StaticResource LoginButtonStyle}" />
                 <Button
-                    Command="{x:Bind ViewModel.ResetUserComand}"
-                    Content="Reset User File"
-                    Style="{StaticResource LoginButtonStyle}"
-                    Width="180"/>
-                <Button                    
-                    Command="{x:Bind ViewModel.DownloadSRCZipCommand}"                    
-                    Content="Download SRC"                    
-                    Style="{StaticResource LoginButtonStyle}" 
-                    Width="180"/>
-                <Button
-                    Command="{x:Bind ViewModel.DownloadCustomerDocumentsCommand}"
-                    Content="Download Customer Documents"
-                    Style="{StaticResource LoginButtonStyle}"
-                    Width="260"/>
-                <Button
-                    Command="{x:Bind ViewModel.SendLogsCommand}"
-                    Content="Send Logs"
-                    Style="{StaticResource LoginButtonStyle}"
-                    Width="180"/>
-                <Button
-                    Command="{x:Bind ViewModel.InstallBuildCommand}"
-                    Content="Update App"
-                    Foreground="White"
-                    Style="{StaticResource LoginButtonStyle}"
-                    Visibility="{x:Bind ViewModel.IsUpgradeVersion}"
-                    Width="180">
-                    <Button.Background>
-                        <SolidColorBrush Color="Red"/>
-                    </Button.Background>
-                </Button>
-                <!--<Button
-                    Visibility="Collapsed"
-                    Command="{x:Bind ViewModel.ResetSqlLiteArchiveFlagCommand}"
-                    Content="Reset DB Archive Flag"
-                    Style="{StaticResource LoginButtonStyle}"
-                    Width="180"/>
+                    Command="{x:Bind ViewModel.DownloadSRCZipCommand}"
+                    Content="Download SRC"
+                    Style="{StaticResource LoginButtonStyle}" />
                 <Button
                     Command="{x:Bind ViewModel.UpdateAppComand}"
                     Content="Update Application"
                     Style="{StaticResource LoginButtonStyle}"
-                    Visibility="{x:Bind ViewModel.IsUpdateAvailable, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}}" 
-                    Width="200"/>-->
+                    Visibility="{x:Bind ViewModel.IsUpdateAvailable, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+                <!--    -->
             </StackPanel>
-
         </StackPanel>
-        
+
+
         <Grid
             Grid.Row="0"
             Grid.RowSpan="3"
@@ -355,24 +284,5 @@
             </StackPanel>
         </Grid>
 
-        <Grid
-            Grid.Row="0"
-            Grid.RowSpan="2"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            d:Visibility="Collapsed"
-            Visibility="{x:Bind ViewModel.LoadingVisibility, Mode=OneWay}">
-
-            <Grid Background="Black" Opacity="0.3" />
-            <ProgressRing
-                Width="100"
-                Height="100"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Foreground="White"
-                IsActive="True" />
-        </Grid>
-
     </Grid>
 </Page>
-

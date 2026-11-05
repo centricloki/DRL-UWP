@@ -1,4 +1,4 @@
-﻿using DRLMobile.Core.Enums;
+using DRLMobile.Core.Enums;
 using DRLMobile.Core.Helpers;
 using DRLMobile.Core.Models;
 using DRLMobile.Core.Models.DataModels;
@@ -7,6 +7,7 @@ using DRLMobile.Core.Services;
 using DRLMobile.ExceptionHandler;
 using DRLMobile.Uwp.Helpers;
 using DRLMobile.Uwp.Services;
+using DRLMobile.Uwp.View;
 
 using Microsoft.Toolkit.Mvvm.Input;
 
@@ -99,6 +100,13 @@ namespace DRLMobile.Uwp.ViewModel
         {
             get { return _nonTobaccoGridItemSource; }
             set { SetProperty(ref _nonTobaccoGridItemSource, value); }
+        }
+
+        private bool _isDistributionButtonVisible;
+        public bool IsDistributionButtonVisible
+        {
+            get { return _isDistributionButtonVisible; }
+            set { SetProperty(ref _isDistributionButtonVisible, value); }
         }
 
         private ObservableCollection<OrderHistoryDetailsGridUIModel> _rtnGridItemSource;
@@ -301,6 +309,7 @@ namespace DRLMobile.Uwp.ViewModel
         public ICommand OpenPickerCommand { get; private set; }
         public ICommand PreviewCommand { get; private set; }
         public ICommand RemoveAttachementCommand { get; private set; }
+        public ICommand DistributorButtonCommand { get; private set; }
         #endregion
 
         #region constructor
@@ -326,6 +335,7 @@ namespace DRLMobile.Uwp.ViewModel
             //ActivityTypeList = new ObservableCollection<string>();
             CustomerList = new ObservableCollection<CustomerPageUIModel>();
             AddedAttachementItemSource = new ObservableCollection<AttachmentView>();
+            DistributorButtonCommand = new AsyncRelayCommand(DistributorButtonCommandHandler);
             RegisterCommands();
         }
         #endregion
@@ -841,6 +851,42 @@ namespace DRLMobile.Uwp.ViewModel
                     currentActivity.NextWeekPlan = null;
                 }
 
+                var previousStateOfActivity = await AppReference.QueryService.GetIndidualActivityById(currentActivity?.CallActivityDeviceID);
+
+                /*** JIRA Ticket https://republicbrands.atlassian.net/browse/HS2-383
+                * Update Last call date on Customer List
+                * Chain Stores:Retail Sales Call,Distributor Sales Call,Chain Sales Call
+                */
+                if (previousStateOfActivity != null)
+                {
+                    var customerMaster = await AppReference.QueryService.GetCustomerMasterByDeviceIdAsync(previousStateOfActivity.CustomerID);
+                    string lastCallActivityDate = null;
+                    List<string> calldateActivityTypes = new List<string> { "Distributor Sales Call", "Retail Sales Call", "Chain Sales Call" };
+                    if (calldateActivityTypes.Contains(previousStateOfActivity.ActivityType))
+                    {
+                        if (!string.IsNullOrWhiteSpace(customerMaster.CustomerNumber) && customerMaster.CustomerNumber.ToLower().StartsWith("x"))
+                        {
+                            calldateActivityTypes.Add("Car Stock Order");
+                        }
+                        if (customerMaster.AccountType != 1)
+                        {
+                            calldateActivityTypes.Add("Cash Sale");
+                            calldateActivityTypes.Add("Cash Sales Initiative");
+                        }
+                        var customerActivities = await AppReference.QueryService.GetCallActivitiesOfSelectedCustomerForLoggedInUser(previousStateOfActivity.CustomerID);
+                        lastCallActivityDate = customerActivities
+                            .Where(x => calldateActivityTypes.Contains(x.ActivityType)
+                            && x.CustomerID == previousStateOfActivity.CustomerID
+                            && x.CallActivityID != previousStateOfActivity.CallActivityID)
+                            .OrderByDescending(x => x._callActivityDate)
+                            .Take(1)
+                            .Select(x => x.CallDate)
+                            .FirstOrDefault();
+                        await AppReference.QueryService.UpdateDateFromActivityCustomerMaster(customerMaster.DeviceCustomerID
+                       , previousStateOfActivity.ActivityType
+                       , lastCallActivityDate);
+                    }
+                }
 
                 var editedActivity = await AppReference.QueryService.AddCallActivityToDb(currentActivity);
 
@@ -982,7 +1028,7 @@ namespace DRLMobile.Uwp.ViewModel
                     UIModel.CallDate = callDate;
                     UIModel.SelectedActivityType = activityByAllCustomerModel?.ActivityType;
                     UIModel.Hours = currentActivity?.Hours;
-                    UIModel.Notes = currentActivity?.Comments;                    
+                    UIModel.Notes = currentActivity?.Comments;
                     //UIModel.Team = territories?.FirstOrDefault()?.TerritoryName;
                     UIModel.Team = currentActivity.TerritoryName;
                     UIModel.AccountNo = activityByAllCustomerModel?.CustomerNumber;
@@ -1160,7 +1206,7 @@ namespace DRLMobile.Uwp.ViewModel
                     }
 
                     territories = new List<TerritoryMaster>();
-                    if(user!= null)
+                    if (user != null)
                     {
                         territories = await AppReference.QueryService.GetTerritoryFromIds(user.TerritoryID);
                         UIModel.CreatedBy = user?.FirstName + " " + user.LastName;
@@ -1172,7 +1218,7 @@ namespace DRLMobile.Uwp.ViewModel
                     UIModel.CallDate = callDate;
                     UIModel.SelectedActivityType = activityByIndividualCustomerModel?.ActivityType;
                     UIModel.Hours = currentActivity?.Hours;
-                    UIModel.Notes = currentActivity?.Comments;                   
+                    UIModel.Notes = currentActivity?.Comments;
                     UIModel.Team = currentActivity.TerritoryName;
                     UIModel.AccountNo = activityByIndividualCustomerModel?.CustomerNumber;
                     UIModel.AccountName = activityByIndividualCustomerModel?.CustomerName;
@@ -1332,6 +1378,25 @@ namespace DRLMobile.Uwp.ViewModel
                     loggedInUser = await AppReference.QueryService.GetUserData(AppReference.LoginUserNameProperty, AppReference.LoginUserPinProperty);
                 }
                 loginedInUserCustomerDeviceId = await AppReference.QueryService.GetUserCustomerDeviceId(loggedInUser.FirstName + " " + loggedInUser.LastName);
+
+                // Check if the customer associated with this activity is an "Indirect" customer.
+                // Based on CustomerDetailsPage logic, AccountType != 1 indicates the Distributor/Indirect type.
+                if (!string.IsNullOrWhiteSpace(currentActivity.CustomerID))
+                {
+                    var customerMaster = await AppReference.QueryService.GetCustomerMasterByDeviceIdAsync(currentActivity.CustomerID);
+                    if (customerMaster != null && customerMaster.AccountType != 1)
+                    {
+                        IsDistributionButtonVisible = true;
+                    }
+                    else
+                    {
+                        IsDistributionButtonVisible = false;
+                    }
+                }
+                else
+                {
+                    IsDistributionButtonVisible = false;
+                }
             }
             catch (Exception ex)
             {
@@ -1339,6 +1404,92 @@ namespace DRLMobile.Uwp.ViewModel
             }
 
             IsLoading = false;
+        }
+
+        private void SetDistributionState(string customerId)
+        {
+            // Set the exact same flags as the Customer Profile page
+            AppReference.SelectedCustomerId = customerId;
+            AppReference.IsDistributionOptionClicked = true;
+            AppReference.IsCarStockOrder = false;
+            AppReference.IsCreditRequestOrder = false;
+            (Application.Current as App).OrderPrintName = "";
+
+            // Navigate to the SRC Product Page (same as Customer Profile)
+            NavigationService.NavigateShellFrame(typeof(SRCProductPage));
+        }
+
+        private async Task DistributorButtonCommandHandler()
+        {
+            try
+            {
+                // 1. Get the Customer ID from the current Activity context.
+                // Using the customer device ID from the current activity
+                string activityCustomerId = currentActivity?.CustomerID;
+                if (!int.TryParse(activityCustomerId, out int iResult))
+                {
+                    var customerMaster = await AppReference.QueryService.GetCustomerMasterByDeviceIdAsync(activityCustomerId);
+                    activityCustomerId = customerMaster.CustomerID.ToString();
+                }
+
+                if (string.IsNullOrWhiteSpace(activityCustomerId))
+                {
+                    await AlertHelper.Instance.ShowConfirmationAlert("Error", "No customer associated with this activity.", "OK");
+                    return;
+                }
+
+                // 2. Replicate the exact Cart/Order logic from CustomerDetailsPage
+                if (AppReference.CurrentOrderId != 0 && (bool)AppReference.IsCreditRequestOrder)
+                {
+                    AppReference.IsOrderTypeChanged = true;
+                }
+                else
+                {
+                    AppReference.IsOrderTypeChanged = false;
+                }
+
+                if (AppReference.CartItemCount > 0)
+                {
+                    if (AppReference.SelectedCustomerId != activityCustomerId)
+                    {
+                        (Application.Current as App).OrderPrintName = "";
+                    }
+
+                    bool isDiff = AppReference.CartDataFromScreen != 0;
+                    isDiff |= isDiff ? isDiff : (AppReference.IsCreditRequestOrder ?? false);
+                    isDiff |= isDiff ? isDiff : (AppReference.IsCarStockOrder ?? false);
+
+                    if (isDiff)
+                    {
+                        // Simplified message since we might not have AccountType check here
+                        string msg = "Empty Current cart and continue with the Retail Sale Order?";
+
+                        var result = await AlertHelper.Instance.ShowConfirmationAlert("", msg, "YES", "NO");
+                        if (result)
+                        {
+                            var isSuccess = await AppReference.QueryService.DeleteAllCartItems(AppReference.CurrentDeviceOrderId);
+                            if (isSuccess)
+                            {
+                                AppReference.CartItemCount = 0;
+                                SetDistributionState(activityCustomerId);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        SetDistributionState(activityCustomerId);
+                    }
+                }
+                else
+                {
+                    AppReference.CartItemCount = 0;
+                    SetDistributionState(activityCustomerId);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.WriteToErrorLog(nameof(EditActivityPageViewModel), nameof(DistributorButtonCommandHandler), ex.StackTrace);
+            }
         }
 
         private async Task SetPropertiesWhichCanBeEdited(string orderID, string customerNumber, bool isIndividualCustomer)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -254,7 +254,7 @@ namespace DRLMobile.Uwp.ViewModel
         {
             try
             {
-               
+
 
                 // Clear previous error messages
                 ErrorForOldPinText = string.Empty;
@@ -677,6 +677,9 @@ namespace DRLMobile.Uwp.ViewModel
 
                     ((App)Application.Current).IsSyncSuccessProperty = false;
 
+                    // 🔑 CRITICAL: Set migration flag to allow fresh login after logout
+                    // This prevents auto-login loop when user explicitly logs out
+                    ((App)Application.Current).IsFirstLaunchAfterMigration = false;
                     var frame = Window.Current.Content as Frame;
 
                     frame.Navigate(typeof(LoginPage));

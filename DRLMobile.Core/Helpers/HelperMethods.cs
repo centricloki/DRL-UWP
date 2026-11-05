@@ -16,11 +16,14 @@ namespace DRLMobile.Core.Helpers
             dict?.TryGetValue(id, out value);
             return value;
         }
+
+
         public static int GetKeyFromIdNameDictionary(Dictionary<int, string> categoryDict, string value)
         {
             var firstEntry = categoryDict?.FirstOrDefault(x => x.Value.Equals(value));
             return firstEntry.HasValue ? firstEntry.Value.Key : 0;
         }
+
         public static string GetNameFromURL(string url)
         {
             if (!string.IsNullOrWhiteSpace(url))
@@ -31,6 +34,7 @@ namespace DRLMobile.Core.Helpers
             }
             return string.Empty;
         }
+
         public static string GetAppVersion()
         {
             Package package = Package.Current;
@@ -39,6 +43,7 @@ namespace DRLMobile.Core.Helpers
 
             return string.Format("{0}.{1}.{2}", version.Major, version.Minor, version.Build);
         }
+
         public static string GetSalesTypeString(string value)
         {
             switch (value)
@@ -75,6 +80,7 @@ namespace DRLMobile.Core.Helpers
                     return string.Empty;
             }
         }
+
         public static void RemoveAll<T>(this ICollection<T> source, Func<T, bool> predicate)
         {
             if (source == null)
@@ -85,6 +91,7 @@ namespace DRLMobile.Core.Helpers
 
             source.Where(predicate).ToList().ForEach(e => source.Remove(e));
         }
+
         public static bool IsValidEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
@@ -127,26 +134,12 @@ namespace DRLMobile.Core.Helpers
                 return false;
             }
         }
+
         public static int GenerateRandomNumberForGivenRange(int minRangeNumber, int maxRangeNumber)
         {
             Random random = new Random();
 
             return random.Next(minRangeNumber, maxRangeNumber);
-        }
-        public static bool IsProdEnviornment
-        {
-            get
-            {
-                string url = ApplicationConstants.UATBaseUrl;
-                if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
-                {
-                    return uri.Host.Equals(
-                        "honeyapi.drl-ent.com",
-                        StringComparison.OrdinalIgnoreCase
-                    );
-                }
-                else return false;
-            }
         }
     }
 }

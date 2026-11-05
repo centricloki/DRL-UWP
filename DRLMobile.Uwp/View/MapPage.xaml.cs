@@ -1,4 +1,4 @@
-using DevExpress.Mvvm.Native;
+﻿using DevExpress.Mvvm.Native;
 
 using DRLMobile.Core.Enums;
 using DRLMobile.Core.Models.UIModels;
@@ -91,7 +91,7 @@ namespace DRLMobile.Uwp.View
             }
             ViewModel.SetLoader(true);
             try
-            {                
+            {
                 await ViewModel.OnNavigatedToCommandHandler();
                 await InitializeMap();
                 await RefreshMapIcons();
@@ -405,7 +405,7 @@ namespace DRLMobile.Uwp.View
                 OptionsAllCheckBox.Unchecked -= OptionsAllCheckBox_Unchecked;
 
                 await myMap.ClearAllAsync();
-                
+
                 if (ViewModel.PointOfIntrestSource != null && ViewModel.PointOfIntrestSource.Count > 0)
                 {
                     // ---- parallelism limiter ----

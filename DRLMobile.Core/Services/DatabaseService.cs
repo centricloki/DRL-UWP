@@ -1,4 +1,4 @@
-﻿using DRLMobile.Core.Helpers;
+using DRLMobile.Core.Helpers;
 using DRLMobile.Core.Interface;
 using DRLMobile.Core.Models.DataModels;
 using DRLMobile.Core.Models.UIModels;
@@ -73,48 +73,135 @@ namespace DRLMobile.Core.Services
         //    }
         //}
 
+        //public async Task<Dictionary<int, Classification>> GetClassificationDictionaryAsync()
+        //{
+        //    Dictionary<int, Classification> classificationDictionary = null;
+        //    SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH, false);
+        //    try
+        //    {
+        //        var table = await db.Table<Classification>().ToListAsync().ConfigureAwait(false);
+        //        classificationDictionary = table.ToDictionary(key => key.AccountClassificationId);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorLogger.WriteToErrorLog(nameof(DatabaseService), "GetClassificationDictionaryAsync", ex.Message);
+        //    }
+        //    finally
+        //    {
+        //        await db.CloseAsync().ConfigureAwait(false);
+        //    }
+        //    return classificationDictionary;
+        //}
+
         public async Task<Dictionary<int, Classification>> GetClassificationDictionaryAsync()
         {
             Dictionary<int, Classification> classificationDictionary = null;
-            SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH, false);
-            try
+            int maxRetries = 3;
+            int retryDelayMs = 500; // Wait half a second between retries
+
+            for (int attempt = 1; attempt <= maxRetries; attempt++)
             {
-                var table = await db.Table<Classification>().ToListAsync().ConfigureAwait(false);
-                classificationDictionary = table.ToDictionary(key => key.AccountClassificationId);
+                // Note: SQLiteAsyncConnection manages its own pool, but creating a new one 
+                // per attempt ensures we don't reuse a potentially locked/bad connection state.
+                SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH, false);
+                try
+                {
+                    var table = await db.Table<Classification>().ToListAsync().ConfigureAwait(false);
+
+                    // Safety check: ensure table is not null before calling ToDictionary
+                    if (table != null)
+                    {
+                        classificationDictionary = table.ToDictionary(key => key.AccountClassificationId);
+                    }
+                    else
+                    {
+                        classificationDictionary = new Dictionary<int, Classification>();
+                    }
+
+                    break; // Success! Exit the retry loop immediately.
+                }
+                catch (Exception ex)
+                {
+                    if (attempt == maxRetries)
+                    {
+                        // Final attempt failed. Log the FULL exception (ex.ToString()) to capture inner SQLite errors.
+                        ErrorLogger.WriteToErrorLog(nameof(DatabaseService), "GetClassificationDictionaryAsync", ex.ToString());
+
+                        // Return an empty dictionary instead of null to prevent downstream NullReferenceExceptions
+                        classificationDictionary = new Dictionary<int, Classification>();
+                    }
+                }
+              
+                // If we haven't reached the max retries, wait briefly before trying again.
+                // This brief pause is usually enough for a background sync to release the database.
+                if (attempt < maxRetries)
+                {
+                    await Task.Delay(retryDelayMs).ConfigureAwait(false);
+                }
             }
-            catch (Exception ex)
-            {
-                ErrorLogger.WriteToErrorLog(nameof(DatabaseService), "GetClassificationDictionaryAsync", ex.Message);
-            }
-            finally
-            {
-                await db.CloseAsync().ConfigureAwait(false);
-            }
-            return classificationDictionary;
+
+            return classificationDictionary ?? new Dictionary<int, Classification>();
         }
 
         /// <summary>
         /// Returns all rows from the <c>MapClassification</c> SQLite table.
         /// Used exclusively by the Map view to drive legend order, visibility and colours.
         /// </summary>
+        //public async Task<List<MapClassification>> GetMapClassificationsAsync()
+        //{
+        //    List<MapClassification> result = null;
+        //    SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH, false);
+        //    try
+        //    {
+        //        result = await db.Table<MapClassification>().ToListAsync().ConfigureAwait(false);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorLogger.WriteToErrorLog(nameof(DatabaseService), nameof(GetMapClassificationsAsync), ex.Message);
+        //    }
+        //    finally
+        //    {
+        //        await db.CloseAsync().ConfigureAwait(false);
+        //    }
+        //    return result ?? new List<MapClassification>();
+        //}
+
         public async Task<List<MapClassification>> GetMapClassificationsAsync()
         {
             List<MapClassification> result = null;
-            SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH, false);
-            try
+            int maxRetries = 3;
+            int retryDelayMs = 500; // Wait half a second between retries
+
+            for (int attempt = 1; attempt <= maxRetries; attempt++)
             {
-                result = await db.Table<MapClassification>().ToListAsync().ConfigureAwait(false);
+                SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH, false);
+                try
+                {
+                    result = await db.Table<MapClassification>().ToListAsync().ConfigureAwait(false);
+                    break; // Success! Exit the retry loop immediately.
+                }
+                catch (Exception ex)
+                {
+                    if (attempt == maxRetries)
+                    {
+                        // Final attempt failed. Log the FULL exception (ex.ToString()) to capture inner SQLite errors.
+                        ErrorLogger.WriteToErrorLog(nameof(DatabaseService), nameof(GetMapClassificationsAsync), ex.ToString());
+
+                        // Ensure we return an empty list instead of null to prevent downstream NullReferenceExceptions
+                        result = new List<MapClassification>();
+                    }
+                }
+
+                // If we haven't reached the max retries, wait briefly before trying again.
+                if (attempt < maxRetries)
+                {
+                    await Task.Delay(retryDelayMs).ConfigureAwait(false);
+                }
             }
-            catch (Exception ex)
-            {
-                ErrorLogger.WriteToErrorLog(nameof(DatabaseService), nameof(GetMapClassificationsAsync), ex.Message);
-            }
-            finally
-            {
-                await db.CloseAsync().ConfigureAwait(false);
-            }
+
             return result ?? new List<MapClassification>();
         }
+
 
         //public async Task<List<CustomerMaster>> GetCustomerDataAsync()
         //{
@@ -134,6 +221,9 @@ namespace DRLMobile.Core.Services
         //        return null;
         //    }
         //}
+
+
+
 
         public async Task<List<CustomerMaster>> GetCustomerDataAsync()
         {
@@ -1969,6 +2059,7 @@ namespace DRLMobile.Core.Services
 
             return success != 0;
         }
+
 
         public async Task<bool> UpdateMapClassificationColorAsync(int accountClassificationId, string hexColorCode)
         {
@@ -9117,8 +9208,9 @@ namespace DRLMobile.Core.Services
             try
             {
                 await db.CreateTableAsync<Configuration>();
-                Configuration config = await db.FindWithQueryAsync<Configuration>($"SELECT ConfigID,KEYName,KEYValue FROM Configuration WHERE KEYName = '{_keyName}'")
-                    .ConfigureAwait(false);
+                // Get the value from the row with MAX ConfigID for this KeyName (most recent entry)
+                Configuration config = await db.FindWithQueryAsync<Configuration>(
+                    $"SELECT ConfigID,KEYName,KEYValue FROM Configuration WHERE KEYName = '{_keyName}' AND ConfigID = (SELECT MAX(ConfigID) FROM Configuration WHERE KEYName = '{_keyName}')");
                 if (config != null) result = config.KEYValue;
             }
             catch (Exception ex)
@@ -9327,5 +9419,50 @@ namespace DRLMobile.Core.Services
             }
             return null;
         }
+
+        #region Auto-Login Migration Helper Methods
+
+        // 1. Get CustomerName from CustomerMaster table
+        public async Task<string> GetCustomerNameByCustomerIdAsync(int customerId)
+        {
+            try
+            {
+                SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH, false);
+                var result = await db.ExecuteScalarAsync<string>(
+                    "SELECT CustomerName FROM CustomerMaster WHERE CustomerId = ?", customerId);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.WriteToErrorLog(nameof(QueryService), "GetCustomerNameByCustomerIdAsync", ex);
+                return null;
+            }
+        }
+
+
+        // 2. Get User Credentials from UserMaster by FirstName and LastName
+        public async Task<(string UserName, int PIN, int UserId, string DbFileName)> GetUserCredentialsByNameAsync(string firstName, string lastName)
+        {
+            try
+            {
+                SQLiteAsyncConnection db = new SQLiteAsyncConnection(ApplicationConstants.DATABASE_PATH, false);
+                // Query to find user matching the name
+                var user = await db.FindWithQueryAsync<(string UserName, int PIN, int UserId, string DbFileName)>(
+                            @"SELECT UserName, PIN, UserId 
+                            FROM UserMaster 
+                            WHERE LOWER(FirstName) = LOWER(?) AND LOWER(LastName) = LOWER(?) 
+                            LIMIT 1",
+                    firstName.Trim(), lastName.Trim());
+
+                return user;
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.WriteToErrorLog(nameof(QueryService), "GetUserCredentialsByNameAsync", ex);
+                return default;
+            }
+        }
+
+        #endregion
     }
 }

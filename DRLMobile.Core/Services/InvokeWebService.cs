@@ -82,7 +82,7 @@ namespace DRLMobile.Core.Services
         /// <param name="password"></param>
         /// <param name="updateDate"></param>
         /// <returns>Downloaded data string</returns>
-        public async static Task<string> DataDownloadService(string userName, int password, string updateDate, string oldTerritoryId = "")
+        public async static Task<string> DataDownloadService(string userName, int password, string updateDate, string oldTerritoryId="")
         {
             string downloadedData = string.Empty;
 
@@ -94,7 +94,7 @@ namespace DRLMobile.Core.Services
                     pin = password,
                     versionnumber = ApplicationConstants.APPLICATION_VERSION,
                     updatedate = updateDate,
-                    oldterritoryid = oldTerritoryId
+                    oldterritoryid= oldTerritoryId
                 };
 
                 string serviceRequestModel = JsonConvert.SerializeObject(requestModel);

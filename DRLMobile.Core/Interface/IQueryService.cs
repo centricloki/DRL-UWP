@@ -1,4 +1,4 @@
-﻿using DRLMobile.Core.Enums;
+using DRLMobile.Core.Enums;
 using DRLMobile.Core.Models.DataModels;
 using DRLMobile.Core.Models.FedExAddressValidationModels;
 using DRLMobile.Core.Models.UIModels;
@@ -224,6 +224,11 @@ namespace DRLMobile.Core.Interface
 
         Task<string> GetTerritoriesBeforeSyncOfUserAsync(string userName, string pin);
         Task<CustomerMaster> GetCustomerMasterByDeviceIdAsync(string deviceId);
+        
+        // Auto-login migration helper methods
+        Task<string> GetCustomerNameByCustomerIdAsync(int customerId);
+        Task<(string UserName, int PIN, int UserId, string DbFileName)> GetUserCredentialsByNameAsync(string firstName, string lastName);
+        
         Task<List<StateMaster>> GetStateMasterDataAsync(string stateName);
     }
 }

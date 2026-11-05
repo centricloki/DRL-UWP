@@ -1,4 +1,5 @@
-﻿using DevExpress.Mvvm.Native;
+using DevExpress.Mvvm.Native;
+
 using Microsoft.Toolkit.Mvvm.Input;
 
 using DRLMobile.Core.Enums;
@@ -7,6 +8,7 @@ using DRLMobile.Core.Models;
 using DRLMobile.Core.Models.DataModels;
 using DRLMobile.Core.Models.UIModels;
 using DRLMobile.ExceptionHandler;
+using DRLMobile.Core.Services;
 using DRLMobile.Uwp.Helpers;
 
 using System;
@@ -25,7 +27,6 @@ using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
-using System.Collections.Concurrent;
 
 namespace DRLMobile.Uwp.ViewModel
 {
@@ -50,7 +51,7 @@ namespace DRLMobile.Uwp.ViewModel
         public RandomAccessStreamReference[] numberIconReferences = new RandomAccessStreamReference[8];
         public List<PointOfInterest> places = new List<PointOfInterest>();
         public int previousZoomLevel = 0;
-        
+
         #endregion
 
         #region Commands
@@ -957,9 +958,9 @@ namespace DRLMobile.Uwp.ViewModel
             }
         }
 
-        public async Task OnMapLegendItemClickCommandHandler( MapsLegendFilterUIModel selectedItem, CancellationToken token)
+        public async Task OnMapLegendItemClickCommandHandler(MapsLegendFilterUIModel selectedItem, CancellationToken token)
         {
-            token.ThrowIfCancellationRequested();   
+            token.ThrowIfCancellationRequested();
 
             if (CustomMapPinVisibility == Visibility.Visible)
             { CustomMapPinVisibility = Visibility.Collapsed; }
@@ -1314,55 +1315,51 @@ namespace DRLMobile.Uwp.ViewModel
                     LegendsLabelText = "Trade Type";
                     PlotByCurrentFilter = MapFilter.TradeType;
                     PlotByFilterSource = StaticDataSourceHelper.GetPlotByTypeFiltersDataSource();
-
-                    var classifications = await AppReference.QueryService.GetClassificationDict();
-
-                    //MapsStaticDataSourceHelper.ClassificationsList = classifications?.Values.ToList();
-
-                    // ── DB-driven MapClassification path (Map view only) ─────────────
-                    // Reads the MapClassification SQLite table via MapClassificationService.
-                    // Drives legend visibility (IsActive), display order (DisplayOrder)
-                    // and colour (HexColorCode — null → deterministic gradient generator).
-                    // This is completely independent of GetClassificationDict() used by
-                    // other ViewModels (CustomerList, CustomerPage, etc.).
-                    try
-                    {
-                        var mapClassifications = await AppReference.QueryService
-                            .GetActiveMapClassificationsAsync();
-
-                        MapsStaticDataSourceHelper.MapClassificationList = mapClassifications;
-
-                        // Pre-warm: resolve colours and generate dynamic pin PNGs.
-                        if (mapClassifications?.Count > 0)
-                        {
-                            _ = Task.Run(async () =>
-                            {
-                                try
-                                {
-                                    await ClassificationColorService.PrewarmAsync(mapClassifications, AppReference.QueryService.DatabaseService);
-                                }
-                                catch (Exception prewarmEx)
-                                {
-                                    ErrorLogger.WriteToErrorLog(
-                                        nameof(MapPageViewModel),
-                                        "ClassificationColorService.PrewarmAsync(MapClassificationViewModel)",
-                                        prewarmEx.StackTrace);
-                                }
-                            });
-                        }
-                    }
-                    catch (Exception mapClsEx)
-                    {
-                        // Non-fatal — fall back to ClassificationsList path in MapsStaticDataSourceHelper.
-                        ErrorLogger.WriteToErrorLog(
-                            nameof(MapPageViewModel),
-                            "GetActiveMapClassificationsAsync",
-                            mapClsEx.StackTrace);
-                    }
-
-                    SetLegendsSource();
                 }
-                //
+                // ── DB-driven MapClassification path (Map view only) ─────────────
+                // Reads the MapClassification SQLite table via MapClassificationService.
+                // Drives legend visibility (IsActive), display order (DisplayOrder)
+                // and colour (HexColorCode — null → deterministic gradient generator).
+                // This is completely independent of GetClassificationDict() used by
+                // other ViewModels (CustomerList, CustomerPage, etc.).
+                try
+                {
+                    var mapClassifications = await AppReference.QueryService
+                        .GetActiveMapClassificationsAsync();
+
+                    MapsStaticDataSourceHelper.MapClassificationList = mapClassifications;
+
+                    // Pre-warm: resolve colours and generate dynamic pin PNGs.
+                    if (mapClassifications?.Count > 0)
+                    {
+                        _ = Task.Run(async () =>
+                        {
+                            try
+                            {
+                                await ClassificationColorService.PrewarmAsync(mapClassifications, AppReference.QueryService.DatabaseService);
+                            }
+                            catch (Exception prewarmEx)
+                            {
+                                ErrorLogger.WriteToErrorLog(
+                                    nameof(MapPageViewModel),
+                                    "ClassificationColorService.PrewarmAsync(MapClassificationViewModel)",
+                                    prewarmEx.StackTrace);
+                            }
+                        });
+                    }
+                }
+                catch (Exception mapClsEx)
+                {
+                    // Non-fatal — fall back to ClassificationsList path in MapsStaticDataSourceHelper.
+                    ErrorLogger.WriteToErrorLog(
+                        nameof(MapPageViewModel),
+                        "GetActiveMapClassificationsAsync",
+                        mapClsEx.StackTrace);
+                }
+
+
+                SetLegendsSource();
+
                 if (DbStateDict == null || DbStateDict.Count == 0)
                 { DbStateDict = await AppReference.QueryService.GetStateDictionaryWhichHasCustomersAssociated(); }
 
@@ -1439,8 +1436,8 @@ namespace DRLMobile.Uwp.ViewModel
                     await GetCustomerDataForCallActivity();
                 }
 
-                //if (PointOfIntrestSource.Count > 0)
-                //    Center = CalculateCenter(PointOfIntrestSource);
+                if (PointOfIntrestSource.Count > 0)
+                    Center = CalculateCenter(PointOfIntrestSource);
             }
             catch (Exception ex)
             {
@@ -1723,8 +1720,8 @@ namespace DRLMobile.Uwp.ViewModel
                             PointOfIntrestSource.Add(new PointOfInterest
                             {
                                 CustomerData = item,
-                                OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(
-                                                new OnTerra.MapsControl.UWP.BasicGeoposition()
+                                Location = new Geopoint(
+                                                new BasicGeoposition()
                                                 {
                                                     Latitude = Convert.ToDouble(item?.Latitude),
                                                     Longitude = Convert.ToDouble(item?.Longitude)
@@ -1777,7 +1774,7 @@ namespace DRLMobile.Uwp.ViewModel
                                 PointOfIntrestSource.Add(new PointOfInterest
                                 {
                                     CustomerData = item,
-                                    OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(new OnTerra.MapsControl.UWP.BasicGeoposition()
+                                    Location = new Geopoint(new BasicGeoposition()
                                     {
                                         Latitude = Convert.ToDouble(item?.Latitude),
                                         Longitude = Convert.ToDouble(item?.Longitude)
@@ -1843,8 +1840,8 @@ namespace DRLMobile.Uwp.ViewModel
                             PointOfIntrestSource.Add(new PointOfInterest
                             {
                                 CustomerData = item,
-                                OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(
-                                        new OnTerra.MapsControl.UWP.BasicGeoposition()
+                                Location = new Geopoint(
+                                        new BasicGeoposition()
                                         {
                                             Latitude = Convert.ToDouble(item?.Latitude),
                                             Longitude = Convert.ToDouble(item?.Longitude)
@@ -1903,8 +1900,8 @@ namespace DRLMobile.Uwp.ViewModel
                             PointOfIntrestSource.Add(new PointOfInterest
                             {
                                 CustomerData = item,
-                                OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(
-                                        new OnTerra.MapsControl.UWP.BasicGeoposition()
+                                Location = new Geopoint(
+                                        new BasicGeoposition()
                                         {
                                             Latitude = Convert.ToDouble(item?.Latitude),
                                             Longitude = Convert.ToDouble(item?.Longitude)
@@ -1971,7 +1968,7 @@ namespace DRLMobile.Uwp.ViewModel
                             PointOfIntrestSource.Add(new PointOfInterest
                             {
                                 CustomerData = item,
-                                OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(new OnTerra.MapsControl.UWP.BasicGeoposition()
+                                Location = new Geopoint(new BasicGeoposition()
                                 {
                                     Latitude = Convert.ToDouble(item?.Latitude),
                                     Longitude = Convert.ToDouble(item?.Longitude)
@@ -2066,7 +2063,7 @@ namespace DRLMobile.Uwp.ViewModel
             return distanceSquared < threshold * threshold;
         }
 
-        private OnTerra.MapsControl.UWP.Geopoint CalculateCenter(ICollection<PointOfInterest> places)
+        private Geopoint CalculateCenter(ICollection<PointOfInterest> places)
         {
             double totalLatitude = 0.0;
             double totalLongitude = 0.0;
@@ -2077,10 +2074,10 @@ namespace DRLMobile.Uwp.ViewModel
                 totalLongitude += place.Location.Position.Longitude;
             }
 
-            return new OnTerra.MapsControl.UWP.Geopoint(new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = Convert.ToDouble(totalLatitude / places.Count), Longitude = Convert.ToDouble(totalLongitude / places.Count) });
+            return new Geopoint(new BasicGeoposition { Latitude = Convert.ToDouble(totalLatitude / places.Count), Longitude = Convert.ToDouble(totalLongitude / places.Count) });
         }
 
-        public Point GetMapCoordinates(OnTerra.MapsControl.UWP.BasicGeoposition geoposition)
+        public Point GetMapCoordinates(BasicGeoposition geoposition)
         {
             double latitude = Math.Max(Math.Min(geoposition.Latitude, 85.05112878), -85.05112878);
 
@@ -2096,9 +2093,9 @@ namespace DRLMobile.Uwp.ViewModel
         #endregion
 
         #region Public Methods
-        
-        public async void SetLoader(bool isOpen)=> await coreDispatcher.RunAsync(CoreDispatcherPriority.Normal, () => IsLoading = isOpen);
-        
+
+        public async void SetLoader(bool isOpen) => await coreDispatcher.RunAsync(CoreDispatcherPriority.Normal, () => IsLoading = isOpen);
+
         internal void SetTheStateFlyoutList()
         {
             StateDictionary = DbStateDict.ToDictionary(x => x.Key, y => y.Value);

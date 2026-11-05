@@ -149,7 +149,7 @@ namespace DRLMobile.Uwp.Helpers
                     }
                 }
             }
-
+            
             bool wholesaleAdded = false;
 
             // Iterate in display order; Wholesale is inserted at the position of the first

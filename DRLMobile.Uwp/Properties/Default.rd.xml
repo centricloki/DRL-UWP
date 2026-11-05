@@ -23,7 +23,10 @@
     -->
     <Assembly Name="*Application*" Dynamic="Required All" />
 	  <!--<Namespace Name="DRLMobile.UWP.Core" Serialize="All" />
-	  <Namespace Name="DRLMobile.Uwp.ViewModel" Serialize="All" />-->  
+	  <Namespace Name="DRLMobile.Uwp.ViewModel" Serialize="All" />-->
+	
+    
+    
     
     <!-- Add your application specific runtime directives here. -->
 

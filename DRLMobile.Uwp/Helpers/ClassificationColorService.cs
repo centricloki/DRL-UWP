@@ -89,22 +89,22 @@ namespace DRLMobile.Uwp.Helpers
                 else
                 {
                     string gradientHex = GetUniqueGradientHex(id, usedColors);
-
+                    
                     // For consistency between legend and pin, convert gradient to averaged color
                     if (gradientHex.Contains(","))
                     {
                         var parts = gradientHex.Split(',');
                         Color colorA = HexToColor(parts[0]);
                         Color colorB = HexToColor(parts[1]);
-
+                        
                         // Calculate averaged color to match pin generation
                         byte r = (byte)((colorA.R + colorB.R) / 2);
                         byte g = (byte)((colorA.G + colorB.G) / 2);
                         byte b = (byte)((colorA.B + colorB.B) / 2);
                         Color averagedColor = Color.FromArgb(255, r, g, b);
-
+                        
                         hex = $"{averagedColor.R:X2}{averagedColor.G:X2}{averagedColor.B:X2}";
-
+                        
                         // Also update the item's HexColorCode so it gets persisted to database if dbService is provided
                         item.HexColorCode = hex;
                         // Update the database with the generated color
@@ -114,9 +114,9 @@ namespace DRLMobile.Uwp.Helpers
                     {
                         hex = gradientHex;
                     }
-
+                    
                     // Add the newly generated color to the used set so the next ID doesn't pick it
-                    usedColors.Add(gradientHex.Replace(",", ",").ToUpper());
+                    usedColors.Add(gradientHex.Replace(",", ",").ToUpper()); 
                 }
 
                 _colorCache[id] = hex;
@@ -130,7 +130,7 @@ namespace DRLMobile.Uwp.Helpers
             }
 
             await Task.WhenAll(pinTasks);
-
+            
             //// Persist any generated colors to the database for consistency across app restarts
             //if (dbService != null)
             //{
@@ -165,10 +165,23 @@ namespace DRLMobile.Uwp.Helpers
         /// <returns>A color hex string.</returns>
         public static string GetColorHex(int classificationId)
         {
+            // 1. Check the cache first (fastest path, especially on 2nd+ loads)
             if (_colorCache.TryGetValue(classificationId, out string cached))
                 return cached;
 
-            // Fallback in case PrewarmAsync has not finished executing yet
+            // 2. ★★★ FIX FOR 1ST LOAD RACE CONDITION ★★★
+            // Check the synchronously loaded DB list before falling back to random generation.
+            // This ensures we use the actual SQLite color even if PrewarmAsync hasn't finished caching it yet.
+            var dbItem = MapsStaticDataSourceHelper.MapClassificationList?.FirstOrDefault(x => x.AccountClassificationId == classificationId);
+            if (dbItem != null && !string.IsNullOrWhiteSpace(dbItem.HexColorCode))
+            {
+                string hex = dbItem.HexColorCode.TrimStart('#');
+                _colorCache[classificationId] = hex; // Cache it for future calls
+                return hex;
+            }
+
+            // 3. Fallback: Only generate a deterministic color if PrewarmAsync hasn't finished 
+            // AND the database genuinely has no color defined for this classification.
             string fallback = ComputeMixedDistinctHex(classificationId);
 
             // If fallback is a gradient (comma-separated), convert to averaged color
@@ -281,9 +294,9 @@ namespace DRLMobile.Uwp.Helpers
 
                 // If clash found, increment offset to try the next available pair
                 offset++;
-
+                
                 // Safety break to prevent infinite loops if we run out of combinations
-                if (offset > len * len) return candidate;
+                if (offset > len * len) return candidate; 
             }
         }
 
@@ -294,6 +307,6 @@ namespace DRLMobile.Uwp.Helpers
             int idxA = classificationId % len;
             int idxB = ((classificationId / len) + idxA + 1) % len;
             return _darkColors[idxA] + "," + _darkColors[idxB];
-        }
+        }        
     }
 }

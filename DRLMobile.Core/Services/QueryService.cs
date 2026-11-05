@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 
 using DRLMobile.Core.AutoMapperProfiler;
 using DRLMobile.Core.Enums;
@@ -1318,6 +1318,7 @@ namespace DRLMobile.Core.Services
                                     {
                                         if (!fileName.ToUpper().StartsWith("HTTP"))
                                         {
+                                            fileName= LocalStatePathResolver.Resolve(fileName);
                                             if (File.Exists(fileName))
                                             {
                                                 using (FileStream fileStream = File.Open(fileName, FileMode.Open))
@@ -5399,7 +5400,6 @@ namespace DRLMobile.Core.Services
             }
         }
 
-
         public async Task<Dictionary<string, string>> GetConfiguration()
         {
             Dictionary<string, string> result = null;
@@ -5497,5 +5497,15 @@ namespace DRLMobile.Core.Services
         }
 
         public async Task<CustomerMaster> GetCustomerMasterByDeviceIdAsync(string deviceId) => await DbService.GetCustomerMasterByDeviceIdAsync(deviceId);
+
+        #region Auto-Login Migration Helper Methods
+        // 1. Get CustomerName from CustomerMaster table
+        public async Task<string> GetCustomerNameByCustomerIdAsync(int customerId)
+            => await DbService.GetCustomerNameByCustomerIdAsync(customerId);
+        // 2. Get User Credentials from UserMaster by FirstName and LastName
+        public async Task<(string UserName, int PIN, int UserId, string DbFileName)> GetUserCredentialsByNameAsync(string firstName, string lastName)
+            => await DbService.GetUserCredentialsByNameAsync(firstName, lastName);
+        #endregion
+
     }
 }

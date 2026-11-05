@@ -129,7 +129,7 @@ namespace DRLMobile.Core.Helpers
                     isexported = customerItem.IsExported,
                     OrderDeliveryWeekDays = customerItem.OrderDeliveryWeekDays,
                     isdeleted = customerItem.isDeleted,
-                    LastCallActivityDate=customerItem.LastCallActivityDate
+                    LastCallActivityDate = customerItem.LastCallActivityDate
                 };
                 customer.mailingaddresszipcode = ZipCodeConversion(customerItem.MailingAddressZipID);
                 customer.physicaladdresszipcode = ZipCodeConversion(customerItem.PhysicalAddressZipCode);
@@ -465,6 +465,8 @@ namespace DRLMobile.Core.Helpers
                     .GetCustomerDeviceIdForDocumentUpload(customerDocument.CustomerID).ConfigureAwait(false);
 
                 byte[] FileBytes;
+
+                customerDocument.CustomerDocumentName = LocalStatePathResolver.Resolve(customerDocument.CustomerDocumentName);
                 string localpathName = Path.Combine(ApplicationConstants.APP_PATH, ApplicationConstants.CustomerDocumentsSubFolder,
                     HelperMethods.GetNameFromURL(customerDocument.CustomerDocumentName));
                 if (customerDocument.IsDelete == "1" || customerDocument.IsDelete == "true")
@@ -565,6 +567,7 @@ namespace DRLMobile.Core.Helpers
                 {
                     byte[] FileBytes;
 
+                    orderItem.CustomerSignatureFileName = LocalStatePathResolver.Resolve(orderItem.CustomerSignatureFileName);
                     if (File.Exists(orderItem.CustomerSignatureFileName))
                     {
                         using (FileStream fileStream = File.Open(orderItem.CustomerSignatureFileName, FileMode.Open))
