@@ -1,5 +1,4 @@
 using DevExpress.Mvvm.Native;
-
 using Microsoft.Toolkit.Mvvm.Input;
 
 using DRLMobile.Core.Enums;
@@ -8,7 +7,6 @@ using DRLMobile.Core.Models;
 using DRLMobile.Core.Models.DataModels;
 using DRLMobile.Core.Models.UIModels;
 using DRLMobile.ExceptionHandler;
-using DRLMobile.Core.Services;
 using DRLMobile.Uwp.Helpers;
 
 using System;
@@ -27,6 +25,7 @@ using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
+using System.Collections.Concurrent;
 
 namespace DRLMobile.Uwp.ViewModel
 {
@@ -1360,6 +1359,7 @@ namespace DRLMobile.Uwp.ViewModel
 
                 SetLegendsSource();
 
+
                 if (DbStateDict == null || DbStateDict.Count == 0)
                 { DbStateDict = await AppReference.QueryService.GetStateDictionaryWhichHasCustomersAssociated(); }
 
@@ -1436,8 +1436,8 @@ namespace DRLMobile.Uwp.ViewModel
                     await GetCustomerDataForCallActivity();
                 }
 
-                if (PointOfIntrestSource.Count > 0)
-                    Center = CalculateCenter(PointOfIntrestSource);
+                //if (PointOfIntrestSource.Count > 0)
+                //    Center = CalculateCenter(PointOfIntrestSource);
             }
             catch (Exception ex)
             {
@@ -1720,8 +1720,8 @@ namespace DRLMobile.Uwp.ViewModel
                             PointOfIntrestSource.Add(new PointOfInterest
                             {
                                 CustomerData = item,
-                                Location = new Geopoint(
-                                                new BasicGeoposition()
+                                OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(
+                                                new OnTerra.MapsControl.UWP.BasicGeoposition()
                                                 {
                                                     Latitude = Convert.ToDouble(item?.Latitude),
                                                     Longitude = Convert.ToDouble(item?.Longitude)
@@ -1774,7 +1774,7 @@ namespace DRLMobile.Uwp.ViewModel
                                 PointOfIntrestSource.Add(new PointOfInterest
                                 {
                                     CustomerData = item,
-                                    Location = new Geopoint(new BasicGeoposition()
+                                    OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(new OnTerra.MapsControl.UWP.BasicGeoposition()
                                     {
                                         Latitude = Convert.ToDouble(item?.Latitude),
                                         Longitude = Convert.ToDouble(item?.Longitude)
@@ -1840,8 +1840,8 @@ namespace DRLMobile.Uwp.ViewModel
                             PointOfIntrestSource.Add(new PointOfInterest
                             {
                                 CustomerData = item,
-                                Location = new Geopoint(
-                                        new BasicGeoposition()
+                                OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(
+                                        new OnTerra.MapsControl.UWP.BasicGeoposition()
                                         {
                                             Latitude = Convert.ToDouble(item?.Latitude),
                                             Longitude = Convert.ToDouble(item?.Longitude)
@@ -1900,8 +1900,8 @@ namespace DRLMobile.Uwp.ViewModel
                             PointOfIntrestSource.Add(new PointOfInterest
                             {
                                 CustomerData = item,
-                                Location = new Geopoint(
-                                        new BasicGeoposition()
+                                OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(
+                                        new OnTerra.MapsControl.UWP.BasicGeoposition()
                                         {
                                             Latitude = Convert.ToDouble(item?.Latitude),
                                             Longitude = Convert.ToDouble(item?.Longitude)
@@ -1968,7 +1968,7 @@ namespace DRLMobile.Uwp.ViewModel
                             PointOfIntrestSource.Add(new PointOfInterest
                             {
                                 CustomerData = item,
-                                Location = new Geopoint(new BasicGeoposition()
+                                OnTerraLocation = new OnTerra.MapsControl.UWP.Geopoint(new OnTerra.MapsControl.UWP.BasicGeoposition()
                                 {
                                     Latitude = Convert.ToDouble(item?.Latitude),
                                     Longitude = Convert.ToDouble(item?.Longitude)
@@ -2063,7 +2063,7 @@ namespace DRLMobile.Uwp.ViewModel
             return distanceSquared < threshold * threshold;
         }
 
-        private Geopoint CalculateCenter(ICollection<PointOfInterest> places)
+        private OnTerra.MapsControl.UWP.Geopoint CalculateCenter(ICollection<PointOfInterest> places)
         {
             double totalLatitude = 0.0;
             double totalLongitude = 0.0;
@@ -2074,10 +2074,10 @@ namespace DRLMobile.Uwp.ViewModel
                 totalLongitude += place.Location.Position.Longitude;
             }
 
-            return new Geopoint(new BasicGeoposition { Latitude = Convert.ToDouble(totalLatitude / places.Count), Longitude = Convert.ToDouble(totalLongitude / places.Count) });
+            return new OnTerra.MapsControl.UWP.Geopoint(new OnTerra.MapsControl.UWP.BasicGeoposition { Latitude = Convert.ToDouble(totalLatitude / places.Count), Longitude = Convert.ToDouble(totalLongitude / places.Count) });
         }
 
-        public Point GetMapCoordinates(BasicGeoposition geoposition)
+        public Point GetMapCoordinates(OnTerra.MapsControl.UWP.BasicGeoposition geoposition)
         {
             double latitude = Math.Max(Math.Min(geoposition.Latitude, 85.05112878), -85.05112878);
 
